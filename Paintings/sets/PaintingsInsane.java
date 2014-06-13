@@ -8,7 +8,7 @@ public class PaintingsInsane {
 
 	public static void addPaintings(){
 		
-		PaintingIgnore.ignoreVanillaPaintings();
+		//PaintingIgnore.ignoreVanillaPaintings();
 
 		EnumHelper.addArt("EnumArt_" + i, "ins_001", 16, 16, 48, 256);i++;
 
