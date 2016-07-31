@@ -1,4 +1,4 @@
-package Paintings.config;
+package subaraki.paintings.config;
 
 import java.io.File;
 

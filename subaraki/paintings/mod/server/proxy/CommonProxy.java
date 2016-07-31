@@ -1,4 +1,4 @@
-package Paintings;
+package subaraki.paintings.mod.server.proxy;
 
 public class CommonProxy
 {

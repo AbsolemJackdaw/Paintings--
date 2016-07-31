@@ -1,8 +1,7 @@
-package Paintings;
+package subaraki.paintings.mod.client;
 
 import org.lwjgl.opengl.GL11;
 
-import Paintings.config.ConfigFile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -21,6 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import subaraki.paintings.config.ConfigFile;
 
 @SideOnly(Side.CLIENT)
 public class RenderPaintingLate extends Render implements IRenderFactory

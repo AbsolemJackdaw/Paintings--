@@ -1,4 +1,4 @@
-package Paintings.sets;
+package subaraki.paintings.sets;
 
 import net.minecraftforge.common.util.EnumHelper;
 

@@ -1,13 +1,7 @@
-package Paintings;
+package subaraki.paintings.mod;
 
 import java.lang.reflect.Field;
 
-import Paintings.config.ConfigFile;
-import Paintings.sets.PaintingsGibea;
-import Paintings.sets.PaintingsInsane;
-import Paintings.sets.PaintingsNewInsane;
-import Paintings.sets.PaintingsSphax;
-import Paintings.sets.PaintingsTiny;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
@@ -15,6 +9,13 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import subaraki.paintings.config.ConfigFile;
+import subaraki.paintings.mod.server.proxy.CommonProxy;
+import subaraki.paintings.sets.PaintingsGibea;
+import subaraki.paintings.sets.PaintingsInsane;
+import subaraki.paintings.sets.PaintingsNewInsane;
+import subaraki.paintings.sets.PaintingsSphax;
+import subaraki.paintings.sets.PaintingsTiny;
 
 @Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION)
 public class Paintings
