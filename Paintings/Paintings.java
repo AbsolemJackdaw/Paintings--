@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class Paintings
 {
 
-	public static final String MODID = "MorePaintings";
+	public static final String MODID = "morepaintings";
 	public static final String VERSION = "1.10 1";
 	public static final String NAME = "Paintings++";
 
@@ -32,6 +32,9 @@ public class Paintings
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ConfigFile.instance.loadConfig(event.getSuggestedConfigurationFile());
+
+		proxy.registerRenderInformation();
+
 	}
 
 	String [] textureLoc= new String[5];
@@ -61,8 +64,6 @@ public class Paintings
 
 		size[0] = size[1] = size[2] = 512;
 		size[3] = size[4] = 256;
-
-		proxy.registerRenderInformation();
 
 		for(int i = 0; i < 5; i++){
 			if(bools[i])

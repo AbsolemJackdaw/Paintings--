@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPainting;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityPainting;
@@ -193,4 +194,9 @@ public class RenderPaintingLate extends Render implements IRenderFactory
 		return this;
 	}
 
+	@Override
+	public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
+	{
+		doRender((EntityPainting)par1Entity, par2, par4, par6, par8, par9);
+	}
 }
