@@ -1,13 +1,13 @@
 package Paintings;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.entity.item.EntityPainting;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy
-  extends CommonProxy
+extends CommonProxy
 {
-  public void registerRenderInformation()
-  {
-    RenderingRegistry.registerEntityRenderingHandler(EntityPainting.class, new RenderPaintingLate());
-  }
+	public void registerRenderInformation()
+	{
+		RenderingRegistry.registerEntityRenderingHandler(EntityPainting.class, RenderPaintingLate::new);
+	}
 }

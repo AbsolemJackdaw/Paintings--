@@ -2,32 +2,33 @@ package Paintings;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.util.ResourceLocation;
 import Paintings.config.ConfigFile;
 import Paintings.sets.PaintingsGibea;
 import Paintings.sets.PaintingsInsane;
 import Paintings.sets.PaintingsNewInsane;
 import Paintings.sets.PaintingsSphax;
 import Paintings.sets.PaintingsTiny;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid="PaintingsMod", name="Paintings++", version="1.7.2")
+@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION)
 public class Paintings
 {
 
-	private static final String name = "Paintings++";
-	private static final String version = "1.7.2 v1";
-	public static Paintings instance;
+	public static final String MODID = "MorePaintings";
+	public static final String VERSION = "1.10 1";
+	public static final String NAME = "Paintings++";
 
 	@SidedProxy(serverSide="Paintings.CommonProxy", clientSide="Paintings.ClientProxy")
 	public static CommonProxy proxy;
 	private static final String CLASS_LOC = "com.mcf.davidee.paintinggui.gui.PaintingButton";
 
-	@Mod.EventHandler
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		ConfigFile.instance.loadConfig(event.getSuggestedConfigurationFile());
@@ -37,7 +38,7 @@ public class Paintings
 	int[] size = new int[5];
 	boolean[] bools = new boolean[5];
 
-	@Mod.EventHandler
+	@EventHandler
 	public void load(FMLInitializationEvent init)
 	{
 		boolean Insane = ConfigFile.instance.Insane;
@@ -94,17 +95,17 @@ public class Paintings
 
 	private void paintingGuiHelper(Class c, String field, int value)
 			throws Exception
-			{
+	{
 		Field f = c.getField(field);
 		f.setAccessible(true);
 		f.set(null, Integer.valueOf(value));
-			}
+	}
 
 	private void paintingGuiTextureHelper(Class c, String field, ResourceLocation loc)
 			throws Exception
-			{
+	{
 		Field f = c.getField(field);
 		f.setAccessible(true);
 		f.set(null, loc);
-			}
+	}
 }

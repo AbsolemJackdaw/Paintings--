@@ -1,96 +1,90 @@
 package Paintings.sets;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-
 import net.minecraft.entity.item.EntityPainting.EnumArt;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class PaintingIgnore {
 
 	public static void ignoreVanillaPaintings(){
 
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Alban, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Alban, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.ALBAN, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.ALBAN, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Aztec, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Aztec, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.AZTEC, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.AZTEC, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Aztec2, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Aztec2, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.AZTEC_2, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.AZTEC_2, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Bomb, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Bomb, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BOMB, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BOMB, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BurningSkull, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BurningSkull, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BURNING_SKULL, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BURNING_SKULL, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Bust, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Bust, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BUST, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.BUST, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Courbet, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Courbet, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.COURBET, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.COURBET, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Creebet, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Creebet, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.CREEBET, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.CREEBET, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.DonkeyKong, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.DonkeyKong, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.DONKEY_KONG, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.DONKEY_KONG, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Fighters, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Fighters, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.FIGHTERS, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.FIGHTERS, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Graham, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Graham, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.GRAHAM, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.GRAHAM, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Kebab, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Kebab, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.KEBAB, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.KEBAB, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Match, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Match, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.MATCH, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.MATCH, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pigscene, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pigscene, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.PIGSCENE, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.PIGSCENE, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Plant, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Plant, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.PLANT, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.PLANT, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pointer, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pointer, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.POINTER, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.POINTER, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pool, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Pool, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.POOL, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.POOL, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Sea, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Sea, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SEA, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SEA, 0, "sizeY", "  field_75704_C");
 
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Skeleton, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Skeleton, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SKELETON, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SKELETON, 0, "sizeY", "  field_75704_C");
 
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SkullAndRoses, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SkullAndRoses, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SKULL_AND_ROSES, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SKULL_AND_ROSES, 0, "sizeY", "  field_75704_C");
 
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Stage, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Stage, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.STAGE, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.STAGE, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Sunset, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Sunset, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SUNSET, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.SUNSET, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Void, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Void, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.VOID, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.VOID, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wanderer, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wanderer, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WANDERER, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WANDERER, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wasteland, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wasteland, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WASTELAND, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WASTELAND, 0, "sizeY", "  field_75704_C");
 		
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wither, 0, "sizeX", " field_75703_B");
-		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.Wither, 0, "sizeY", "  field_75704_C");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WITHER, 0, "sizeX", " field_75703_B");
+		ObfuscationReflectionHelper.setPrivateValue(EnumArt.class, EnumArt.WITHER, 0, "sizeY", "  field_75704_C");
 	}
-
 
 	static void setFinalStatic(Class clazz, String fieldName, Object newValue) throws NoSuchFieldException, IllegalAccessException {
 

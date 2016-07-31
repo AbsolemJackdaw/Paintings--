@@ -1,7 +1,5 @@
 package Paintings.sets;
 
-import net.minecraft.entity.item.EntityPainting;
-import net.minecraft.entity.item.EntityPainting.EnumArt;
 import net.minecraftforge.common.util.EnumHelper;
 
 public class PaintingsTiny {
