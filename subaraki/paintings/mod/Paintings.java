@@ -17,7 +17,7 @@ import subaraki.paintings.sets.PaintingsNewInsane;
 import subaraki.paintings.sets.PaintingsSphax;
 import subaraki.paintings.sets.PaintingsTiny;
 
-@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION)
+@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:PaintingSelGui")
 public class Paintings
 {
 
@@ -25,7 +25,7 @@ public class Paintings
 	public static final String VERSION = "1.10 1";
 	public static final String NAME = "Paintings++";
 
-	@SidedProxy(serverSide="Paintings.CommonProxy", clientSide="Paintings.ClientProxy")
+	@SidedProxy(serverSide="subaraki.paintings.mod.server.proxy.CommonProxy", clientSide="subaraki.paintings.mod.client.proxy.ClientProxy")
 	public static CommonProxy proxy;
 	private static final String CLASS_LOC = "com.mcf.davidee.paintinggui.gui.PaintingButton";
 
