@@ -14,7 +14,7 @@ public class PaintingsNewInsane {
 		EnumHelper.addArt("EnumArt_" + i, "new_ins_"+i, 128, 96, 128, 0);i++;
 
 		EnumHelper.addArt("EnumArt_" + i, "new_ins_"+i, 64, 128, 0, 128);i++;
-		EnumHelper.addArt("EnumArt_" + i, "new_ins_"+i, 64, 128, 128, 128);i++;
+		EnumHelper.addArt("EnumArt_" + i, "new_ins_"+i, 64, 128, 64, 128);i++;
 
 		EnumHelper.addArt("EnumArt_" + i, "new_ins_"+i, 32, 48, 160, 384);i++;
 

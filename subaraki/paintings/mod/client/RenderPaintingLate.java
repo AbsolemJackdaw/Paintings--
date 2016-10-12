@@ -1,15 +1,11 @@
 package subaraki.paintings.mod.client;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.RenderPainting;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityPainting;
@@ -20,40 +16,28 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import subaraki.paintings.config.ConfigFile;
+import subaraki.paintings.config.ConfigurationHandler;
 
 @SideOnly(Side.CLIENT)
 public class RenderPaintingLate extends Render implements IRenderFactory
 {
-
-	static boolean insane = ConfigFile.instance.Insane;
-	static boolean sphax = ConfigFile.instance.Sphax;
-	static boolean tiny = ConfigFile.instance.TinyPics;
-	static boolean gibea = ConfigFile.instance.Gibea;
-	static boolean newInsane = ConfigFile.instance.NewInsane;
+	private ResourceLocation art = null;
 
 	public RenderPaintingLate(RenderManager renderManager) {
 		super(renderManager);
+		art = new ResourceLocation("subaraki:art/"+ConfigurationHandler.instance.texture+".png");		
 	}
-	
-	protected static final ResourceLocation art =
-			new ResourceLocation(
-					"subaraki:art/" + 
-							(sphax ? "sphax" :
-								insane ? "insane" :
-									tiny ? "tiny" :
-										newInsane ? "newInsane" :
-									"gib") + ".png");
 
-	private float getSize()
+	public static float getSize()
 	{
-		if ((insane || tiny || newInsane) && (!gibea) && (!sphax)) {
+		switch (ConfigurationHandler.instance.texture) {
+		case "insane":
+		case "tinypics":
+		case "new_insane":
 			return 512.0F;
-		}
-		if ((!insane) && (!tiny) && (gibea || sphax)) {
+		default:
 			return 256.0F;
 		}
-		return 256.0F;
 	}
 
 	public void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks)
