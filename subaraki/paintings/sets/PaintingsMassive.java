@@ -285,7 +285,7 @@ public class PaintingsMassive {
 		EnumHelper.addArt("EnumArt_" + i, "ptg273", 112, 80, 736, 928);i++;
 		EnumHelper.addArt("EnumArt_" + i, "ptg274", 64, 80, 848, 928);i++;
 		EnumHelper.addArt("EnumArt_" + i, "ptg275", 128, 32, 784, 896);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg276", 48, 122, 912, 896);i++;
+		EnumHelper.addArt("EnumArt_" + i, "ptg276", 48, 112, 912, 896);i++;
 		EnumHelper.addArt("EnumArt_" + i, "ptg277", 48, 112, 960, 896);i++;
 	}
 }
