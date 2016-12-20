@@ -23,7 +23,7 @@ public class ConfigurationHandler
 
 	private void loadSettings(Configuration config)
 	{
-		config.addCustomCategoryComment("Painting Mode", "gibea, sphax, insane, tinypics or new_insane");
+		config.addCustomCategoryComment("Painting Mode", "gibea, sphax, insane, tinypics, new_insane or massive");
 
 		String paintingTexture = config.getString("name", "Painting Mode", "gibea", "Texture").toLowerCase();
 
@@ -33,6 +33,7 @@ public class ConfigurationHandler
 		case "insane":
 		case "tinypics":
 		case "new_insane":
+		case "massive":
 			texture = paintingTexture;
 			break;
 

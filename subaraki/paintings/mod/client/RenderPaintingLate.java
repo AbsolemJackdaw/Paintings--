@@ -35,6 +35,8 @@ public class RenderPaintingLate extends Render implements IRenderFactory
 		case "tinypics":
 		case "new_insane":
 			return 512.0F;
+		case "massive":
+			return 1008.0F;
 		default:
 			return 256.0F;
 		}
@@ -135,32 +137,32 @@ public class RenderPaintingLate extends Render implements IRenderFactory
 
 	private void setLightmap(EntityPainting painting, float p_77008_2_, float p_77008_3_)
 	{
-		int i = MathHelper.floor_double(painting.posX);
-		int j = MathHelper.floor_double(painting.posY + (double)(p_77008_3_ / 16.0F));
-		int k = MathHelper.floor_double(painting.posZ);
+		int i = MathHelper.floor(painting.posX);
+		int j = MathHelper.floor(painting.posY + (double)(p_77008_3_ / 16.0F));
+		int k = MathHelper.floor(painting.posZ);
 		EnumFacing enumfacing = painting.facingDirection;
 
 		if (enumfacing == EnumFacing.NORTH)
 		{
-			i = MathHelper.floor_double(painting.posX + (double)(p_77008_2_ / 16.0F));
+			i = MathHelper.floor(painting.posX + (double)(p_77008_2_ / 16.0F));
 		}
 
 		if (enumfacing == EnumFacing.WEST)
 		{
-			k = MathHelper.floor_double(painting.posZ - (double)(p_77008_2_ / 16.0F));
+			k = MathHelper.floor(painting.posZ - (double)(p_77008_2_ / 16.0F));
 		}
 
 		if (enumfacing == EnumFacing.SOUTH)
 		{
-			i = MathHelper.floor_double(painting.posX - (double)(p_77008_2_ / 16.0F));
+			i = MathHelper.floor(painting.posX - (double)(p_77008_2_ / 16.0F));
 		}
 
 		if (enumfacing == EnumFacing.EAST)
 		{
-			k = MathHelper.floor_double(painting.posZ + (double)(p_77008_2_ / 16.0F));
+			k = MathHelper.floor(painting.posZ + (double)(p_77008_2_ / 16.0F));
 		}
 
-		int l = this.renderManager.worldObj.getCombinedLight(new BlockPos(i, j, k), 0);
+		int l = this.renderManager.world.getCombinedLight(new BlockPos(i, j, k), 0);
 		int i1 = l % 65536;
 		int j1 = l / 65536;
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i1, (float)j1);

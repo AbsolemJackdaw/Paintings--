@@ -5,76 +5,31 @@ import net.minecraftforge.common.util.EnumHelper;
 public class PaintingsTiny {
 
 	private static int i = 0;
-	
+
 	public static void addPaintings(){
 		PaintingIgnore.ignoreVanillaPaintings();
 
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_8", 16, 16, 112, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_9", 16, 16, 128, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_10", 16, 16, 144, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_11", 16, 16, 160, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_12", 16, 16, 176, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_13", 16, 16, 192, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_14", 16, 16, 208, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_15", 16, 16, 224, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_16", 16, 16, 240, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_17", 16, 16, 256, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_18", 16, 16, 272, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_19", 16, 16, 288, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_20", 16, 16, 304, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_21", 16, 16, 320, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_22", 16, 16, 336, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_23", 16, 16, 352, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_24", 16, 16, 416, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_25", 16, 16, 432, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_26", 16, 16, 448, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_27", 16, 16, 464, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_28", 16, 16, 480, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_29", 16, 16, 496, 0);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_30", 16, 16, 0, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_31", 16, 16, 16, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_32", 16, 16, 32, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_33", 16, 16, 48, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_34", 16, 16, 64, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_35", 16, 16, 80, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_36", 16, 16, 96, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_37", 16, 16, 112, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_38", 16, 16, 128, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_39", 16, 16, 144, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_40", 16, 16, 160, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_41", 16, 16, 176, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_42", 16, 16, 192, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_43", 16, 16, 208, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_44", 16, 16, 224, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_45", 16, 16, 240, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_46", 16, 16, 256, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_47", 16, 16, 272, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_48", 16, 16, 288, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_49", 16, 16, 304, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_50", 16, 16, 320, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_51", 16, 16, 336, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_52", 16, 16, 352, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_53", 16, 16, 416, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_54", 16, 16, 432, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_55", 16, 16, 448, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_56", 16, 16, 464, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_57", 16, 16, 480, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_58", 16, 16, 496, 16);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_59", 16, 16, 128, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_60", 16, 16, 144, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_61", 16, 16, 160, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_62", 16, 16, 176, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_63", 16, 16, 448, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_64", 16, 16, 464, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_65", 16, 16, 480, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_66", 16, 16, 496, 432);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_67", 16, 16, 448, 448);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_68", 16, 16, 464, 448);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_69", 16, 16, 480, 448);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_70", 16, 16, 496, 448);i++;
+		for(int x = 1; x <= 23; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(x), 16, 16, 16*(x-1), 0);i++;
+		}
+		for(int x = 1; x <= 6; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(23+x), 16, 16, 400+(x*16), 0);i++;
+		}
 
+		for(int x = 1; x <= 23; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(x+29), 16, 16, 16*(x-1), 16);i++;
+		}
+		for(int x = 1; x <= 6; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(52+x), 16, 16, 400+(x*16), 16);i++;
+		}
 
+		for(int x = 1; x <= 8; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(58+x), 16, 16, 112+(x*16), 432);i++;
+		}
 
+		for(int x = 1; x <= 4; x++){
+			EnumHelper.addArt("EnumArt_" + i, "ptg_1x1_"+(66+x), 16, 16, 432+(x*16), 448);i++;
+		}
 
 
 		EnumHelper.addArt("EnumArt_" + i, "ptg_2x1_6", 32, 16, 160, 32);i++;
