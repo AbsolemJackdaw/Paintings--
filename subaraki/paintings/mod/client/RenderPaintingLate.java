@@ -34,6 +34,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory
 		case "insane":
 		case "tinypics":
 		case "new_insane":
+		case "mediumpics":
 			return 512.0F;
 		case "massive":
 			return 1008.0F;

@@ -17,6 +17,7 @@ import subaraki.paintings.mod.server.proxy.CommonProxy;
 import subaraki.paintings.sets.PaintingsGibea;
 import subaraki.paintings.sets.PaintingsInsane;
 import subaraki.paintings.sets.PaintingsMassive;
+import subaraki.paintings.sets.PaintingsMedium;
 import subaraki.paintings.sets.PaintingsNewInsane;
 import subaraki.paintings.sets.PaintingsSphax;
 import subaraki.paintings.sets.PaintingsTiny;
@@ -26,7 +27,7 @@ public class Paintings
 {
 
 	public static final String MODID = "morepaintings";
-	public static final String VERSION = "1.10.2-3.2.0.1";
+	public static final String VERSION = "1.10.2-3.2.0.2";
 	public static final String NAME = "Paintings++";
 
 	@SidedProxy(serverSide="subaraki.paintings.mod.server.proxy.CommonProxy", clientSide="subaraki.paintings.mod.client.proxy.ClientProxy")
@@ -59,6 +60,7 @@ public class Paintings
 		case "tinypics": PaintingsTiny.addPaintings(); break;
 		case "new_insane": PaintingsNewInsane.addPaintings(); break;
 		case "massive": PaintingsMassive.addPaintings(); break;
+		case "mediumpics": PaintingsMedium.addPaintings(); break;
 		}
 
 
