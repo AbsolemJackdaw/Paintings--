@@ -33,7 +33,7 @@ public class PaintingsMedium
 		{
 			for(int x = 1; x <= 3; x++)
 			{
-				EnumHelper.addArt("EnumArt_" + i, "ptg_2x1_"+(x+(y*23)), 32, 16, 400+(32*x), 16*y);i++;
+				EnumHelper.addArt("EnumArt_" + i, "ptg_2x1_"+(x+(y*23)), 32, 16, 384+(32*x), 16*y);i++;
 			}
 		}
 		for(int x = 1; x <= 16; x++)
@@ -90,7 +90,7 @@ public class PaintingsMedium
 		}
 		for(int x = 1; x <= 8; x++)
 		{
-			EnumHelper.addArt("EnumArt_" + i, "ptg_4x4_"+(x), 64, 64, 64*(x-1), 488);i++;
+			EnumHelper.addArt("EnumArt_" + i, "ptg_4x4_"+(x), 64, 64, 64*(x-1), 448);i++;
 		}
 	}
 }
