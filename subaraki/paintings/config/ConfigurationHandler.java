@@ -2,8 +2,6 @@ package subaraki.paintings.config;
 
 import java.io.File;
 
-import com.typesafe.config.ConfigIncluderFile;
-
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.FMLLog;
 
