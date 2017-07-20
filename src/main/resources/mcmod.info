@@ -1,0 +1,16 @@
+[
+{
+  "modid": "morepaintings",
+  "name": "Paintings++",
+  "description": "Pick your template and choose from up to over 30 paintings to place down and decorate yoru walls !",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/paintings",
+  "updateUrl": "https://minecraft.curseforge.com/projects/paintings/files",
+  "authorList": ["Subaraki"],
+  "credits": "The original authors fo the Insane , XTreme and TinyPics Edition, as well as Kisutora for his contribution of the Massive and Extended template",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
