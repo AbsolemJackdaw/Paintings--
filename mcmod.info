@@ -1,0 +1,16 @@
+[
+{
+  "modid": "subcommonlib",
+  "name": "Subaraki's Common Library",
+  "description": "Like a multi-outlet for electricity. but for my mods !",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://minecraft.curseforge.com/projects/sublib",
+  "updateUrl": "https://minecraft.curseforge.com/projects/sublib/files",
+  "authorList": ["Subaraki"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
