@@ -70,13 +70,5 @@ public class PaintingsGibea {
 		EnumHelper.addArt("EnumArt_" + i, "ptg060", 32, 32, 224, 192);i++;
 		EnumHelper.addArt("EnumArt_" + i, "ptg061", 32, 32, 192, 224);i++;
 		EnumHelper.addArt("EnumArt_" + i, "ptg062", 32, 32, 224, 224);i++;
-		
-		EnumHelper.addArt("EnumArt_" + i, "ptg063", 64, 32, 0, 96);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg064", 64, 48, 192, 64);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg065", 64, 48, 192, 112);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg066", 64, 64, 0, 192);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg067", 64, 64, 64, 192);i++;
-		EnumHelper.addArt("EnumArt_" + i, "ptg068", 64, 64, 128, 192);i++;
-
 	}
 }
