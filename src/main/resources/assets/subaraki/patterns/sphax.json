@@ -1,0 +1,37 @@
+{
+  "type": "subaraki:pattern",
+  "name": "sphax",
+  "pattern": [
+    "AAAAAAAJJJCC    ",
+    "FFFFAAAJJJCC    ",
+    "FFFFFFFFFFCC    ",
+    "DDDDCHHYYYYY    ",
+    "BBBBCHHYYYYYSSSS",
+    "BBBBCHHYYYYYSSSS",
+    "RRRRKKKYYYYYSSSS",
+    "RRRRKKKYYYYYSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "TTTTTTTTTTTTSSSS",
+    "TTTTTTTTTTTTSSSS",
+    "TTTTTTTTTTTTSSSS",
+    "TTTTTTTTTTTTSSSS"
+  ],
+  "key": {
+    "A": {"x": 1, "y": 1},
+    "B": {"x": 1, "y": 2},
+    "C": {"x": 1, "y": 3},
+    "D": {"x": 1, "y": 4},
+    "F": {"x": 2, "y": 1},
+    "G": {"x": 2, "y": 2},
+    "H": {"x": 2, "y": 3},
+    "J": {"x": 3, "y": 1},
+    "K": {"x": 3, "y": 2},
+    "R": {"x": 4, "y": 2},
+    "S": {"x": 4, "y": 3},
+    "T": {"x": 4, "y": 4},
+    "Y": {"x": 5, "y": 5}
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "subaraki:pattern",
+  "name": "gibea",
+  "pattern": [
+    "AAAAAAAAAAAA    ",
+    "AAAAAAAAAAAA    ",
+    "FFFFFFFFFFFF    ",
+    "FFFFFFFFFFFF    ",
+    "BBBBBBBBBBBBSSSS",
+    "BBBBBBBBBBBBSSSS",
+    "RRRRFFFFFFFFSSSS",
+    "RRRRFFFFFFFFSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "GGGGGGGGGGGGSSSS",
+    "FFFFFFFFFFFFFFFF",
+    "FFFFFFFFFFFFFFFF",
+    "TTTTTTTTTTTTGGGG",
+    "TTTTTTTTTTTTGGGG",
+    "TTTTTTTTTTTTGGGG",
+    "TTTTTTTTTTTTGGGG"
+  ],
+  "key": {
+    "A": {"x": 1, "y": 1},
+    "B": {"x": 1, "y": 2},
+    "F": {"x": 2, "y": 1},
+    "G": {"x": 2, "y": 2},
+    "R": {"x": 4, "y": 2},
+    "S": {"x": 4, "y": 3},
+    "T": {"x": 4, "y": 4}
+  }
+}
