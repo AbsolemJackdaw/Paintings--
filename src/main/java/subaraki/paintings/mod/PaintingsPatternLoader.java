@@ -31,6 +31,7 @@ public class PaintingsPatternLoader {
                     if (size != null) {
                         Integer sizeX = this.key.get(symbol).get("x");
                         Integer sizeY = this.key.get(symbol).get("y");
+                        FMLLog.log.debug(String.format("Adding %d x %d painting at %d, %d", sizeX, sizeY, offsetX, offsetY));
                         this.addPatternSection(sizeX, sizeY, offsetX, offsetY);
                         this.updatePattern(sizeX, sizeY, offsetX, offsetY);
                     } else {
@@ -58,6 +59,7 @@ public class PaintingsPatternLoader {
      * @param offsetY Top offset in blocks
      */
     private void addPatternSection(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
+
         EnumHelper.addArt(
                 String.format("EnumArt_%d", PaintingsPatternLoader.enumCounter++),
                 String.format("ptg%3d%3d", offsetX, offsetY),
@@ -76,6 +78,7 @@ public class PaintingsPatternLoader {
      * @param offsetY Top offset in blocks
      */
     private void updatePattern(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
+
         for (int row = offsetY; row < offsetY + sizeY; row++) {
             byte[] rowBytes = this.pattern[row].getBytes();
             for (int column = offsetX; column < offsetX + sizeX; column++) {

@@ -52,15 +52,22 @@ public class Paintings {
 
     public void loadPaintingGui() {
         try {
+
+            // Open a reader to the pattern
             ResourceLocation loc = new ResourceLocation("subaraki:patterns/" + ConfigurationHandler.instance.texture + ".json");
             InputStream in = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
+            // Read the JSON into a loader object
             Gson gson = new Gson();
             JsonElement je = gson.fromJson(reader, JsonElement.class);
             JsonObject json = je.getAsJsonObject();
             PaintingsPatternLoader loader = gson.fromJson(json, PaintingsPatternLoader.class);
+
+            // Rebuild painting list in EnumArt
+            PaintingsIgnore.ignoreVanillaPaintings();
             loader.loadPatterns();
+
         } catch (IOException e) {
             FMLLog.log.warn(e.getLocalizedMessage());
         }
@@ -71,6 +78,7 @@ public class Paintings {
             paintingGuiHelper(altClass, "KZ_WIDTH", (int) RenderPaintingLate.getSize());
             paintingGuiHelper(altClass, "KZ_HEIGHT", (int) RenderPaintingLate.getSize());
         } catch (Exception e) {
+            FMLLog.log.error(e);
         }
     }
 

@@ -1,7 +1,7 @@
 {
-	"type": "subaraki:pattern",
-	"name": "massive",
-	"pattern": [
+  "type": "subaraki:pattern",
+  "name": "massive",
+  "pattern": [
     "AAAAAAAAAACCCCCKKK   VVVVVVVVVVVVVVVVVVVVjjjjjjjjSSSSSSSSSSSSHH",
     "FFFFFFFFFFCCCCCKKK   VVVVVVVVVVVVVVVVVVVVjjjjjjjjSSSSSSSSSSSSHH",
     "FFFFFFFFFFCCCCCOOOOOOVVVVVVVVVVVVVVVVVVVVjjjjjjjjSSSSSSSSSSSSHH",
@@ -65,8 +65,8 @@
     "ZZZZZZZZZZZZZZZZZZZZZZZZZffffffffffffffffffffffffffffUUUUPPPPPP",
     "ZZZZZZZZZZZZZZZZZZZZZZZZZffffffffffffffffffffffffffffUUUUPPPPPP",
     "ZZZZZZZZZZZZZZZZZZZZZZZZZffffffffffffffffffffffffffffUUUUPPPPPP"
-	],
-	"key": {
+  ],
+  "key": {
     "A": {"x": 1, "y": 1},
     "B": {"x": 1, "y": 2},
     "C": {"x": 1, "y": 3},
