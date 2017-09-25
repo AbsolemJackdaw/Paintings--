@@ -17,14 +17,15 @@ import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.paintings.config.ConfigurationHandler;
+import subaraki.paintings.mod.PaintingsPattern;
 
 @SideOnly(Side.CLIENT)
 public class RenderPaintingLate extends Render implements IRenderFactory {
-    private ResourceLocation art = null;
+
+    private static ResourceLocation TEXTURE = new ResourceLocation("subaraki:art/" + ConfigurationHandler.instance.texture + ".png");
 
     public RenderPaintingLate(RenderManager renderManager) {
         super(renderManager);
-        art = new ResourceLocation("subaraki:art/" + ConfigurationHandler.instance.texture + ".png");
     }
 
     private void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks) {
@@ -78,8 +79,8 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
                 this.setLightmap(painting, (ltX1 + ltX0) / 2, (ltY1 + ltY0) / 2);
 
                 // Compute Texture
-                float txWidth = ConfigurationHandler.pattern.getSize().width * 16;
-                float txHeight = ConfigurationHandler.pattern.getSize().height * 16;
+                float txWidth = PaintingsPattern.instance.getSize().width * 16;
+                float txHeight = PaintingsPattern.instance.getSize().height * 16;
                 float txX0 = (float) (textureU + width - x * 16) / txWidth;
                 float txX1 = (float) (textureU + width - (x + 1) * 16) / txWidth;
                 float txY0 = (float) (textureV + height - y * 16) / txHeight;
@@ -155,7 +156,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 
     @Override
     protected ResourceLocation getEntityTexture(Entity par1EntityPainting) {
-        return art;
+        return TEXTURE;
     }
 
     @Override

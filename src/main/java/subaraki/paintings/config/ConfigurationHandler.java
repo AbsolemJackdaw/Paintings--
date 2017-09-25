@@ -7,7 +7,6 @@ import subaraki.paintings.mod.PaintingsPattern;
 
 public class ConfigurationHandler {
     public static ConfigurationHandler instance = new ConfigurationHandler();
-    public static PaintingsPattern pattern = null;
 
     public String texture = "gibea";
 

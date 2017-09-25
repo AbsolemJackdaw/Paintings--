@@ -20,6 +20,8 @@ public class PaintingsPattern {
         }
     }
 
+    public static PaintingsPattern instance = null;
+
     private static Integer enumCounter = 0;
 
     private String type = "subaraki:pattern";
