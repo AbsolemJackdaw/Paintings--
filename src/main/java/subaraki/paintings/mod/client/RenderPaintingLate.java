@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.util.EnumFacing;
@@ -20,171 +19,152 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.paintings.config.ConfigurationHandler;
 
 @SideOnly(Side.CLIENT)
-public class RenderPaintingLate extends Render implements IRenderFactory
-{
-	private ResourceLocation art = null;
+public class RenderPaintingLate extends Render implements IRenderFactory {
+    private ResourceLocation art = null;
 
-	public RenderPaintingLate(RenderManager renderManager) {
-		super(renderManager);
-		art = new ResourceLocation("subaraki:art/"+ConfigurationHandler.instance.texture+".png");		
-	}
+    public RenderPaintingLate(RenderManager renderManager) {
+        super(renderManager);
+        art = new ResourceLocation("subaraki:art/" + ConfigurationHandler.instance.texture + ".png");
+    }
 
-	public static float getSize()
-	{
-		switch (ConfigurationHandler.instance.texture) {
-		case "insane":
-		case "tinypics":
-		case "new_insane":
-		case "mediumpics":
-			return 512.0F;
-		case "massive":
-			return 1008.0F;
-		default:
-			return 256.0F;
-		}
-	}
+    private void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, z);
+        GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
+        GlStateManager.enableRescaleNormal();
+        this.bindEntityTexture(entity);
+        EntityPainting.EnumArt enumart = entity.art;
+        float f = 0.0625F;
+        GlStateManager.scale(0.0625F, 0.0625F, 0.0625F);
 
-	public void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks)
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(x, y, z);
-		GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
-		GlStateManager.enableRescaleNormal();
-		this.bindEntityTexture(entity);
-		EntityPainting.EnumArt enumart = entity.art;
-		float f = 0.0625F;
-		GlStateManager.scale(0.0625F, 0.0625F, 0.0625F);
+        if (this.renderOutlines) {
+            GlStateManager.enableColorMaterial();
+            GlStateManager.enableOutlineMode(this.getTeamColor(entity));
+        }
 
-		if (this.renderOutlines)
-		{
-			GlStateManager.enableColorMaterial();
-			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
-		}
+        this.renderPainting(entity, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY);
 
-		this.renderPainting(entity, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY);
+        if (this.renderOutlines) {
+            GlStateManager.disableOutlineMode();
+            GlStateManager.disableColorMaterial();
+        }
 
-		if (this.renderOutlines)
-		{
-			GlStateManager.disableOutlineMode();
-			GlStateManager.disableColorMaterial();
-		}
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.popMatrix();
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
 
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.popMatrix();
-		super.doRender(entity, x, y, z, entityYaw, partialTicks);
-	}
+    private void renderPainting(EntityPainting painting, int width, int height, int textureU, int textureV) {
+        float centerX = -width / 2.0F;
+        float centerY = -height / 2.0F;
 
-	private void renderPainting(EntityPainting painting, int width, int height, int textureU, int textureV)
-	{
-		float f = (float)(-width) / 2.0F;
-		float f1 = (float)(-height) / 2.0F;
-		float f2 = 0.5F;
-		float f3 = 0.75F;
-		float f4 = 0.8125F;
-		float f5 = 0.0F;
-		float f6 = 0.0625F;
-		float f7 = 0.75F;
-		float f8 = 0.8125F;
-		float f9 = 0.001953125F;
-		float f10 = 0.001953125F;
-		float f11 = 0.7519531F;
-		float f12 = 0.7519531F;
-		float f13 = 0.0F;
-		float f14 = 0.0625F;
+        float x0 = 3F / 4;     // 0.75
+        float x1 = 385F / 512; // 0.751953125
+        float x2 = 10F / 16;   // 0.8125
+        float y0 = 0F;
+        float y1 = 1F / 512;   // 0.001953125
+        float y2 = 1F / 16;    // 0.0625
+        float z = 0.5F;
 
-		for (int i = 0; i < width / 16; ++i)
-		{
-			for (int j = 0; j < height / 16; ++j)
-			{
-				float f15 = f + (float)((i + 1) * 16);
-				float f16 = f + (float)(i * 16);
-				float f17 = f1 + (float)((j + 1) * 16);
-				float f18 = f1 + (float)(j * 16);
-				this.setLightmap(painting, (f15 + f16) / 2.0F, (f17 + f18) / 2.0F);
-				float f19 = (float)(textureU + width - i * 16) / getSize();
-				float f20 = (float)(textureU + width - (i + 1) * 16) / getSize();
-				float f21 = (float)(textureV + height - j * 16) / getSize();
-				float f22 = (float)(textureV + height - (j + 1) * 16) / getSize();
-				Tessellator tessellator = Tessellator.getInstance();
-				BufferBuilder bufferbuilder = tessellator.getBuffer();
-				bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex((double)f20, (double)f21).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex((double)f19, (double)f21).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex((double)f19, (double)f22).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex((double)f20, (double)f22).normal(0.0F, 0.0F, -1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.75D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.8125D, 0.0D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.8125D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.75D, 0.0625D).normal(0.0F, 0.0F, 1.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, 1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex(0.8125D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex(0.75D, 0.001953125D).normal(0.0F, -1.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, 0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, 0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f18, -0.5D).tex(0.751953125D, 0.0625D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f15, (double)f17, -0.5D).tex(0.751953125D, 0.0D).normal(-1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, -0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, -0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f18, 0.5D).tex(0.751953125D, 0.0625D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				bufferbuilder.pos((double)f16, (double)f17, 0.5D).tex(0.751953125D, 0.0D).normal(1.0F, 0.0F, 0.0F).endVertex();
-				tessellator.draw();
-			}
-		}
-	}
+        // For each section in the painting:
+        for (int y = 0; y < height / 16; ++y) {
+            for (int x = 0; x < width / 16; ++x) {
 
-	private void setLightmap(EntityPainting painting, float p_77008_2_, float p_77008_3_)
-	{
-		int i = MathHelper.floor(painting.posX);
-		int j = MathHelper.floor(painting.posY + (double)(p_77008_3_ / 16.0F));
-		int k = MathHelper.floor(painting.posZ);
-		EnumFacing enumfacing = painting.facingDirection;
+                // Compute Lighting
+                float ltX0 = centerX + x * 16F;
+                float ltX1 = ltX0 + 16F;
+                float ltY0 = centerY + y * 16F;
+                float ltY1 = ltY0 + 16F;
+                this.setLightmap(painting, (ltX1 + ltX0) / 2, (ltY1 + ltY0) / 2);
 
-		if (enumfacing == EnumFacing.NORTH)
-		{
-			i = MathHelper.floor(painting.posX + (double)(p_77008_2_ / 16.0F));
-		}
+                // Compute Texture
+                float txWidth = ConfigurationHandler.pattern.getSize().width * 16;
+                float txHeight = ConfigurationHandler.pattern.getSize().height * 16;
+                float txX0 = (float) (textureU + width - x * 16) / txWidth;
+                float txX1 = (float) (textureU + width - (x + 1) * 16) / txWidth;
+                float txY0 = (float) (textureV + height - y * 16) / txHeight;
+                float txY1 = (float) (textureV + height - (y + 1) * 16) / txHeight;
 
-		if (enumfacing == EnumFacing.WEST)
-		{
-			k = MathHelper.floor(painting.posZ - (double)(p_77008_2_ / 16.0F));
-		}
+                // Create 3D model
+                Tessellator tessellator = Tessellator.getInstance();
+                BufferBuilder bufferbuilder = tessellator.getBuffer();
+                bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
+                // Front
+                bufferbuilder.pos(ltX1, ltY0, -z).tex(txX1, txY0).normal( 0, 0,-1).endVertex();
+                bufferbuilder.pos(ltX0, ltY0, -z).tex(txX0, txY0).normal( 0, 0,-1).endVertex();
+                bufferbuilder.pos(ltX0, ltY1, -z).tex(txX0, txY1).normal( 0, 0,-1).endVertex();
+                bufferbuilder.pos(ltX1, ltY1, -z).tex(txX1, txY1).normal( 0, 0,-1).endVertex();
+                // Back
+                bufferbuilder.pos(ltX1, ltY1,  z).tex(x0, y0).normal( 0, 0, 1).endVertex();
+                bufferbuilder.pos(ltX0, ltY1,  z).tex(x2, y0).normal( 0, 0, 1).endVertex();
+                bufferbuilder.pos(ltX0, ltY0,  z).tex(x2, y2).normal( 0, 0, 1).endVertex();
+                bufferbuilder.pos(ltX1, ltY0,  z).tex(x0, y2).normal( 0, 0, 1).endVertex();
+                // Top
+                bufferbuilder.pos(ltX1, ltY1, -z).tex(x0, y1).normal( 0, 1, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY1, -z).tex(x2, y1).normal( 0, 1, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY1,  z).tex(x2, y1).normal( 0, 1, 0).endVertex();
+                bufferbuilder.pos(ltX1, ltY1,  z).tex(x0, y1).normal( 0, 1, 0).endVertex();
+                // Bottom
+                bufferbuilder.pos(ltX1, ltY0,  z).tex(x0, y1).normal( 0,-1, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY0,  z).tex(x2, y1).normal( 0,-1, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY0, -z).tex(x2, y1).normal( 0,-1, 0).endVertex();
+                bufferbuilder.pos(ltX1, ltY0, -z).tex(x0, y1).normal( 0,-1, 0).endVertex();
+                // Left
+                bufferbuilder.pos(ltX1, ltY1,  z).tex(x1, y0).normal(-1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX1, ltY0,  z).tex(x1, y2).normal(-1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX1, ltY0, -z).tex(x1, y2).normal(-1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX1, ltY1, -z).tex(x1, y0).normal(-1, 0, 0).endVertex();
+                // Right
+                bufferbuilder.pos(ltX0, ltY1, -z).tex(x1, y0).normal( 1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY0, -z).tex(x1, y2).normal( 1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY0,  z).tex(x1, y2).normal( 1, 0, 0).endVertex();
+                bufferbuilder.pos(ltX0, ltY1,  z).tex(x1, y0).normal( 1, 0, 0).endVertex();
+                tessellator.draw();
+            }
+        }
+    }
 
-		if (enumfacing == EnumFacing.SOUTH)
-		{
-			i = MathHelper.floor(painting.posX - (double)(p_77008_2_ / 16.0F));
-		}
+    private void setLightmap(EntityPainting entity, float x, float y) {
+        int i = MathHelper.floor(entity.posX);
+        int j = MathHelper.floor(entity.posY + y / 16);
+        int k = MathHelper.floor(entity.posZ);
+        EnumFacing enumfacing = entity.facingDirection;
 
-		if (enumfacing == EnumFacing.EAST)
-		{
-			k = MathHelper.floor(painting.posZ + (double)(p_77008_2_ / 16.0F));
-		}
+        if (enumfacing == EnumFacing.NORTH) {
+            i = MathHelper.floor(entity.posX + x / 16);
+        }
 
-		int l = this.renderManager.world.getCombinedLight(new BlockPos(i, j, k), 0);
-		int i1 = l % 65536;
-		int j1 = l / 65536;
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)i1, (float)j1);
-		GlStateManager.color(1.0F, 1.0F, 1.0F);
-	}
+        if (enumfacing == EnumFacing.WEST) {
+            k = MathHelper.floor(entity.posZ - x / 16);
+        }
 
-	@Override
-	protected ResourceLocation getEntityTexture(Entity par1EntityPainting)
-	{
-		return art;
-	}
+        if (enumfacing == EnumFacing.SOUTH) {
+            i = MathHelper.floor(entity.posX - x / 16);
+        }
 
-	@Override
-	public Render createRenderFor(RenderManager manager) {
-		return this;
-	}
+        if (enumfacing == EnumFacing.EAST) {
+            k = MathHelper.floor(entity.posZ + x / 16);
+        }
 
-	@Override
-	public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
-	{
-		doRender((EntityPainting)par1Entity, par2, par4, par6, par8, par9);
-	}
+        int l = this.renderManager.world.getCombinedLight(new BlockPos(i, j, k), 0);
+        int i1 = l % 65536;
+        int j1 = l / 65536;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) i1, (float) j1);
+        GlStateManager.color(1.0F, 1.0F, 1.0F);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity par1EntityPainting) {
+        return art;
+    }
+
+    @Override
+    public Render createRenderFor(RenderManager manager) {
+        return this;
+    }
+
+    @Override
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
+        this.doRender((EntityPainting) par1Entity, par2, par4, par6, par8, par9);
+    }
 }
