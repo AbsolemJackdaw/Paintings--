@@ -1,9 +1,9 @@
-package subaraki.paintings.sets;
+package subaraki.paintings.mod;
 
 import net.minecraft.entity.item.EntityPainting.EnumArt;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class PaintingIgnore {
+public class PaintingsIgnore {
 
 	public static void ignoreVanillaPaintings(){
 		//set all vanilla paintings to nothing
