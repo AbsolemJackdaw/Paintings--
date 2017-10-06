@@ -37,7 +37,11 @@ Paintings++ uses resource files to store the image file used to texture painting
 
 While the specific symbols used in each pattern don't matter, a specific convention was used in creating the original JSON files
 
-<!-- | Symbol | Size  | Symbol | Size  | Symbol | Size  |
+# Reference Tables
+
+## Symbols in Default Templates
+
+| Symbol | Size  | Symbol | Size  | Symbol | Size  |
 | :----: | :---: | :----: | :---: | :----: | :---: |
 | A      | 1x1   | O      | 3x6   | c      | 6x3   |
 | B      | 1x2   | P      | 3x7   | d      | 6x4   |
@@ -54,7 +58,7 @@ While the specific symbols used in each pattern don't matter, a specific convent
 | M      | 3x4   | a      | 5x8   | o      | 10x1  |
 | N      | 3x5   | b      | 5x10  | p      | 10x5  |
 
-### Lookup Table
+## Sizes in Default Templates
 
 This lookup table is the reverse of the original symbol table, and can be used to to find the symbol for a certain painting size used in the original JSON files. If you wish to edit those files, or continue using the original convention, you might find this useful.
 
@@ -70,9 +74,9 @@ This lookup table is the reverse of the original symbol table, and can be used t
 | 8     |       |       |       | W     | a     |       |       | l     |       |       |
 | 9     |       |       |       |       |       | e     |       |       |       |       |
 | 10    | E     |       |       |       | b     |       |       |       |       |       |
-| 12    |       |       |       |       |       |       |       | m     |       |       | -->
+| 12    |       |       |       |       |       |       |       | m     |       |       |
 
-# Texture Templates
+## Texture Templates
 These templates give you paintings at a resolution of 16&times;16 pixels per block, which is the resolution of the vanilla textures. Several of the templates come with pictures already added to get you started, but those pictures can be replaced.
 
 To make higher resolution paintings, you'll need to resize the template you're working with.
