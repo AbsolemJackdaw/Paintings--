@@ -1,6 +1,7 @@
 package subaraki.paintings.mod.client;
 
-import net.minecraft.client.renderer.BufferBuilder;
+// import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -88,7 +89,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 
                 // Create 3D model
                 Tessellator tessellator = Tessellator.getInstance();
-                BufferBuilder bufferbuilder = tessellator.getBuffer();
+                VertexBuffer bufferbuilder = tessellator.getBuffer();
                 bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
                 // Front
                 bufferbuilder.pos(ltX1, ltY0, -z).tex(txX1, txY0).normal( 0, 0,-1).endVertex();
