@@ -3,7 +3,6 @@ package subaraki.paintings.config;
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
-import subaraki.paintings.mod.PaintingsPattern;
 
 public class ConfigurationHandler {
     public static ConfigurationHandler instance = new ConfigurationHandler();
@@ -19,11 +18,11 @@ public class ConfigurationHandler {
     }
 
     private void loadSettings(Configuration config) {
-        config.addCustomCategoryComment("Painting Mode", "The layout pattern of your art texture. Built-in patterns include gibea, sphax, insane, tinypics, mediumpics, new_insane, and massive. Use of a custom pattern is possible by including a JSON file in your ");
+        config.addCustomCategoryComment("Painting Mode", "The layout pattern of your art texture. Already available are : \n extended, gibea, insane, new_insane, massive, mediumpics, sphax, tinypics. \nYou can also include your own json and texture and use that name to load your own custom pattern");
 
         this.texture = config.getString("name", "Painting Mode", "gibea", "Texture").toLowerCase();
         
-        config.addCustomCategoryComment("Painting Background", "define what texture is used as the painting background. default is oak planks. use texture localization to define texture.");
+        config.addCustomCategoryComment("Painting Background", "Define what texture is used as the painting background. \n default is oak planks.");
         
         this.background_texture = config.getString("background texture", "Painting Background", "minecraft:blocks/planks_oak", "").toLowerCase();
     }

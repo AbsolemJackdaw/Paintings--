@@ -11,34 +11,34 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.event.terraingen.OreGenEvent.GenerateMinable;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import subaraki.paintings.config.ConfigurationHandler;
-import subaraki.paintings.mod.PaintingsPattern;
+import subaraki.paintings.entity.EntityPaintingNew;
+import subaraki.paintings.fake_enum.Painting;
+import subaraki.paintings.handler.PaintingPattern;
 
 @SideOnly(Side.CLIENT)
-public class RenderPaintingLate extends Render implements IRenderFactory {
+public class RenderPaintingNew extends Render implements IRenderFactory {
 
 	private static ResourceLocation TEXTURE = new ResourceLocation("subaraki:art/" + ConfigurationHandler.instance.texture + ".png");
 	private TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(ConfigurationHandler.instance.background_texture);
 
-	public RenderPaintingLate(RenderManager renderManager) {
+	public RenderPaintingNew(RenderManager renderManager) {
 		super(renderManager);
 	}
 
-	private void doRender(EntityPainting entity, double x, double y, double z, float entityYaw, float partialTicks) {
+	private void doRender(EntityPaintingNew entity, double x, double y, double z, float entityYaw, float partialTicks) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, z);
 		GlStateManager.rotate(180.0F - entityYaw, 0.0F, 1.0F, 0.0F);
 		GlStateManager.enableRescaleNormal();
-		EntityPainting.EnumArt enumart = entity.art;
+		Painting art = entity.getPainting();
 		float f = 0.0625F;
 		GlStateManager.scale(0.0625F, 0.0625F, 0.0625F);
 
@@ -47,7 +47,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
 		}
 
-		this.renderPainting(entity, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY,false);
+		this.renderPainting(entity, art.getX(), art.getY(), art.getU(), art.getV(),false);
 
 		if (this.renderOutlines) {
 			GlStateManager.disableOutlineMode();
@@ -68,7 +68,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 			GlStateManager.enableOutlineMode(this.getTeamColor(entity));
 		}
 
-		this.renderPainting(entity, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY,true);
+		this.renderPainting(entity, art.getX(), art.getY(), art.getU(), art.getV(),true);
 
 		if (this.renderOutlines) {
 			GlStateManager.disableOutlineMode();
@@ -81,12 +81,12 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 		super.doRender(entity, x, y, z, entityYaw, partialTicks);
 	}
 
-	private void renderPainting(EntityPainting painting, int width, int height, int textureU, int textureV, boolean isBack) {
+	private void renderPainting(EntityPaintingNew painting, int width, int height, int textureU, int textureV, boolean isBack) {
 		float centerX = -width / 2.0F;
 		float centerY = -height / 2.0F;
 
-		float txWidth = PaintingsPattern.instance.getSize().width * 16;
-		float txHeight = PaintingsPattern.instance.getSize().height * 16;
+		float txWidth = PaintingPattern.instance.getSize().width * 16;
+		float txHeight = PaintingPattern.instance.getSize().height * 16;
 
 		//an offset to use in painting borders to offset by one relative pixel
 		float offsetX = 1f / txWidth;
@@ -107,7 +107,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 				float frontTex_x_left = (float) (textureU + width - x * 16) / txWidth;
 				float frontTex_x_right = (float) (textureU + width - (x + 1) * 16) / txWidth;
 				float frontTex_y_up = (float) (textureV + height - y * 16) / txHeight;
-				float frontTex_y_down = (float) (textureV + height - (y + 1) * 16) / txHeight;
+				float frontTex_y_down = (float) (textureV + height - (y + 1 )* 16) / txHeight;
 
 				float z = 0.5f;
 
@@ -164,7 +164,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 		}
 	}
 
-	private void setLightmap(EntityPainting entity, float x, float y) {
+	private void setLightmap(EntityPaintingNew entity, float x, float y) {
 		int i = MathHelper.floor(entity.posX);
 		int j = MathHelper.floor(entity.posY + y / 16);
 		int k = MathHelper.floor(entity.posZ);
@@ -205,6 +205,6 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 
 	@Override
 	public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
-		this.doRender((EntityPainting) par1Entity, par2, par4, par6, par8, par9);
+		this.doRender((EntityPaintingNew) par1Entity, par2, par4, par6, par8, par9);
 	}
 }
