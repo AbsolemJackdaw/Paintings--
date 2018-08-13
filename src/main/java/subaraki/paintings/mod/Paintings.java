@@ -6,34 +6,29 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import subaraki.paintings.config.ConfigurationHandler;
-import subaraki.paintings.handler.EntityHandler;
-import subaraki.paintings.handler.PatternLoader;
-import subaraki.paintings.mod.proxy.CommonProxy;
+import subaraki.paintings.mod.entity.EntityHandler;
+import subaraki.paintings.mod.network.NetworkHandler;
+import subaraki.paintings.mod.network.PatternLoader;
+import subaraki.paintings.mod.server.proxy.CommonProxy;
 
 
-@Mod(modid = MorePaintings.MODID, name = MorePaintings.NAME, version = MorePaintings.VERSION, dependencies = "after:PaintingSelGui")
-public class MorePaintings {
+@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:PaintingSelGui")
+public class Paintings {
 
     public static final String MODID = "morepaintings";
     public static final String VERSION = "$version";
     public static final String NAME = "Paintings++";
 
-    @SidedProxy(serverSide = "subaraki.paintings.mod.proxy.CommonProxy", clientSide = "subaraki.paintings.mod.proxy.ClientProxy")
+    @SidedProxy(serverSide = "subaraki.paintings.mod.server.proxy.CommonProxy", clientSide = "subaraki.paintings.mod.client.proxy.ClientProxy")
     public static CommonProxy proxy;
     public static Logger log;
 
-    @Instance(MODID)
-    public static MorePaintings INSTANCE;
-    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-    	INSTANCE = this;
-    	
         log = event.getModLog();
 
         ModMetadata modMeta = event.getModMetadata();
@@ -42,14 +37,15 @@ public class MorePaintings {
         modMeta.credits = "Subaraki";
         modMeta.description = "More Paintings! Check the config file for options.";
         modMeta.url = "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1287285-/";
-        
+
         ConfigurationHandler.instance.loadConfig(event.getSuggestedConfigurationFile());
 
-        new PatternLoader();
-        
         new EntityHandler();
         
-        proxy.registerRenderInformation();
+        new PatternLoader();
         
+        proxy.registerRenderInformation();
+     
+        new NetworkHandler();
     }
 }

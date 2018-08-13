@@ -1,12 +1,10 @@
-package subaraki.paintings.handler;
+package subaraki.paintings.mod;
 
 import java.util.HashMap;
 
-import net.minecraftforge.common.util.EnumHelper;
-import subaraki.paintings.fake_enum.Painting;
-import subaraki.paintings.mod.MorePaintings;
+import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
-public class PaintingPattern {
+public class PaintingsPattern {
 
     public class Size {
         public Integer width;
@@ -22,7 +20,7 @@ public class PaintingPattern {
         }
     }
 
-    public static PaintingPattern instance = null;
+    public static PaintingsPattern instance = null;
 
     private static Integer enumCounter = 0;
 
@@ -52,19 +50,19 @@ public class PaintingPattern {
                 } else {
                     StringBuilder error = new StringBuilder();
                     error.append(String.format("Error processing pattern at offset: %d, %d\n", offsetX, offsetY));
-                    MorePaintings.log.error(error);
+                    Paintings.log.error(error);
                 }
             }
         }
 
-        MorePaintings.log.info(String.format("%d paintings found in %s/%s.", count, this.type, this.name));
+        Paintings.log.info(String.format("%d paintings found in %s/%s.", count, this.type, this.name));
     }
 
     public Size getSize() {
-    	int x =  this.pattern[0].length();
-    	int y = this.pattern.length;
-
-    	return new Size(x,y);
+        return new Size(
+                this.pattern[0].length(),
+                this.pattern.length
+        );
     }
 
     /**
@@ -77,25 +75,42 @@ public class PaintingPattern {
      */
     private void addPatternSection(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
 
-    	int count = PaintingPattern.enumCounter++;
+    	int count = PaintingsPattern.enumCounter++;
     	
-    	new Painting(sizeX*16, sizeY*16, offsetX*16, offsetY*16, String.format("EnumArt_%d", count)).enlist();
+    	new PaintingWrapper(String.format("ptg%3d%3d", offsetX, offsetY),
+    			sizeX * 16,
+                sizeY * 16,
+                offsetX * 16,
+                offsetY * 16
+        ).append();
+    	
+    	//used to be this. keeping it for legacy reasons
+//        EnumHelper.addArt(
+//                String.format("EnumArt_%d", count),
+//                String.format("ptg%3d%3d", offsetX, offsetY),
+//                sizeX * 16,
+//                sizeY * 16,
+//                offsetX * 16,
+//                offsetY * 16
+//        );
         
-        MorePaintings.log.debug(String.format("Added %d x %d painting at %d, %d.", sizeX, sizeY, offsetX, offsetY));
+        Paintings.log.debug(String.format("Added %d x %d painting at %d, %d.", sizeX, sizeY, offsetX, offsetY));
+        
     }
 
     /**
-     * Remove (replace with ' ') a region of the pattern; used to remove a read-in painting
-     * Removes any painting entry from the file that is considered out of bounds by the file's entries
-     * 
+     * Remove (replace with ' ') a region of the pattern, used to remove a read-in painting
+     *
      * @param sizeX   Width in blocks
      * @param sizeY   Height in blocks
      * @param offsetX Left offset in blocks
      * @param offsetY Top offset in blocks
      */
     private void updatePattern(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
-        if (this.pattern[offsetY].length() < offsetX + sizeX) {
-        	MorePaintings.log.warn("Tried adding a painting that extends beyond pattern dimensions. Removing the Entry !");
+    	System.out.println(sizeX + " " + sizeY + " " + offsetX + " " + offsetY);
+    	if (this.pattern[offsetY].length() < offsetX + sizeX) {
+            Paintings.log.warn("Added painting extends beyond pattern dimensions.");
+            return;
         }
 
         for (int row = offsetY; row < offsetY + sizeY; row++) {
