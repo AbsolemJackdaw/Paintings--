@@ -1,14 +1,14 @@
 [
 {
-  "modid": "morepaintings",
-  "name": "Paintings++",
-  "description": "Pick your template and choose from up to over 30 paintings to place down and decorate yoru walls !",
+  "modid": "paintingselgui",
+  "name": "PaintingSelectionGui",
+  "description": "Select your paintings via a GUI",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://minecraft.curseforge.com/projects/paintings",
-  "updateUrl": "https://minecraft.curseforge.com/projects/paintings/files",
-  "authorList": ["Subaraki"],
-  "credits": "The original authors fo the Insane , XTreme and TinyPics Edition, as well as Kisutora for his contribution of the Massive and Extended template",
+  "url": "https://minecraft.curseforge.com/projects/painting-selection-gui-revamped",
+  "updateUrl": "https://minecraft.curseforge.com/projects/painting-selection-gui-revamped/files",
+  "authorList": ["Davidee, Subaraki"],
+  "credits": "Thanks to Mojang, Forge, and all your support.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

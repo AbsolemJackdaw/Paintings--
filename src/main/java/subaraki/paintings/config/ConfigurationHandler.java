@@ -18,11 +18,15 @@ public class ConfigurationHandler {
     }
 
     private void loadSettings(Configuration config) {
-        config.addCustomCategoryComment("Painting Mode", "The layout pattern of your art texture. Already available are : \n extended, gibea, insane, new_insane, massive, mediumpics, sphax, tinypics. \nYou can also include your own json and texture and use that name to load your own custom pattern");
+        config.addCustomCategoryComment("Painting Mode", "The layout pattern of your art texture. "
+        		+ "\n Built-in patterns include vanilla, gibea, sphax, insane, tinypics, mediumpics, new_insane, and massive. "
+        		+ "\n"
+        		+ "\n Use of a custom pattern is possible by including a JSON file in the mod file under : "
+        		+ "\n src/main/resources/assets/subaraki/patterns. Make sure to include a texture of the same name");
 
-        this.texture = config.getString("name", "Painting Mode", "gibea", "Texture").toLowerCase();
+        this.texture = config.getString("name", "Painting Mode", "vanilla", "Texture").toLowerCase();
         
-        config.addCustomCategoryComment("Painting Background", "Define what texture is used as the painting background. \n default is oak planks.");
+        config.addCustomCategoryComment("Painting Background", "define what texture is used as the painting background. default is oak planks. use texture localization to define texture.");
         
         this.background_texture = config.getString("background texture", "Painting Background", "minecraft:blocks/planks_oak", "").toLowerCase();
     }
