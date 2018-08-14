@@ -11,6 +11,5 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderInformation()
 	{
 		RenderingRegistry.registerEntityRenderingHandler(EntityNewPainting.class, RenderPaintingLate::new);
-
 	}
 }

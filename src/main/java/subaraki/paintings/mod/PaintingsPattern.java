@@ -107,7 +107,6 @@ public class PaintingsPattern {
      * @param offsetY Top offset in blocks
      */
     private void updatePattern(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
-    	System.out.println(sizeX + " " + sizeY + " " + offsetX + " " + offsetY);
     	if (this.pattern[offsetY].length() < offsetX + sizeX) {
             Paintings.log.warn("Added painting extends beyond pattern dimensions.");
             return;

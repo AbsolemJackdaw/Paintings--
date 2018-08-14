@@ -87,7 +87,6 @@ public class CPacketSyncPaintingData implements IMessage{
 				enp.art = message.title;
 				enp.setPosition(message.position.getX(), message.position.getY(), message.position.getZ());
 				enp.rotationYaw = message.facing.getHorizontalAngle();
-				//enp.updateBB();
 			}
 			
 		}

@@ -5,17 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.crash.CrashReport;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import subaraki.paintings.config.ConfigurationHandler;
@@ -33,41 +28,20 @@ public class PatternLoader {
 
 	public void loadPatterns() {
 
-		//old code
-		//InputStream in = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
-		//BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		//JsonElement je = gson.fromJson(reader, JsonElement.class);
-
 		// Open a reader to the pattern
 		ResourceLocation loc = new ResourceLocation("subaraki:patterns/" + ConfigurationHandler.instance.texture+".json");
 
-		String base = String.format("assets/%s/%s", "subaraki", "patterns/"+ ConfigurationHandler.instance.texture+".json");
-		URL resURL = getClass().getClassLoader().getResource(base);
-
-		if(resURL == null) {
-			Paintings.log.warn("Unable to access file %s: got 'null' when trying to resolve it", base);
-			return;
-		}
-
-		URI uri;
-
-		try {
-			uri = resURL.toURI();
-		} catch (URISyntaxException ex) {
-			CrashReport report = CrashReport.makeCrashReport(ex, String.format("Failed to get URI for %s", base));
-			return;
-		}
-
 		InputStream in = null;
 		try {
-			in = Files.newInputStream(Paths.get(uri));
+			in = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
 		} catch (IOException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		if(in == null)
 		{
-			Paintings.log.warn("Coult not read painting data. paintings will be unusable");
+			Paintings.log.warn("Could not read painting data. paintings will be unusable");
 			return;
 		}
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
