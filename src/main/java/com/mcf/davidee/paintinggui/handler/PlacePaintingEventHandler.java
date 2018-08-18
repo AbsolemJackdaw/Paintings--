@@ -9,6 +9,7 @@ import com.mcf.davidee.paintinggui.packet.CPacketPainting;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -21,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
@@ -36,14 +38,14 @@ public class PlacePaintingEventHandler {
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event){
 
-		ItemStack stack = event.getItemStack();
-		if(stack.getItem() == Items.PAINTING){
+		ItemStack itemStack = event.getItemStack();
+		
+		if(itemStack.getItem() == Items.PAINTING){
 
 			EntityPlayer player = event.getEntityPlayer();
 			EnumFacing face = event.getFace();
 			BlockPos blockpos = event.getPos();
 			BlockPos actualPos = blockpos.offset(face);
-
 			World world = event.getWorld();
 
 			boolean flag = false;
@@ -52,7 +54,7 @@ public class PlacePaintingEventHandler {
 				if(face.equals(facing))
 					flag = true;
 
-			if (flag && player.canPlayerEdit(actualPos, face, stack)){
+			if (flag && player.canPlayerEdit(actualPos, face, itemStack)){
 
 
 				EntityNewPainting painting = new EntityNewPainting(world);
@@ -60,12 +62,12 @@ public class PlacePaintingEventHandler {
 				painting.rotationYaw = face.getHorizontalAngle();
 				painting.setPosition(actualPos.getX(), blockpos.getY(), actualPos.getZ());
 				painting.updateBB();
-				
+
 				if(painting.onValidSurface()){
 					event.getEntityPlayer().swingArm(EnumHand.MAIN_HAND); //recreate the animation of placing down an item
 
 					if(!event.getEntityPlayer().isCreative())
-						stack.shrink(1);
+						itemStack.shrink(1);
 
 					if (!event.getWorld().isRemote){
 

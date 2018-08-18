@@ -10,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import subaraki.paintings.config.ConfigurationHandler;
@@ -31,19 +30,14 @@ public class PatternLoader {
 		// Open a reader to the pattern
 		ResourceLocation loc = new ResourceLocation("subaraki:patterns/" + ConfigurationHandler.instance.texture+".json");
 
-		InputStream in = null;
-		try {
-			in = Minecraft.getMinecraft().getResourceManager().getResource(loc).getInputStream();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		InputStream in = PatternLoader.class.getResourceAsStream("/assets/"+loc.getResourceDomain()+"/"+loc.getResourcePath());
 
 		if(in == null)
 		{
 			Paintings.log.warn("Could not read painting data. paintings will be unusable");
 			return;
 		}
+		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
 		// Read the JSON into a loader object

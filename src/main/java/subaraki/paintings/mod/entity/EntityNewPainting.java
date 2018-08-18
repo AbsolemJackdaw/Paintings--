@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
@@ -28,6 +29,11 @@ public class EntityNewPainting extends EntityHanging implements IEntityAdditiona
 		super(worldIn);
 	}
 
+	@Override
+	public ItemStack getPickedResult(RayTraceResult target) {
+		return new ItemStack(Items.PAINTING, 1);
+	}
+	
 	public void updateBB() {
 		this.updateFacingWithBoundingBox(facingDirection);
 	}
