@@ -16,7 +16,7 @@ import subaraki.paintings.mod.network.PatternLoader;
 import subaraki.paintings.mod.server.proxy.CommonProxy;
 
 
-@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:PaintingSelGui")
+@Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:paintingselgui")
 public class Paintings {
 
     public static final String MODID = "morepaintings";
