@@ -22,14 +22,12 @@ public class PaintingsPattern {
 
     public static PaintingsPattern instance = null;
 
-    private static Integer enumCounter = 0;
-
     private String type = "subaraki:pattern";
     private String name = null;
     private String[] pattern = null;
     private HashMap<String, Size> key = null;
 
-    public void loadPatterns() {
+    public void parsePattern() {
         Integer width = this.pattern[0].length();
         Integer height = this.pattern.length;
         Integer count = 0;
@@ -44,7 +42,7 @@ public class PaintingsPattern {
 
                 Size size = this.key.get(symbol);
                 if (size != null) {
-                    this.addPatternSection(size.width, size.height, offsetX, offsetY);
+                    this.addPainting(size.width, size.height, offsetX, offsetY);
                     this.updatePattern(size.width, size.height, offsetX, offsetY);
                     count++;
                 } else {
@@ -73,33 +71,20 @@ public class PaintingsPattern {
      * @param offsetX Left offset in blocks
      * @param offsetY Top offset in blocks
      */
-    private void addPatternSection(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
+    private void addPainting(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
 
-    	int count = PaintingsPattern.enumCounter++;
-    	
     	new PaintingWrapper(String.format("ptg%3d%3d", offsetX, offsetY),
     			sizeX * 16,
                 sizeY * 16,
                 offsetX * 16,
                 offsetY * 16
         ).append();
-    	
-    	//used to be this. keeping it for legacy reasons
-//        EnumHelper.addArt(
-//                String.format("EnumArt_%d", count),
-//                String.format("ptg%3d%3d", offsetX, offsetY),
-//                sizeX * 16,
-//                sizeY * 16,
-//                offsetX * 16,
-//                offsetY * 16
-//        );
-        
+
         Paintings.log.debug(String.format("Added %d x %d painting at %d, %d.", sizeX, sizeY, offsetX, offsetY));
-        
     }
 
     /**
-     * Remove (replace with ' ') a region of the pattern, used to remove a read-in painting
+     * Remove a region of the pattern, used to remove a painting that has already been parsed
      *
      * @param sizeX   Width in blocks
      * @param sizeY   Height in blocks

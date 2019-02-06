@@ -99,7 +99,7 @@ public class PaintingSelectionScreen extends BasicScreen implements ButtonHandle
 
 		//We're 10 pixels away from each edge
 		int correction = (width - 20 - (right - left)) / 2;
-		for (int i = start; i <= end; ++i) 
+		for (int i = start; i <= end; ++i)
 			buttons[i].shiftX(correction);
 	}
 
