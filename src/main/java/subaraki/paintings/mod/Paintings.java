@@ -60,12 +60,7 @@ public class Paintings {
         if (!ConfigurationHandler.instance.texture.equals("vanilla")) {
             try {
                 PaintingsPattern.instance.parsePattern();
-
-                // Since PaintingsGui is a permanent part of Paintings++, we don't need those helper methods
-                PaintingButton.TEXTURE = new ResourceLocation(Paintings.RESOURCE_DOMAIN,"art/" + ConfigurationHandler.instance.texture + ".png");
-                PaintingButton.KZ_WIDTH = PaintingsPattern.instance.getSize().width * 16;
-                PaintingButton.KZ_HEIGHT = PaintingsPattern.instance.getSize().height * 16;
-
+                proxy.configurePaintingsGuiButtonTexture();
             } catch (Exception e) {
                 Paintings.log.warn(e.getLocalizedMessage());
             }

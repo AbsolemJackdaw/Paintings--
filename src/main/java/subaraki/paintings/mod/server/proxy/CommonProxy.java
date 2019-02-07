@@ -15,8 +15,7 @@ import net.minecraftforge.fml.common.Loader;
 import subaraki.paintings.mod.Paintings;
 
 public class CommonProxy {
-    public void registerRenderInformation() {
-    }
+    public void registerRenderInformation() {}
 
     public JsonObject getPatternJson(String patternName) {
 
@@ -62,4 +61,6 @@ public class CommonProxy {
 
         return null;
     }
+
+    public void configurePaintingsGuiButtonTexture() {}
 }
