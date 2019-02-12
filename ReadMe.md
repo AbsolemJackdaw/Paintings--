@@ -86,11 +86,11 @@ The Gibea texture is the original picture set included as part of this mod. It c
 
 | Pattern    | Template                                                                                                                                  |
 | :--------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
-| Gibea      | ![gibea.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/gibea.png?raw=true)           |
-| Sphax      | ![sphax.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/sphax.png?raw=true)           |
-| Tiny       | ![tinypics.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/tinypics.png?raw=true)     |
-| Medium     | ![mediumpics.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/mediumpics.png?raw=true) |
-| New Insane | ![new_insane.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/new_insane.png?raw=true) |
-| Insane     | ![insane.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/insane.png?raw=true)         |
+| Gibea      | ![gibea.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/gibea.png?raw=true)           |
+| Sphax      | ![sphax.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/sphax.png?raw=true)           |
+| Tiny       | ![tinypics.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/tinypics.png?raw=true)     |
+| Medium     | ![mediumpics.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/mediumpics.png?raw=true) |
+| New Insane | ![new_insane.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/new_insane.png?raw=true) |
+| Insane     | ![insane.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/insane.png?raw=true)         |
 | Extended    | ![extended.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/extended.png?raw=true)     |
-| Massive    | ![massive.png](https://github.com/MurphysChaos/Paintings--/blob/master/src/main/resources/assets/subaraki/art/massive.png?raw=true)       |
+| Massive    | ![massive.png](https://github.com/ArtixAllMighty/Paintings--/blob/master/src/main/resources/assets/subaraki/art/massive.png?raw=true)       |
