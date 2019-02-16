@@ -3,6 +3,7 @@ package subaraki.paintings.mod;
 import java.util.HashMap;
 
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
+import net.minecraft.util.ResourceLocation;
 
 public class PaintingsPattern {
 
@@ -21,6 +22,7 @@ public class PaintingsPattern {
     }
 
     public static PaintingsPattern instance = null;
+    public ResourceLocation texture = null;
 
     private String type = "subaraki:pattern";
     private String name = null;

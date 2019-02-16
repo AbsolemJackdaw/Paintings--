@@ -1,12 +1,8 @@
 package subaraki.paintings.mod.network;
 
-import java.util.UUID;
-
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -14,6 +10,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import subaraki.paintings.mod.entity.EntityNewPainting;
+
+import java.util.UUID;
 
 public class CPacketSyncPaintingData implements IMessage{
 
@@ -23,9 +21,6 @@ public class CPacketSyncPaintingData implements IMessage{
 	private String title;
 	private UUID uniqueID;
 
-
-	public CPacketSyncPaintingData() {
-	}
 
 	public CPacketSyncPaintingData(EntityNewPainting painting) {
 		this.entityID = painting.getEntityId();

@@ -1,15 +1,10 @@
 package com.mcf.davidee.paintinggui.handler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.packet.CPacketPainting;
 import com.mcf.davidee.paintinggui.packet.NetworkHandler;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -22,12 +17,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+
 import subaraki.paintings.mod.entity.EntityNewPainting;
 import subaraki.paintings.mod.network.CPacketSyncPaintingData;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PlacePaintingEventHandler {
 

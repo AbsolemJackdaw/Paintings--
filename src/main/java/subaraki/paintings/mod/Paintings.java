@@ -1,22 +1,18 @@
 package subaraki.paintings.mod;
 
-import java.util.Arrays;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mcf.davidee.paintinggui.gui.PaintingButton;
-import net.minecraft.util.ResourceLocation;
-import org.apache.logging.log4j.Logger;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.apache.logging.log4j.Logger;
 import subaraki.paintings.config.ConfigurationHandler;
 import subaraki.paintings.mod.entity.EntityHandler;
 import subaraki.paintings.mod.network.NetworkHandler;
-import subaraki.paintings.mod.server.proxy.CommonProxy;
+
+import java.util.Arrays;
 
 
 @Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:paintingselgui")
@@ -28,8 +24,8 @@ public class Paintings {
     public static final String NAME = "Paintings++";
     public static final String[] AUTHORS = {"Subaraki", "MurphysChaos"};
 
-    @SidedProxy(serverSide = "subaraki.paintings.mod.server.proxy.CommonProxy", clientSide = "subaraki.paintings.mod.client.proxy.ClientProxy")
-    public static CommonProxy proxy;
+    @SidedProxy(serverSide = "subaraki.paintings.mod.server.proxy.ServerProxy", clientSide = "subaraki.paintings.mod.client.proxy.ClientProxy")
+    public static IPaintingsProxy proxy;
     public static Logger log;
 
     @EventHandler
@@ -54,16 +50,14 @@ public class Paintings {
     }
 
     public static void loadPattern() {
-        JsonObject patternObject = proxy.getPatternJson(ConfigurationHandler.instance.texture);
+        JsonObject patternObject = proxy.getPatternFile(ConfigurationHandler.instance.texture);
         PaintingsPattern.instance = new Gson().fromJson(patternObject, PaintingsPattern.class);
 
-        if (!ConfigurationHandler.instance.texture.equals("vanilla")) {
-            try {
-                PaintingsPattern.instance.parsePattern();
-                proxy.configurePaintingsGuiButtonTexture();
-            } catch (Exception e) {
-                Paintings.log.warn(e.getLocalizedMessage());
-            }
+        try {
+            PaintingsPattern.instance.parsePattern();
+            proxy.configurePaintingsGuiButtonTexture();
+        } catch (Exception e) {
+            Paintings.log.warn(e.getLocalizedMessage());
         }
     }
 }

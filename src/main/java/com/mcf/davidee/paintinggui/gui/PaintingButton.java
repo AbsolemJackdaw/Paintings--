@@ -11,11 +11,10 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.util.ResourceLocation;
+import subaraki.paintings.mod.PaintingsPattern;
 
 public class PaintingButton extends Button implements Shiftable {
 
-	public static ResourceLocation TEXTURE = new ResourceLocation("textures/painting/paintings_kristoffer_zetterstrand.png");
 	public static int KZ_WIDTH = 256, KZ_HEIGHT = 256;
 
 	private static final int BORDER = 3;
@@ -32,7 +31,7 @@ public class PaintingButton extends Button implements Shiftable {
 
 	@Override
 	public void draw(int mx, int my) {
-		mc.renderEngine.bindTexture(TEXTURE);
+		mc.renderEngine.bindTexture(PaintingsPattern.instance.texture);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(x, y, art.getU(), art.getV(), width, height);
 

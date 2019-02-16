@@ -20,17 +20,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
 import subaraki.paintings.config.ConfigurationHandler;
-import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.mod.PaintingsPattern;
 import subaraki.paintings.mod.entity.EntityNewPainting;
 
 @SideOnly(Side.CLIENT)
 public class RenderPaintingLate extends Render implements IRenderFactory {
 
-	private static ResourceLocation TEXTURE = new ResourceLocation(Paintings.RESOURCE_DOMAIN, "art/" + ConfigurationHandler.instance.texture + ".png");
-	private static ResourceLocation PAINTINGS = new ResourceLocation("textures/painting/paintings_kristoffer_zetterstrand.png");
-	
 	private TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(ConfigurationHandler.instance.background_texture);
 
 	public RenderPaintingLate(RenderManager renderManager) {
@@ -202,7 +199,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity par1EntityPainting) {
-		return ConfigurationHandler.instance.texture.equals("vanilla") ? PAINTINGS : TEXTURE;
+		return PaintingsPattern.instance.texture;
 	}
 
 	@Override
