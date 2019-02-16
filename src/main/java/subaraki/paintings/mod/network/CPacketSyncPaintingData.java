@@ -22,6 +22,9 @@ public class CPacketSyncPaintingData implements IMessage{
 	private UUID uniqueID;
 
 
+	public CPacketSyncPaintingData() {
+	}
+
 	public CPacketSyncPaintingData(EntityNewPainting painting) {
 		this.entityID = painting.getEntityId();
 		this.position = painting.getHangingPosition();
