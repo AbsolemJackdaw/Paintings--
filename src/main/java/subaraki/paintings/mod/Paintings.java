@@ -1,18 +1,20 @@
 package subaraki.paintings.mod;
 
+import java.util.Arrays;
+
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import org.apache.logging.log4j.Logger;
 import subaraki.paintings.config.ConfigurationHandler;
 import subaraki.paintings.mod.entity.EntityHandler;
 import subaraki.paintings.mod.network.NetworkHandler;
-
-import java.util.Arrays;
 
 
 @Mod(modid = Paintings.MODID, name = Paintings.NAME, version = Paintings.VERSION, dependencies = "after:paintingselgui")
@@ -47,6 +49,7 @@ public class Paintings {
         proxy.registerRenderInformation();
      
         new NetworkHandler();
+        new LoginHandler();
     }
 
     public static void loadPattern() {
