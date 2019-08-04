@@ -28,6 +28,7 @@ public class PaintingsPattern {
     private String name = null;
     private String[] pattern = null;
     private HashMap<String, Size> key = null;
+    private HashMap<Size, Integer> sizeCounts = new HashMap<>();
 
     public void parsePattern() {
         Integer width = this.pattern[0].length();
@@ -44,8 +45,14 @@ public class PaintingsPattern {
 
                 Size size = this.key.get(symbol);
                 if (size != null) {
-                    this.addPainting(size.width, size.height, offsetX, offsetY);
+
+                    // Paintings are named by dimensions, use an index value to include offsets
+                    int sizeCount = sizeCounts.get(size) != null ? sizeCounts.get(size) : 0;
+
+                    this.addPainting(sizeCount, size.width, size.height, offsetX, offsetY);
                     this.updatePattern(size.width, size.height, offsetX, offsetY);
+
+                    sizeCounts.put(size, ++sizeCount);
                     count++;
                 } else {
                     StringBuilder error = new StringBuilder();
@@ -73,16 +80,18 @@ public class PaintingsPattern {
      * @param offsetX Left offset in blocks
      * @param offsetY Top offset in blocks
      */
-    private void addPainting(Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
+    private void addPainting(Integer sizeIndex, Integer sizeX, Integer sizeY, Integer offsetX, Integer offsetY) {
 
-    	new PaintingWrapper(String.format("ptg%3d%3d", offsetX, offsetY),
+        // By using the sizeIndex last in the painting name, shapes will be grouped
+        String name = String.format("p++%dx%d#%d", sizeX, sizeY, sizeIndex);
+    	new PaintingWrapper(name,
     			sizeX * 16,
                 sizeY * 16,
                 offsetX * 16,
                 offsetY * 16
         ).append();
 
-        Paintings.log.debug(String.format("Added %d x %d painting at %d, %d.", sizeX, sizeY, offsetX, offsetY));
+        Paintings.log.info(String.format("Added %s at %d, %d.", name, offsetX, offsetY));
     }
 
     /**
