@@ -24,7 +24,7 @@ public class PaintingWrapper {
 			return new PaintingWrapper("Default", 16, 16, 0, 0).append();
 		}
 		
-		String parsName = artName.substring(3);
+		String parsName = artName.substring(artName.contains("errored") ? 10 : 3);
 		String parseSizeX[] = parsName.split("x");
 		int x = Integer.parseInt(parseSizeX[0]);
 		String parseSizeY[] = parseSizeX[1].split("#");
