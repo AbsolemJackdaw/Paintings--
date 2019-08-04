@@ -106,7 +106,7 @@ public class SPacketPainting implements IMessage{
 			if(PaintingWrapper.PAINTINGS.containsKey(artName))
 				return PaintingWrapper.PAINTINGS.get(artName);
 
-			return PaintingWrapper.DEFAULT;
+			return PaintingWrapper.createDefault(artName);
 		}
 
 		protected void setPaintingArt(EntityNewPainting p, PaintingWrapper art) {

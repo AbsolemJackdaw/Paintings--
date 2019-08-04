@@ -1,5 +1,6 @@
 package subaraki.paintings.mod.entity.client;
 
+import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import subaraki.paintings.config.ConfigurationHandler;
+import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.mod.PaintingsPattern;
 import subaraki.paintings.mod.entity.EntityNewPainting;
 
@@ -89,8 +91,10 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 		float centerX = -width / 2.0F;
 		float centerY = -height / 2.0F;
 
-		float txWidth = PaintingsPattern.instance.getSize().width * 16;
-		float txHeight = PaintingsPattern.instance.getSize().height * 16;
+		boolean errorFlag = painting.art.toLowerCase().contains("errored");
+
+		float txWidth = !errorFlag ? PaintingsPattern.instance.getSize().width * 16 : 128;
+		float txHeight = !errorFlag ? PaintingsPattern.instance.getSize().height * 16 : 128;
 
 		//an offset to use in painting borders to offset by one relative pixel
 		float offsetX = 1f / txWidth;
@@ -120,6 +124,7 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 				BufferBuilder bufferbuilder = tessellator.getBuffer();
 				bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_NORMAL);
 
+
 				if(isBack)
 				{
 					this.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -132,7 +137,12 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 				}
 				else
 				{
-					this.bindEntityTexture(painting);
+					if(errorFlag)
+					{
+						this.bindTexture(PaintingsPattern.instance.errorTex);
+					}
+					else
+						this.bindEntityTexture(painting);
 					// Front
 					bufferbuilder.pos(ltX1, ltY0, -z).tex(frontTex_x_right, frontTex_y_up).normal( 0, 0,-1).endVertex();
 					bufferbuilder.pos(ltX0, ltY0, -z).tex(frontTex_x_left, frontTex_y_up).normal( 0, 0,-1).endVertex();

@@ -63,6 +63,9 @@ public class ClientProxy implements IPaintingsProxy {
 		} else {
 			PaintingsPattern.instance.texture = new ResourceLocation(Paintings.RESOURCE_DOMAIN, "art/" + ConfigurationHandler.instance.texture + ".png");
 		}
+		
+		PaintingsPattern.instance.errorTex = new ResourceLocation(Paintings.RESOURCE_DOMAIN, "art/errored.png");
+				
 		PaintingButton.KZ_WIDTH = PaintingsPattern.instance.getSize().width * 16;
 		PaintingButton.KZ_HEIGHT = PaintingsPattern.instance.getSize().height * 16;
 

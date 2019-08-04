@@ -22,7 +22,7 @@ import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 public class EntityNewPainting extends EntityHanging implements IEntityAdditionalSpawnData{
 
-	public String art = PaintingWrapper.DEFAULT.getTitle();
+	public String art = PaintingWrapper.createDefault("").getTitle();
 
 	public EntityNewPainting(World worldIn)
 	{
@@ -33,7 +33,7 @@ public class EntityNewPainting extends EntityHanging implements IEntityAdditiona
 	public ItemStack getPickedResult(RayTraceResult target) {
 		return new ItemStack(Items.PAINTING, 1);
 	}
-	
+
 	public void updateBB() {
 		this.updateFacingWithBoundingBox(facingDirection);
 	}
@@ -61,6 +61,10 @@ public class EntityNewPainting extends EntityHanging implements IEntityAdditiona
 		if (PaintingWrapper.PAINTINGS.containsKey(motive))
 		{
 			this.art = motive;
+		}
+		else if(!motive.equals("Default"))
+		{
+			this.art = PaintingWrapper.createDefault(motive).getTitle();
 		}
 
 		super.readEntityFromNBT(compound);
@@ -114,17 +118,28 @@ public class EntityNewPainting extends EntityHanging implements IEntityAdditiona
 		buffer.writeDouble(hangingPosition.getX());
 		buffer.writeDouble(hangingPosition.getY());
 		buffer.writeDouble(hangingPosition.getZ());
-		
+
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf additionalData) {
-		
+
 		if(additionalData.isReadable())
 		{
 			String arttitle =  ByteBufUtils.readUTF8String(additionalData);
-			art = PaintingWrapper.PAINTINGS.containsKey(arttitle) ? arttitle : PaintingWrapper.DEFAULT.getTitle();
 			
+			if(arttitle.toLowerCase().contains("errored"))
+			{
+				//here we first check to see if the painting exists again , or if it is still errored
+				//if it exists again, we will show the original painting
+				String original = arttitle.split("errored")[1];
+				art = PaintingWrapper.PAINTINGS.containsKey(original)? original : arttitle;
+			}
+			else
+				//here we check to see if the painting exists. if not, we will copy it over and have it errored
+				art = PaintingWrapper.PAINTINGS.containsKey(arttitle) ? arttitle : PaintingWrapper.createDefault(arttitle).getTitle();
+
+
 			facingDirection = EnumFacing.getHorizontal(additionalData.readByte());
 			rotationYaw = additionalData.readFloat();
 			setPosition(additionalData.readDouble(), additionalData.readDouble(), additionalData.readDouble());

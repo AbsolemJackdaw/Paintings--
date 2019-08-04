@@ -111,8 +111,7 @@ public class PlacePaintingEventHandler {
 
 						// send to one player only, the player that needs his Gui opened !!
 						// this used to be send to all around, but then everyone got the gui opened
-						if(player instanceof EntityPlayerMP)
-							NetworkHandler.NETWORK.sendTo(new CPacketPainting(painting, names), (EntityPlayerMP) player);
+						NetworkHandler.NETWORK.sendTo(new CPacketPainting(painting, names), playerMP);
 					}
 
 				}

@@ -23,6 +23,7 @@ public class PaintingsPattern {
 
     public static PaintingsPattern instance = null;
     public ResourceLocation texture = null;
+    public ResourceLocation errorTex = null;
 
     private String type = "subaraki:pattern";
     private String name = null;
