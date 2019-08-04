@@ -1,25 +1,23 @@
 package subaraki.paintings.mod.client.proxy;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 import com.mcf.davidee.paintinggui.gui.PaintingButton;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-
 import subaraki.paintings.config.ConfigurationHandler;
 import subaraki.paintings.mod.IPaintingsProxy;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.mod.PaintingsPattern;
 import subaraki.paintings.mod.entity.EntityNewPainting;
 import subaraki.paintings.mod.entity.client.RenderPaintingLate;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class ClientProxy implements IPaintingsProxy {
 

@@ -3,6 +3,7 @@ package subaraki.paintings.mod;
 import java.util.HashMap;
 
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
+
 import net.minecraft.util.ResourceLocation;
 
 public class PaintingsPattern {

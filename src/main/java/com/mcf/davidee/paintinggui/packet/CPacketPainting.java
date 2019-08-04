@@ -1,19 +1,14 @@
 package com.mcf.davidee.paintinggui.packet;
 
-import com.mcf.davidee.paintinggui.gui.PaintingSelectionScreen;
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.EnumFaceDirection;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

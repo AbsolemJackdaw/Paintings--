@@ -1,6 +1,5 @@
 package subaraki.paintings.mod.entity.client;
 
-import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
 import net.minecraft.client.Minecraft;
@@ -21,9 +20,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import subaraki.paintings.config.ConfigurationHandler;
-import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.mod.PaintingsPattern;
 import subaraki.paintings.mod.entity.EntityNewPainting;
 
