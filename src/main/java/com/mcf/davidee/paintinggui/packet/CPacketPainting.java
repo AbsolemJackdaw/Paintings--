@@ -1,5 +1,6 @@
 package com.mcf.davidee.paintinggui.packet;
 
+import com.mcf.davidee.paintinggui.gui.PaintingSelectionScreen;
 import com.mcf.davidee.paintinggui.mod.PaintingSelection;
 import com.mcf.davidee.paintinggui.wrapper.PaintingWrapper;
 
@@ -8,9 +9,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EnumFaceDirection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -56,13 +59,15 @@ public class CPacketPainting implements IMessage{
 		@Override 
 		public IMessage onMessage(CPacketPainting message, MessageContext ctx) {
 
-			Minecraft.getMinecraft().addScheduledTask( () -> {
+			Minecraft mc =  Minecraft.getMinecraft();
+
+			mc.addScheduledTask( () -> {
 				if(message.id == -1) { //What painting is selected?
 					PaintingSelection.proxy.processRayTracing();
 				}
 				else if (message.art.length == 1) { //Set Painting
 					PaintingWrapper wrapper = getPaintingWrapper(message.art[0]);
-					Entity e = Minecraft.getMinecraft().world.getEntityByID(message.id);
+					Entity e = mc.world.getEntityByID(message.id);
 					if (e instanceof EntityNewPainting){
 						EntityNewPainting painting = ((EntityNewPainting)e);
 						painting.facingDirection = message.face;
@@ -70,7 +75,10 @@ public class CPacketPainting implements IMessage{
 					}
 				}
 				else { //Show art GUI
+					
 					PaintingSelection.proxy.displayPaintingSelectionScreen(message);
+
+					
 				}
 			});
 

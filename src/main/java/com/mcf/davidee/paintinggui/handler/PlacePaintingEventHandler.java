@@ -38,7 +38,7 @@ public class PlacePaintingEventHandler {
 	public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event){
 
 		ItemStack itemStack = event.getItemStack();
-		
+
 		if(itemStack.getItem() == Items.PAINTING){
 
 			EntityPlayer player = event.getEntityPlayer();
@@ -109,7 +109,8 @@ public class PlacePaintingEventHandler {
 							names[i] = validArtsArray[i].getTitle();
 
 
-						NetworkHandler.NETWORK.sendToAllAround(new CPacketPainting(painting, names), new TargetPoint(world.provider.getDimension(), blockpos.getX(),blockpos.getY(),blockpos.getZ(), 48));
+						if(player instanceof EntityPlayerMP)
+							NetworkHandler.NETWORK.sendTo(new CPacketPainting(painting, names), (EntityPlayerMP) player);
 					}
 
 				}
