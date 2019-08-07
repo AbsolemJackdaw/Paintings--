@@ -176,25 +176,29 @@ public class RenderPaintingLate extends Render implements IRenderFactory {
 	}
 
 	private void setLightmap(EntityNewPainting painting, float x, float y) {
+		
+		//info :  to counter blocky light rendering, I commented out x and y arguments,
+		//so the painting doesn't account for the offset per tile drawn.
+		
 		int i = MathHelper.floor(painting.posX);
-		int j = MathHelper.floor(painting.posY + y / 16);
+		int j = MathHelper.floor(painting.posY /*+ y / 16*/);
 		int k = MathHelper.floor(painting.posZ);
 		EnumFacing enumfacing = painting.facingDirection;
 
 		if (enumfacing == EnumFacing.NORTH) {
-			i = MathHelper.floor(painting.posX + x / 16);
+			i = MathHelper.floor(painting.posX /*+ x / 16*/);
 		}
 
 		if (enumfacing == EnumFacing.WEST) {
-			k = MathHelper.floor(painting.posZ - x / 16);
+			k = MathHelper.floor(painting.posZ /*- x / 16*/);
 		}
 
 		if (enumfacing == EnumFacing.SOUTH) {
-			i = MathHelper.floor(painting.posX - x / 16);
+			i = MathHelper.floor(painting.posX /*- x / 16*/);
 		}
 
 		if (enumfacing == EnumFacing.EAST) {
-			k = MathHelper.floor(painting.posZ + x / 16);
+			k = MathHelper.floor(painting.posZ /*+ x / 16*/);
 		}
 
 		int l = this.renderManager.world.getCombinedLight(new BlockPos(i, j, k), 0);
