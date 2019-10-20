@@ -50,20 +50,11 @@ public class ConfigData {
 
     public static class ClientConfig {
 
-        public final ForgeConfigSpec.BooleanValue use_vanilla_only;
-        public final ForgeConfigSpec.BooleanValue use_selection_gui;
-        public final ForgeConfigSpec.BooleanValue cycle_paintings;
         public final ForgeConfigSpec.BooleanValue show_painting_size;
 
         ClientConfig(ForgeConfigSpec.Builder builder) {
 
             builder.push("general");
-            use_vanilla_only = builder.comment("Pick true to only use the vanilla paintings and skip loading any other paintings")
-                    .translation("translate.pick.vanilla").define("use_vanilla_only", false);
-            use_selection_gui = builder.comment("Pick true to enable the Painting Selection Gui tot pop up when placing a painting")
-                    .translation("translate.pick.psg").define("use_selection_gui", true);
-            cycle_paintings = builder.comment("Pick True to enable painting cycling on right click with a painting item")
-                    .translation("translate.cycle.painting").define("cycle_paintings", false);
             show_painting_size = builder.comment("Pick True to show the size of paintings in the painting gui").translation("translate.show.size")
                     .define("show_painting_size", true);
             builder.pop();
@@ -73,9 +64,6 @@ public class ConfigData {
 
     public static void refreshClient() {
 
-        use_vanilla_only = CLIENT.use_vanilla_only.get();
-        use_selection_gui = CLIENT.use_selection_gui.get();
-        cycle_paintings = CLIENT.cycle_paintings.get();
         show_painting_size = CLIENT.show_painting_size.get();
 
     }
