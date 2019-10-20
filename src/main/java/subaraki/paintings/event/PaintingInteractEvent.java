@@ -28,7 +28,8 @@ public class PaintingInteractEvent {
                         PaintingType firstMatch = null;
                         PaintingType newArt = null;
 
-                        //it is important to sort the paintings from big to small so all same size paintings will be next to one another
+                        // it is important to sort the paintings from big to small so all same size
+                        // paintings will be next to one another
                         PaintingType[] validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().toArray(new PaintingType[0]);
                         Arrays.sort(validArtsArray, new ArtComparator());
 
@@ -54,9 +55,13 @@ public class PaintingInteractEvent {
                             }
                         }
 
-                        if (newArt != null) {
-                            Paintings.utility.setArt(painting, newArt);
-                        }
+                        // if the paintinglist is done with (very last entry) then takeNext is set to true, but wont reloop to set the next painting
+                        // we do that here
+                        // newArt is null && takeNext is still set to true
+                        if (newArt == null && takeNext)
+                            newArt = firstMatch;
+
+                        Paintings.utility.setArt(painting, newArt);
                     }
                 }
             }
