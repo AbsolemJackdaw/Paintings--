@@ -20,6 +20,7 @@ build
 # other
 eclipse
 run
-*.txt
-.vscode
-/runserver/
+
+# Files from Forge MDK
+forge*changelog.txt
+/src_old/
