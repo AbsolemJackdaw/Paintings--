@@ -6,7 +6,7 @@ logoFile="banner.png" #optional
 
 [[mods]] #mandatory
 modId="paintings" #mandatory
-version="1.14.4-6.0.1.0" #mandatory
+version="1.14.4-6.0.1.1" #mandatory
 displayName="Paintings ++" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/paintings" #optional
 credits="David Goldman : the original Painting Selection Gui. Murphy's Chaos : the 1.12 flexible template update , Serilum for letting me use the Cycle Paintings concept" #optional
