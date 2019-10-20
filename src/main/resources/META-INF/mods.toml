@@ -1,0 +1,41 @@
+modLoader="javafml" #mandatory
+loaderVersion="[28,)" #mandatory (26 is current forge version)
+issueTrackerURL="https://github.com/ArtixAllMighty/Paintings--/issues" #optional
+
+logoFile="banner.png" #optional
+
+[[mods]] #mandatory
+modId="paintings" #mandatory
+version="1.14.4-6.0.0.0" #mandatory
+displayName="Paintings ++" #mandatory
+displayURL="https://www.curseforge.com/minecraft/mc-mods/paintings" #optional
+credits="David Goldman : the original Painting Selection Gui. Murphy's Chaos : the 1.12 flexible template update , Serilum for letting me use the Cycle Paintings concept" #optional
+authors="Subaraki" #optional
+description='''
+Add more paintings to your game !! 
+Check out the wiki for more info !
+https://github.com/ArtixAllMighty/Paintings--/wiki
+
+Enjoy picking which painting you want to place down with the integrated Painting Selection GUI ! 
+
+Credit for Serilum : https://www.curseforge.com/minecraft/mc-mods/cycle-paintings
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.examplemod]] #optional
+    # the modid of the dependency
+    modId="forge" #mandatory
+    # Does this dependency have to exist - if not, ordering below must be specified
+    mandatory=true #mandatory
+    # The version range of the dependency
+    versionRange="[28,)" #mandatory
+    # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
+    ordering="NONE"
+    # Side this dependency is applied on - BOTH, CLIENT or SERVER
+    side="BOTH"
+# Here's another dependency
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
