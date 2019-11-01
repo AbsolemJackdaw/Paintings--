@@ -31,7 +31,7 @@ public class PlacePaintingEventHandler {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event) {
 
-        if(ConfigData.use_vanilla_only)
+        if(!ConfigData.use_selection_gui)
             return;
         
         ItemStack itemStack = event.getItemStack();
