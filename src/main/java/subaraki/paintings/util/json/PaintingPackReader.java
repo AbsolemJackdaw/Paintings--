@@ -51,12 +51,6 @@ public class PaintingPackReader {
      */
     public PaintingPackReader init() {
 
-        if(ConfigData.use_vanilla_only)
-        {
-            Paintings.LOG.info("Skipped loading any JSON files present in the install directory. Vanilla only will be used");
-            return this;
-        }
-        
         Paintings.LOG.info("loading json file and contents for paintings.");
         loadFromJson();
 
@@ -124,12 +118,28 @@ public class PaintingPackReader {
                                 sizeSquare = jsonObject.get("square").getAsInt();
                             }
 
+                            if(sizeX == 0 || sizeY == 0)
+                            {
+                                Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
+                                Paintings.LOG.error("Painting name is : " + textureName);
+                                Paintings.LOG.error("Skipping...");
+                                continue;
+                            }
+                            
+                            if(sizeX % 16 != 0 || sizeY %  16 != 0)
+                            {
+                                Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
+                                Paintings.LOG.error("Painting name is : " + textureName);
+                                Paintings.LOG.error("Skipping...");
+                                continue;
+                            }
+                            
                             PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY, sizeSquare);
                             Paintings.LOG.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
                             addedPaintings.add(entry);
 
-                            stream.close();
                         }
+                        stream.close();
                     }
                 }
             }
@@ -150,6 +160,12 @@ public class PaintingPackReader {
 
     public static void registerToMinecraft(RegistryEvent.Register<PaintingType> event) {
 
+        if(ConfigData.use_vanilla_only)
+        {
+            Paintings.LOG.info("Skipped registering any Paintings! Vanilla only will be used. This has been enforced by config");
+            return;
+        }
+        
         for (PaintingEntry entry : addedPaintings) {
             PaintingType painting = new PaintingType(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);
