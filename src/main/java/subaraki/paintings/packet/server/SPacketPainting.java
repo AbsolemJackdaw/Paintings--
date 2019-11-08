@@ -66,7 +66,7 @@ public class SPacketPainting implements IPacketBase {
                 Paintings.utility.updatePaintingBoundingBox(painting);
 
                 ServerPlayerEntity playerMP = context.get().getSender();
-                NetworkHandler.NETWORK.send(PacketDistributor.PLAYER.with((() -> playerMP)),
+                NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> playerMP)),
                         new CPacketPainting(painting, new ResourceLocation[] { type.getRegistryName() }));
             }
         });
