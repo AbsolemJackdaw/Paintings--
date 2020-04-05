@@ -2,8 +2,6 @@ package subaraki.paintings.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -106,9 +104,9 @@ public class PaintingScreen extends Screen {
 
         fill(START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
 
-        GlStateManager.color4f(1, 1, 1, 1);
+        GL11.glColor4f(1, 1, 1, 1);
 
-        MainWindow window = minecraft.mainWindow;
+        MainWindow window = minecraft.getMainWindow();
         int scale = (int) window.getGuiScaleFactor();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(START_X * scale, START_Y * scale, width * scale, (height - (START_Y * 2)) * scale);
@@ -122,7 +120,7 @@ public class PaintingScreen extends Screen {
         String text = this.title.getFormattedText();
         this.drawCenteredString(font, text, width / 2, START_Y / 2, 0xffffff);
 
-        GlStateManager.color4f(1, 1, 1, 1);
+        GL11.glColor4f(1, 1, 1, 1);
 
         drawToolTips(mouseX, mouseY);
     }

@@ -1,6 +1,6 @@
 package subaraki.paintings.gui;
 
-import static com.mojang.blaze3d.platform.GlStateManager.color4f;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
@@ -34,7 +34,7 @@ public class PaintingButton extends Button {
             fill(x - BORDER, y, x, y + height, YELLOW); // middle rectangle to the left
             fill(x + width, y, x + width + BORDER, y + height, YELLOW); // middle rectangle to the right
 
-            color4f(1, 1, 1, 1);
+            GL11.glColor4f(1, 1, 1, 1);
         }
 
     }

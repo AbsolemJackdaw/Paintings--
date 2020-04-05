@@ -47,7 +47,7 @@ public class PaintingPackReader {
 
     /**
      * called once on mod clas initialization. the loadFromJson called in here reads
-     * json files directly out opf a directory.
+     * json files directly out of a directory.
      */
     public PaintingPackReader init() {
 
@@ -67,9 +67,9 @@ public class PaintingPackReader {
 
                 directory.mkdir();
 
-                //read provided base json
-                //copy over to exterior folder
-                //copy contents of base
+                // read provided base json
+                // copy over to exterior folder
+                // copy contents of base
                 try (InputStream is = getClass().getResourceAsStream("/assets/paintings/paintings.json");
                         OutputStream os = new FileOutputStream("./paintings/paintings.json");) {
                     byte[] buffer = new byte[1024];
@@ -118,22 +118,22 @@ public class PaintingPackReader {
                                 sizeSquare = jsonObject.get("square").getAsInt();
                             }
 
-                            if(sizeX == 0 || sizeY == 0)
-                            {
-                                Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
-                                Paintings.LOG.error("Painting name is : " + textureName);
-                                Paintings.LOG.error("Skipping...");
-                                continue;
-                            }
-                            
-                            if(sizeX % 16 != 0 || sizeY %  16 != 0)
-                            {
-                                Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
-                                Paintings.LOG.error("Painting name is : " + textureName);
-                                Paintings.LOG.error("Skipping...");
-                                continue;
-                            }
-                            
+                            if (sizeSquare == 0)
+                                if ((sizeX == 0 || sizeY == 0)) {
+                                    Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
+                                    Paintings.LOG.error("Painting name is : " + textureName);
+                                    Paintings.LOG.error("Skipping...");
+                                    continue;
+                                }
+
+                            if (sizeSquare % 16 != 0)
+                                if ((sizeX % 16 != 0 || sizeY % 16 != 0)) {
+                                    Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
+                                    Paintings.LOG.error("Painting name is : " + textureName);
+                                    Paintings.LOG.error("Skipping...");
+                                    continue;
+                                }
+
                             PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY, sizeSquare);
                             Paintings.LOG.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
                             addedPaintings.add(entry);
@@ -160,12 +160,11 @@ public class PaintingPackReader {
 
     public static void registerToMinecraft(RegistryEvent.Register<PaintingType> event) {
 
-        if(ConfigData.use_vanilla_only)
-        {
+        if (ConfigData.use_vanilla_only) {
             Paintings.LOG.info("Skipped registering any Paintings! Vanilla only will be used. This has been enforced by config");
             return;
         }
-        
+
         for (PaintingEntry entry : addedPaintings) {
             PaintingType painting = new PaintingType(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);

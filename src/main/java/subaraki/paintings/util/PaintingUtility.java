@@ -24,9 +24,8 @@ public class PaintingUtility {
             Direction enumfacing = painting.getHorizontalFacing().rotateYCCW();
             hangX = hangX + offsetWidth * (double) enumfacing.getXOffset();
             hangZ = hangZ + offsetWidth * (double) enumfacing.getZOffset();
-            painting.posX = hangX;
-            painting.posY = hangY;
-            painting.posZ = hangZ;
+            
+            painting.setRawPosition(hangX, hangY, hangZ);
             double widthX = (double) painting.getWidthPixels();
             double height = (double) painting.getHeightPixels();
             double widthZ = (double) painting.getWidthPixels();
