@@ -2,6 +2,8 @@ package subaraki.paintings.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
@@ -68,7 +70,7 @@ public class PaintingScreen extends Screen {
 
             }
 
-            this.addButton(new PaintingButton(posx, posy, type.getWidth(), type.getHeight(), "", (Button) -> {
+            this.addButton(new PaintingButton(posx, posy, type.getWidth(), type.getHeight(), new StringTextComponent(""), (Button) -> {
                 NetworkHandler.NETWORK.sendToServer(new SPacketPainting(type, this.entityID));
                 this.onClose();
             }, type));
@@ -98,11 +100,11 @@ public class PaintingScreen extends Screen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float p_render_3_) {
+    public void render(MatrixStack mat, int mouseX, int mouseY, float p_render_3_) {
 
-        this.renderBackground();
+        this.renderBackground(mat);
 
-        fill(START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
+        fill(mat, START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
 
         GL11.glColor4f(1, 1, 1, 1);
 
@@ -111,18 +113,17 @@ public class PaintingScreen extends Screen {
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(START_X * scale, START_Y * scale, width * scale, (height - (START_Y * 2)) * scale);
 
-        super.render(mouseX, mouseY, p_render_3_);
+        super.render(mat, mouseX, mouseY, p_render_3_);
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
         if (!buttons.isEmpty()) {
-            drawFakeScrollBar();
+            drawFakeScrollBar(mat);
         }
-        String text = this.title.getFormattedText();
-        this.drawCenteredString(font, text, width / 2, START_Y / 2, 0xffffff);
+        drawCenteredString(mat, font, title, width / 2, START_Y / 2, 0xffffff);
 
         GL11.glColor4f(1, 1, 1, 1);
 
-        drawToolTips(mouseX, mouseY);
+        drawToolTips(mat, mouseX, mouseY);
     }
 
     @Override
@@ -131,8 +132,8 @@ public class PaintingScreen extends Screen {
         Widget last = buttons.get(buttons.size() - 1);
         Widget first = buttons.get(0);
 
-        int forsee_bottom_limit = (int) (last.y + last.getHeight() + (mouseScroll * 16));
-        int bottom_limit = height - START_Y - last.getHeight();
+        int forsee_bottom_limit = (int) (last.y + last.getHeightRealms() + (mouseScroll * 16));
+        int bottom_limit = height - START_Y - last.getHeightRealms();
 
         int forsee_top_limit = (int) (first.y + mouseScroll * 16);
         int top_limit = GAP + START_Y;
@@ -158,8 +159,8 @@ public class PaintingScreen extends Screen {
         Widget last = buttons.get(buttons.size() - 1);
         Widget first = buttons.get(0);
 
-        int forsee_bottom_limit = (int) (last.y + last.getHeight() + (amountY * 16));
-        int bottom_limit = height - START_Y - last.getHeight();
+        int forsee_bottom_limit = (int) (last.y + last.getHeightRealms() + (amountY * 16));
+        int bottom_limit = height - START_Y - last.getHeightRealms();
 
         int forsee_top_limit = (int) (first.y + amountY * 16);
         int top_limit = GAP + START_Y;
@@ -185,7 +186,7 @@ public class PaintingScreen extends Screen {
         }
     }
 
-    private void drawToolTips(int mouseX, int mouseY) {
+    private void drawToolTips(MatrixStack mat, int mouseX, int mouseY) {
 
         if (!ConfigData.show_painting_size)
             return;
@@ -193,20 +194,22 @@ public class PaintingScreen extends Screen {
             if (guiButton instanceof PaintingButton) {
                 PaintingButton button = (PaintingButton) guiButton;
                 if (button.isMouseOver(mouseX, mouseY)) {
-                    StringTextComponent text = new StringTextComponent(button.getWidth() / 16 + "x" + button.getHeight() / 16);
+                    StringTextComponent text = new StringTextComponent(button.getWidth() / 16 + "x" + button.getHeightRealms() / 16);
                     HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
-                    Style style = new Style().setHoverEvent(hover);
-                    this.renderComponentHoverEffect(hover.getValue().setStyle(style), width / 2 - font.getStringWidth(text.getUnformattedComponentText()) - 4,
+                    
+                    Style style = Style.EMPTY.setHoverEvent(hover);
+                    
+                    this.renderComponentHoverEffect(mat, style, width / 2 - font.getStringWidth(text.getUnformattedComponentText()) - 4,
                             height - START_Y / 4);
                 }
             }
         }
     }
 
-    private void drawFakeScrollBar() {
+    private void drawFakeScrollBar(MatrixStack mat) {
 
         int top = buttons.get(0).y;
-        int bot = buttons.get(buttons.size() - 1).y + buttons.get(buttons.size() - 1).getHeight();
+        int bot = buttons.get(buttons.size() - 1).y + buttons.get(buttons.size() - 1).getHeightRealms();
 
         // get total size for buttons drawn
         float totalSize = (bot - top) + (GAP);
@@ -230,9 +233,9 @@ public class PaintingScreen extends Screen {
             // 0xff00ffff);
 
             // draw a black background background
-            this.fillGradient(width - START_X, START_Y, width, START_Y + (int) containerSize, 0x80000000, 0x80222222);
+            this.fillGradient(mat, width - START_X, START_Y, width, START_Y + (int) containerSize, 0x80000000, 0x80222222);
             // Draw scrollbar
-            this.fillGradient(width - START_X, START_Y + (int) relativeScroll, width, START_Y + (int) relativeScroll + (int) sizeBar, 0x80ffffff, 0x80222222);
+            this.fillGradient(mat, width - START_X, START_Y + (int) relativeScroll, width, START_Y + (int) relativeScroll + (int) sizeBar, 0x80ffffff, 0x80222222);
 
         }
     }

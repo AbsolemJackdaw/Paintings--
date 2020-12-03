@@ -2,10 +2,13 @@ package subaraki.paintings.gui;
 
 import org.lwjgl.opengl.GL11;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.item.PaintingType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 
 public class PaintingButton extends Button {
 
@@ -14,7 +17,7 @@ public class PaintingButton extends Button {
 
     ResourceLocation resLoc;
 
-    public PaintingButton(int x, int y, int w, int h, String text, IPressable onPress, PaintingType pt) {
+    public PaintingButton(int x, int y, int w, int h, ITextComponent text, IPressable onPress, PaintingType pt) {
 
         super(x, y, w, h, text, onPress);
         String combo = pt.getRegistryName().getNamespace() + ":textures/painting/" + pt.getRegistryName().getPath() + ".png";
@@ -22,28 +25,34 @@ public class PaintingButton extends Button {
     }
 
     @Override
-    public void renderButton(int mouseX, int mouseY, float no_clue) {
+    public void renderButton(MatrixStack mat, int mouseX, int mouseY, float partial_ticks)
+    {
 
         Minecraft.getInstance().getTextureManager().bindTexture(resLoc);
 
-        blit(this.x, this.y, 0, 0, width, height, width, height);
+        blit(mat, this.x, this.y, 0, 0, width, height, width, height);
 
-        if (isHovered) {
-            fill(x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); // upper left to upper right
-            fill(x - BORDER, y + height, x + width + BORDER, y + height + BORDER, YELLOW); // lower left to lower right
-            fill(x - BORDER, y, x, y + height, YELLOW); // middle rectangle to the left
-            fill(x + width, y, x + width + BORDER, y + height, YELLOW); // middle rectangle to the right
+        if (isHovered)
+        {
+            fill(mat, x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); // upper left to upper right
+            fill(mat, x - BORDER, y + height, x + width + BORDER, y + height + BORDER, YELLOW); // lower left to lower right
+            fill(mat, x - BORDER, y, x, y + height, YELLOW); // middle rectangle to the left
+            fill(mat, x + width, y, x + width + BORDER, y + height, YELLOW); // middle rectangle to the right
 
             GL11.glColor4f(1, 1, 1, 1);
         }
 
     }
 
-    public void shiftY(int dy) {
+    public void shiftY(int dy)
+    {
+
         this.y += dy;
     }
 
-    public void shiftX(int dx) {
+    public void shiftX(int dx)
+    {
+
         this.x += dx;
     }
 }
