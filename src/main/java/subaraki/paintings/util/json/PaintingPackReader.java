@@ -160,11 +160,6 @@ public class PaintingPackReader {
 
     public static void registerToMinecraft(RegistryEvent.Register<PaintingType> event) {
 
-        if (ConfigData.use_vanilla_only) {
-            Paintings.LOG.info("Skipped registering any Paintings! Vanilla only will be used. This has been enforced by config");
-            return;
-        }
-
         for (PaintingEntry entry : addedPaintings) {
             PaintingType painting = new PaintingType(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);

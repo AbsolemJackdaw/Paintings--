@@ -29,14 +29,16 @@ import subaraki.paintings.util.ArtComparator;
 public class PlacePaintingEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event) {
+    public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event)
+    {
 
-        if(!ConfigData.use_selection_gui)
+        if (!ConfigData.use_selection_gui)
             return;
-        
+
         ItemStack itemStack = event.getItemStack();
 
-        if (itemStack.getItem() == Items.PAINTING) {
+        if (itemStack.getItem() == Items.PAINTING)
+        {
 
             PlayerEntity player = event.getPlayer();
             Direction face = event.getFace();
@@ -48,20 +50,23 @@ public class PlacePaintingEventHandler {
 
             flag = face.getAxis().isHorizontal();
 
-            if (flag && player.canPlayerEdit(actualPos, face, itemStack)) {
+            if (flag && player.canPlayerEdit(actualPos, face, itemStack))
+            {
 
                 PaintingEntity painting = new PaintingEntity(world, actualPos, face);
                 painting.rotationYaw = face.getHorizontalAngle();
                 // Set position updates bounding box
                 painting.setPosition(actualPos.getX(), blockpos.getY(), actualPos.getZ());
 
-                if (painting.onValidSurface()) {
+                if (painting.onValidSurface())
+                {
                     event.getPlayer().swingArm(Hand.MAIN_HAND); // recreate the animation of placing down an item
 
                     if (!event.getPlayer().isCreative())
                         itemStack.shrink(1);
 
-                    if (!event.getWorld().isRemote) {
+                    if (!event.getWorld().isRemote)
+                    {
 
                         ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
 
@@ -71,7 +76,8 @@ public class PlacePaintingEventHandler {
                         PaintingType originalArt = painting.art;
 
                         List<PaintingType> validArts = new ArrayList<PaintingType>(); // list of paintings placeable at current location
-                        for (ResourceLocation resLoc : ForgeRegistries.PAINTING_TYPES.getKeys()) {
+                        for (ResourceLocation resLoc : ForgeRegistries.PAINTING_TYPES.getKeys())
+                        {
                             PaintingType art = ForgeRegistries.PAINTING_TYPES.getValue(resLoc);
 
                             painting.art = art;
@@ -84,7 +90,26 @@ public class PlacePaintingEventHandler {
                             // simulate placing down a painting. if possible, add it to a list of paintings
                             // that are possible to place at this location
                             if (painting.onValidSurface())
-                                validArts.add(art);
+                            {
+                                
+                                if (ConfigData.use_vanilla_only)
+                                {
+                                    if (art.equals(PaintingType.KEBAB) || art.equals(PaintingType.AZTEC) || art.equals(PaintingType.ALBAN)
+                                            || art.equals(PaintingType.AZTEC2) || art.equals(PaintingType.BOMB) || art.equals(PaintingType.PLANT)
+                                            || art.equals(PaintingType.WASTELAND) || art.equals(PaintingType.POOL) || art.equals(PaintingType.COURBET)
+                                            || art.equals(PaintingType.SEA) || art.equals(PaintingType.SUNSET) || art.equals(PaintingType.CREEBET)
+                                            || art.equals(PaintingType.WANDERER) || art.equals(PaintingType.GRAHAM) || art.equals(PaintingType.MATCH)
+                                            || art.equals(PaintingType.BUST) || art.equals(PaintingType.STAGE) || art.equals(PaintingType.VOID)
+                                            || art.equals(PaintingType.SKULL_AND_ROSES) || art.equals(PaintingType.WITHER) || art.equals(PaintingType.FIGHTERS)
+                                            || art.equals(PaintingType.POINTER) || art.equals(PaintingType.PIGSCENE) || art.equals(PaintingType.BURNING_SKULL)
+                                            || art.equals(PaintingType.SKELETON) || art.equals(PaintingType.DONKEY_KONG))
+                                    {
+                                        validArts.add(art);
+                                    }
+                                }else
+                                    validArts.add(art);
+                            }
+                                
                         }
                         // reset the art of the painting to the one registered before
                         painting.art = originalArt;
@@ -96,7 +121,8 @@ public class PlacePaintingEventHandler {
                         Arrays.sort(validArtsArray, new ArtComparator());
 
                         ResourceLocation[] names = new ResourceLocation[validArtsArray.length];
-                        for (int i = 0; i < validArtsArray.length; ++i) {
+                        for (int i = 0; i < validArtsArray.length; ++i)
+                        {
                             names[i] = validArtsArray[i].getRegistryName();
                         }
 
