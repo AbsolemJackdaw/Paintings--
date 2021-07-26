@@ -16,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -28,7 +27,7 @@ import subaraki.paintings.util.ArtComparator;
 
 public class PlacePaintingEventHandler {
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event)
     {
 
@@ -91,7 +90,7 @@ public class PlacePaintingEventHandler {
                             // that are possible to place at this location
                             if (painting.onValidSurface())
                             {
-                                
+
                                 if (ConfigData.use_vanilla_only)
                                 {
                                     if (art.equals(PaintingType.KEBAB) || art.equals(PaintingType.AZTEC) || art.equals(PaintingType.ALBAN)
@@ -106,10 +105,11 @@ public class PlacePaintingEventHandler {
                                     {
                                         validArts.add(art);
                                     }
-                                }else
+                                }
+                                else
                                     validArts.add(art);
                             }
-                                
+
                         }
                         // reset the art of the painting to the one registered before
                         painting.art = originalArt;
