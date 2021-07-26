@@ -2,11 +2,11 @@ package subaraki.paintings.packet.client;
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.PaintingEntity;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.Paintings;
@@ -23,41 +23,41 @@ public class CPacketPainting implements IPacketBase {
     private int entityID;
     private String resLocNames[];
 
-    public CPacketPainting(PaintingEntity painting, ResourceLocation[] resLocs) {
+    public CPacketPainting(Painting painting, ResourceLocation[] resLocs) {
 
-        this.entityID = painting.getEntityId();
+        this.entityID = painting.getId();
         resLocNames = new String[resLocs.length];
         int index = 0;
         for (ResourceLocation resLoc : resLocs)
             resLocNames[index++] = resLoc.toString();
     }
 
-    public CPacketPainting(PacketBuffer buf) {
+    public CPacketPainting(FriendlyByteBuf buf) {
 
         decode(buf);
     }
 
     @Override
-    public void encode(PacketBuffer buf) {
+    public void encode(FriendlyByteBuf buf) {
 
         buf.writeInt(entityID);
 
         buf.writeInt(resLocNames.length);
 
         for (String path : resLocNames)
-            buf.writeString(path);
+            buf.writeUtf(path);
 
     }
 
     @Override
-    public void decode(PacketBuffer buf) {
+    public void decode(FriendlyByteBuf buf) {
 
         entityID = buf.readInt();
 
         resLocNames = new String[buf.readInt()];
 
         for (int i = 0; i < resLocNames.length; i++)
-            resLocNames[i] = buf.readString();
+            resLocNames[i] = buf.readUtf();
     }
 
     @Override
@@ -66,17 +66,17 @@ public class CPacketPainting implements IPacketBase {
         context.get().enqueueWork(() -> {
             if (resLocNames.length == 1) // we know what painting to set
             {
-                Entity entity = ClientReferences.getClientPlayer().world.getEntityByID(entityID);
-                if (entity instanceof PaintingEntity) {
-                    PaintingEntity painting = (PaintingEntity) entity;
-                    PaintingType type = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(resLocNames[0]));
+                Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityID);
+                if (entity instanceof Painting) {
+                    Painting painting = (Painting) entity;
+                    Motive type = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(resLocNames[0]));
                     Paintings.utility.setArt(painting, type);
                     Paintings.utility.updatePaintingBoundingBox(painting);
 
                 }
             } else // we need to open the painting gui to select a painting
             {
-                PaintingType[] types = new PaintingType[resLocNames.length];
+                Motive[] types = new Motive[resLocNames.length];
                 int dex = 0;
                 for (String path : resLocNames)
                     types[dex++] = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(path));

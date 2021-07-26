@@ -3,7 +3,7 @@ package subaraki.paintings.mod;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.entity.item.PaintingType;
+import net.minecraft.world.entity.decoration.Motive;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -68,7 +68,7 @@ public class Paintings {
     }
 
     @SubscribeEvent
-    public static void registerPaintings(RegistryEvent.Register<PaintingType> event) {
+    public static void registerPaintings(RegistryEvent.Register<Motive> event) {
 
         PaintingPackReader.registerToMinecraft(event);
     }

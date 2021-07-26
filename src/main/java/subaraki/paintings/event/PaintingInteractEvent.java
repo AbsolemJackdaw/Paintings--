@@ -2,10 +2,10 @@ package subaraki.paintings.event;
 
 import java.util.Arrays;
 
-import net.minecraft.entity.item.PaintingEntity;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.InteractionHand;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -19,22 +19,22 @@ public class PaintingInteractEvent {
     public void interact(EntityInteractSpecific event) {
 
         if (ConfigData.cycle_paintings)
-            if (event.getTarget() instanceof PaintingEntity) {
-                if (event.getHand().equals(Hand.MAIN_HAND)) {
-                    if (event.getPlayer() != null && event.getPlayer().getHeldItemMainhand().getItem().equals(Items.PAINTING)) {
-                        PaintingEntity painting = (PaintingEntity) event.getTarget();
-                        PaintingType original = painting.art;
+            if (event.getTarget() instanceof Painting) {
+                if (event.getHand().equals(InteractionHand.MAIN_HAND)) {
+                    if (event.getPlayer() != null && event.getPlayer().getMainHandItem().getItem().equals(Items.PAINTING)) {
+                        Painting painting = (Painting) event.getTarget();
+                        Motive original = painting.motive;
 
-                        PaintingType firstMatch = null;
-                        PaintingType newArt = null;
+                        Motive firstMatch = null;
+                        Motive newArt = null;
 
                         // it is important to sort the paintings from big to small so all same size
                         // paintings will be next to one another
-                        PaintingType[] validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().toArray(new PaintingType[0]);
+                        Motive[] validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().toArray(new Motive[0]);
                         Arrays.sort(validArtsArray, new ArtComparator());
 
                         boolean takeNext = false;
-                        for (PaintingType type : validArtsArray) {
+                        for (Motive type : validArtsArray) {
 
                             if (equalSizes(original, type)) {
                                 if (firstMatch == null) {
@@ -67,12 +67,12 @@ public class PaintingInteractEvent {
             }
     }
 
-    private boolean equalSizes(PaintingType a, PaintingType b) {
+    private boolean equalSizes(Motive a, Motive b) {
 
         return a.getWidth() == b.getWidth() && a.getHeight() == b.getHeight();
     }
 
-    private boolean equalNames(PaintingType a, PaintingType b) {
+    private boolean equalNames(Motive a, Motive b) {
 
         return a.getRegistryName().equals(b.getRegistryName());
     }

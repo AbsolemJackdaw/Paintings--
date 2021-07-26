@@ -1,6 +1,6 @@
 package subaraki.paintings.event;
 
-import net.minecraft.entity.item.PaintingEntity;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,9 +17,9 @@ public class EventFixBoundingBox {
     @SubscribeEvent
     public void spawnEvent(EntityJoinWorldEvent event) {
         
-        if(event.getEntity() instanceof PaintingEntity)
+        if(event.getEntity() instanceof Painting)
         {
-            PaintingEntity painting = (PaintingEntity) event.getEntity();
+            Painting painting = (Painting) event.getEntity();
             Paintings.utility.updatePaintingBoundingBox(painting);
         }
     }

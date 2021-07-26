@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.entity.item.PaintingEntity;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -39,47 +39,47 @@ public class PlacePaintingEventHandler {
         if (itemStack.getItem() == Items.PAINTING)
         {
 
-            PlayerEntity player = event.getPlayer();
+            Player player = event.getPlayer();
             Direction face = event.getFace();
             BlockPos blockpos = event.getPos();
-            BlockPos actualPos = blockpos.offset(face);
-            World world = event.getWorld();
+            BlockPos actualPos = blockpos.relative(face);
+            Level world = event.getWorld();
 
             boolean flag = false;
 
             flag = face.getAxis().isHorizontal();
 
-            if (flag && player.canPlayerEdit(actualPos, face, itemStack))
+            if (flag && player.mayUseItemAt(actualPos, face, itemStack))
             {
 
-                PaintingEntity painting = new PaintingEntity(world, actualPos, face);
-                painting.rotationYaw = face.getHorizontalAngle();
+                Painting painting = new Painting(world, actualPos, face);
+                painting.yRot = face.toYRot();
                 // Set position updates bounding box
-                painting.setPosition(actualPos.getX(), blockpos.getY(), actualPos.getZ());
+                painting.setPos(actualPos.getX(), blockpos.getY(), actualPos.getZ());
 
-                if (painting.onValidSurface())
+                if (painting.survives())
                 {
-                    event.getPlayer().swingArm(Hand.MAIN_HAND); // recreate the animation of placing down an item
+                    event.getPlayer().swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
 
                     if (!event.getPlayer().isCreative())
                         itemStack.shrink(1);
 
-                    if (!event.getWorld().isRemote)
+                    if (!event.getWorld().isClientSide)
                     {
 
-                        ServerPlayerEntity playerMP = (ServerPlayerEntity) event.getPlayer();
+                        ServerPlayer playerMP = (ServerPlayer) event.getPlayer();
 
-                        painting.playPlaceSound();
-                        event.getWorld().addEntity(painting);
+                        painting.playPlacementSound();
+                        event.getWorld().addFreshEntity(painting);
 
-                        PaintingType originalArt = painting.art;
+                        Motive originalArt = painting.motive;
 
-                        List<PaintingType> validArts = new ArrayList<PaintingType>(); // list of paintings placeable at current location
+                        List<Motive> validArts = new ArrayList<Motive>(); // list of paintings placeable at current location
                         for (ResourceLocation resLoc : ForgeRegistries.PAINTING_TYPES.getKeys())
                         {
-                            PaintingType art = ForgeRegistries.PAINTING_TYPES.getValue(resLoc);
+                            Motive art = ForgeRegistries.PAINTING_TYPES.getValue(resLoc);
 
-                            painting.art = art;
+                            painting.motive = art;
 
                             // update the bounding box of the painting to make sure the simulation of
                             // placing down a painting
@@ -88,20 +88,20 @@ public class PlacePaintingEventHandler {
 
                             // simulate placing down a painting. if possible, add it to a list of paintings
                             // that are possible to place at this location
-                            if (painting.onValidSurface())
+                            if (painting.survives())
                             {
 
                                 if (ConfigData.use_vanilla_only)
                                 {
-                                    if (art.equals(PaintingType.KEBAB) || art.equals(PaintingType.AZTEC) || art.equals(PaintingType.ALBAN)
-                                            || art.equals(PaintingType.AZTEC2) || art.equals(PaintingType.BOMB) || art.equals(PaintingType.PLANT)
-                                            || art.equals(PaintingType.WASTELAND) || art.equals(PaintingType.POOL) || art.equals(PaintingType.COURBET)
-                                            || art.equals(PaintingType.SEA) || art.equals(PaintingType.SUNSET) || art.equals(PaintingType.CREEBET)
-                                            || art.equals(PaintingType.WANDERER) || art.equals(PaintingType.GRAHAM) || art.equals(PaintingType.MATCH)
-                                            || art.equals(PaintingType.BUST) || art.equals(PaintingType.STAGE) || art.equals(PaintingType.VOID)
-                                            || art.equals(PaintingType.SKULL_AND_ROSES) || art.equals(PaintingType.WITHER) || art.equals(PaintingType.FIGHTERS)
-                                            || art.equals(PaintingType.POINTER) || art.equals(PaintingType.PIGSCENE) || art.equals(PaintingType.BURNING_SKULL)
-                                            || art.equals(PaintingType.SKELETON) || art.equals(PaintingType.DONKEY_KONG))
+                                    if (art.equals(Motive.KEBAB) || art.equals(Motive.AZTEC) || art.equals(Motive.ALBAN)
+                                            || art.equals(Motive.AZTEC2) || art.equals(Motive.BOMB) || art.equals(Motive.PLANT)
+                                            || art.equals(Motive.WASTELAND) || art.equals(Motive.POOL) || art.equals(Motive.COURBET)
+                                            || art.equals(Motive.SEA) || art.equals(Motive.SUNSET) || art.equals(Motive.CREEBET)
+                                            || art.equals(Motive.WANDERER) || art.equals(Motive.GRAHAM) || art.equals(Motive.MATCH)
+                                            || art.equals(Motive.BUST) || art.equals(Motive.STAGE) || art.equals(Motive.VOID)
+                                            || art.equals(Motive.SKULL_AND_ROSES) || art.equals(Motive.WITHER) || art.equals(Motive.FIGHTERS)
+                                            || art.equals(Motive.POINTER) || art.equals(Motive.PIGSCENE) || art.equals(Motive.BURNING_SKULL)
+                                            || art.equals(Motive.SKELETON) || art.equals(Motive.DONKEY_KONG))
                                     {
                                         validArts.add(art);
                                     }
@@ -112,11 +112,11 @@ public class PlacePaintingEventHandler {
 
                         }
                         // reset the art of the painting to the one registered before
-                        painting.art = originalArt;
+                        painting.motive = originalArt;
 
                         Paintings.utility.updatePaintingBoundingBox(painting); // reset bounding box
 
-                        PaintingType[] validArtsArray = validArts.toArray(new PaintingType[0]);
+                        Motive[] validArtsArray = validArts.toArray(new Motive[0]);
                         // sort paintings from high to low, and from big to small
                         Arrays.sort(validArtsArray, new ArtComparator());
 

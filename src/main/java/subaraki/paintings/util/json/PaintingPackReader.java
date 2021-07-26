@@ -17,9 +17,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.resources.IResourceManager;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.resource.ISelectiveResourceReloadListener;
 import net.minecraftforge.resource.VanillaResourceType;
@@ -33,9 +33,9 @@ public class PaintingPackReader {
     public PaintingPackReader registerReloadListener() {
 
         Paintings.LOG.info("Registering Resource Reloading");
-        IResourceManager rm = Minecraft.getInstance().getResourceManager();
-        if (rm instanceof IReloadableResourceManager) {
-            ((IReloadableResourceManager) rm).addReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
+        ResourceManager rm = Minecraft.getInstance().getResourceManager();
+        if (rm instanceof ReloadableResourceManager) {
+            ((ReloadableResourceManager) rm).registerReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
                 if (resourcePredicate.test(VanillaResourceType.TEXTURES)) {
                     loadFromJson();
                 }
@@ -158,10 +158,10 @@ public class PaintingPackReader {
         }
     }
 
-    public static void registerToMinecraft(RegistryEvent.Register<PaintingType> event) {
+    public static void registerToMinecraft(RegistryEvent.Register<Motive> event) {
 
         for (PaintingEntry entry : addedPaintings) {
-            PaintingType painting = new PaintingType(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
+            Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);
             Paintings.LOG.info("registered painting " + painting);
         }

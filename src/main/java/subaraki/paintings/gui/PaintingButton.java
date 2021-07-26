@@ -2,13 +2,15 @@ package subaraki.paintings.gui;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 public class PaintingButton extends Button {
 
@@ -17,7 +19,7 @@ public class PaintingButton extends Button {
 
     ResourceLocation resLoc;
 
-    public PaintingButton(int x, int y, int w, int h, ITextComponent text, IPressable onPress, PaintingType pt) {
+    public PaintingButton(int x, int y, int w, int h, Component text, OnPress onPress, Motive pt) {
 
         super(x, y, w, h, text, onPress);
         String combo = pt.getRegistryName().getNamespace() + ":textures/painting/" + pt.getRegistryName().getPath() + ".png";
@@ -25,10 +27,10 @@ public class PaintingButton extends Button {
     }
 
     @Override
-    public void renderButton(MatrixStack mat, int mouseX, int mouseY, float partial_ticks)
+    public void renderButton(PoseStack mat, int mouseX, int mouseY, float partial_ticks)
     {
 
-        Minecraft.getInstance().getTextureManager().bindTexture(resLoc);
+        Minecraft.getInstance().getTextureManager().bind(resLoc);
 
         blit(mat, this.x, this.y, 0, 0, width, height, width, height);
 

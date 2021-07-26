@@ -1,36 +1,36 @@
 package subaraki.paintings.util;
 
-import net.minecraft.entity.item.HangingEntity;
-import net.minecraft.entity.item.PaintingEntity;
-import net.minecraft.entity.item.PaintingType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
 
 public class PaintingUtility {
 
     // copied this from vanilla , the original one is protected for some reason
     public void updatePaintingBoundingBox(HangingEntity painting) {
 
-        if (painting.getHorizontalFacing() != null) {
-            double hangX = (double) painting.getHangingPosition().getX() + 0.5D;
-            double hangY = (double) painting.getHangingPosition().getY() + 0.5D;
-            double hangZ = (double) painting.getHangingPosition().getZ() + 0.5D;
-            double offsetWidth = painting.getWidthPixels() % 32 == 0 ? 0.5D : 0.0D;
-            double offsetHeight = painting.getHeightPixels() % 32 == 0 ? 0.5D : 0.0D;
-            hangX = hangX - (double) painting.getHorizontalFacing().getXOffset() * 0.46875D;
-            hangZ = hangZ - (double) painting.getHorizontalFacing().getZOffset() * 0.46875D;
+        if (painting.getDirection() != null) {
+            double hangX = (double) painting.getPos().getX() + 0.5D;
+            double hangY = (double) painting.getPos().getY() + 0.5D;
+            double hangZ = (double) painting.getPos().getZ() + 0.5D;
+            double offsetWidth = painting.getWidth() % 32 == 0 ? 0.5D : 0.0D;
+            double offsetHeight = painting.getHeight() % 32 == 0 ? 0.5D : 0.0D;
+            hangX = hangX - (double) painting.getDirection().getStepX() * 0.46875D;
+            hangZ = hangZ - (double) painting.getDirection().getStepZ() * 0.46875D;
             hangY = hangY + offsetHeight;
-            Direction enumfacing = painting.getHorizontalFacing().rotateYCCW();
-            hangX = hangX + offsetWidth * (double) enumfacing.getXOffset();
-            hangZ = hangZ + offsetWidth * (double) enumfacing.getZOffset();
+            Direction enumfacing = painting.getDirection().getCounterClockWise();
+            hangX = hangX + offsetWidth * (double) enumfacing.getStepX();
+            hangZ = hangZ + offsetWidth * (double) enumfacing.getStepZ();
             
-            painting.setRawPosition(hangX, hangY, hangZ);
-            double widthX = (double) painting.getWidthPixels();
-            double height = (double) painting.getHeightPixels();
-            double widthZ = (double) painting.getWidthPixels();
+            painting.setPosRaw(hangX, hangY, hangZ);
+            double widthX = (double) painting.getWidth();
+            double height = (double) painting.getHeight();
+            double widthZ = (double) painting.getWidth();
 
-            if (painting.getHorizontalFacing().getAxis() == Direction.Axis.Z) {
+            if (painting.getDirection().getAxis() == Direction.Axis.Z) {
                 widthZ = 1.0D;
             } else {
                 widthX = 1.0D;
@@ -39,15 +39,15 @@ public class PaintingUtility {
             widthX = widthX / 32.0D;
             height = height / 32.0D;
             widthZ = widthZ / 32.0D;
-            painting.setBoundingBox(new AxisAlignedBB(hangX - widthX, hangY - height, hangZ - widthZ, hangX + widthX, hangY + height, hangZ + widthZ));
+            painting.setBoundingBox(new AABB(hangX - widthX, hangY - height, hangZ - widthZ, hangX + widthX, hangY + height, hangZ + widthZ));
         }
     }
     
-    public void setArt(PaintingEntity painting, PaintingType type) {
-        CompoundNBT tag = new CompoundNBT();
-        painting.writeAdditional(tag);
+    public void setArt(Painting painting, Motive type) {
+        CompoundTag tag = new CompoundTag();
+        painting.addAdditionalSaveData(tag);
         tag.putString("Motive", type.getRegistryName().toString());
-        painting.readAdditional(tag);
+        painting.readAdditionalSaveData(tag);
     }
 
 }
