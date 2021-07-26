@@ -6,11 +6,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
-
-import net.minecraft.client.gui.components.Button.OnPress;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.decoration.Motive;
 
 public class PaintingButton extends Button {
 
@@ -30,7 +28,7 @@ public class PaintingButton extends Button {
     public void renderButton(PoseStack mat, int mouseX, int mouseY, float partial_ticks)
     {
 
-        Minecraft.getInstance().getTextureManager().bind(resLoc);
+        Minecraft.getInstance().getTextureManager().bindForSetup(resLoc);
 
         blit(mat, this.x, this.y, 0, 0, width, height, width, height);
 

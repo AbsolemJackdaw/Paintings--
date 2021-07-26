@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
@@ -53,7 +53,7 @@ public class PlacePaintingEventHandler {
             {
 
                 Painting painting = new Painting(world, actualPos, face);
-                painting.yRot = face.toYRot();
+                painting.setYRot(face.toYRot());
                 // Set position updates bounding box
                 painting.setPos(actualPos.getX(), blockpos.getY(), actualPos.getZ());
 
@@ -64,7 +64,7 @@ public class PlacePaintingEventHandler {
                     if (!event.getPlayer().isCreative())
                         itemStack.shrink(1);
 
-                    if (!event.getWorld().isClientSide)
+                    if (!event.getWorld().isClientSide())
                     {
 
                         ServerPlayer playerMP = (ServerPlayer) event.getPlayer();
@@ -84,7 +84,7 @@ public class PlacePaintingEventHandler {
                             // update the bounding box of the painting to make sure the simulation of
                             // placing down a painting
                             // happens correctly. Omiting this will result in overlapping paintings
-                            Paintings.utility.updatePaintingBoundingBox(painting);
+                            Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
                             // simulate placing down a painting. if possible, add it to a list of paintings
                             // that are possible to place at this location
@@ -114,7 +114,7 @@ public class PlacePaintingEventHandler {
                         // reset the art of the painting to the one registered before
                         painting.motive = originalArt;
 
-                        Paintings.utility.updatePaintingBoundingBox(painting); // reset bounding box
+                        Paintings.UTILITY.updatePaintingBoundingBox(painting); // reset bounding box
 
                         Motive[] validArtsArray = validArts.toArray(new Motive[0]);
                         // sort paintings from high to low, and from big to small

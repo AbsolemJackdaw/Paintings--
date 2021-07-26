@@ -2,10 +2,10 @@ package subaraki.paintings.event;
 
 import java.util.Arrays;
 
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -61,7 +61,7 @@ public class PaintingInteractEvent {
                         if (newArt == null && takeNext)
                             newArt = firstMatch;
 
-                        Paintings.utility.setArt(painting, newArt);
+                        Paintings.UTILITY.setArt(painting, newArt);
                     }
                 }
             }

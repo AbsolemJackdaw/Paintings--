@@ -2,12 +2,12 @@ package subaraki.paintings.packet.client;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.packet.IPacketBase;
@@ -70,8 +70,8 @@ public class CPacketPainting implements IPacketBase {
                 if (entity instanceof Painting) {
                     Painting painting = (Painting) entity;
                     Motive type = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(resLocNames[0]));
-                    Paintings.utility.setArt(painting, type);
-                    Paintings.utility.updatePaintingBoundingBox(painting);
+                    Paintings.UTILITY.setArt(painting, type);
+                    Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
                 }
             } else // we need to open the painting gui to select a painting

@@ -1,10 +1,10 @@
 package subaraki.paintings.util;
 
-import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.phys.AABB;
 
 public class PaintingUtility {

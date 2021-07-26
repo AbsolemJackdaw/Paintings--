@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,29 +19,43 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.entity.decoration.Motive;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.resource.ISelectiveResourceReloadListener;
-import net.minecraftforge.resource.VanillaResourceType;
-import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
 
 public class PaintingPackReader {
 
     private static ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
 
-    public PaintingPackReader registerReloadListener() {
+    public PaintingPackReader registerReloadListener()
+    {
 
         Paintings.LOG.info("Registering Resource Reloading");
         ResourceManager rm = Minecraft.getInstance().getResourceManager();
-        if (rm instanceof ReloadableResourceManager) {
-            ((ReloadableResourceManager) rm).registerReloadListener((ISelectiveResourceReloadListener) (resourceManager, resourcePredicate) -> {
-                if (resourcePredicate.test(VanillaResourceType.TEXTURES)) {
-                    loadFromJson();
+        if (rm instanceof ReloadableResourceManager)
+        {
+            ((ReloadableResourceManager) rm).registerReloadListener(new PreparableReloadListener() {
+
+                @Override
+                public CompletableFuture<Void> reload(PreparationBarrier p_10638_, ResourceManager p_10639_, ProfilerFiller p_10640_, ProfilerFiller p_10641_, Executor p_10642_, Executor p_10643_)
+                {
+
+                    return CompletableFuture.runAsync(() -> {
+                        loadFromJson();
+                    });
                 }
+
             });
+            // (PreparableReloadListener) (resourceManager, resourcePredicate) -> {
+            // if (resourcePredicate.test(VanillaResourceType.TEXTURES))
+            // {
+            // loadFromJson();
+            // }
+            // });
         }
 
         return this;
@@ -49,7 +65,8 @@ public class PaintingPackReader {
      * called once on mod clas initialization. the loadFromJson called in here reads
      * json files directly out of a directory.
      */
-    public PaintingPackReader init() {
+    public PaintingPackReader init()
+    {
 
         Paintings.LOG.info("loading json file and contents for paintings.");
         loadFromJson();
@@ -57,13 +74,16 @@ public class PaintingPackReader {
         return this;
     }
 
-    private void loadFromJson() {
+    private void loadFromJson()
+    {
 
-        try {
+        try
+        {
 
             File directory = new File("./paintings");
 
-            if (!directory.exists()) {
+            if (!directory.exists())
+            {
 
                 directory.mkdir();
 
@@ -71,21 +91,28 @@ public class PaintingPackReader {
                 // copy over to exterior folder
                 // copy contents of base
                 try (InputStream is = getClass().getResourceAsStream("/assets/paintings/paintings.json");
-                        OutputStream os = new FileOutputStream("./paintings/paintings.json");) {
+                        OutputStream os = new FileOutputStream("./paintings/paintings.json");)
+                {
                     byte[] buffer = new byte[1024];
                     int length;
-                    while ((length = is.read(buffer)) > 0) {
+                    while ((length = is.read(buffer)) > 0)
+                    {
                         os.write(buffer, 0, length);
                     }
 
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     e.printStackTrace();
                 }
             }
 
-            for (File jsonfile : directory.listFiles()) {
-                if (jsonfile.isFile()) {
-                    if (jsonfile.getName().endsWith(".json")) {
+            for (File jsonfile : directory.listFiles())
+            {
+                if (jsonfile.isFile())
+                {
+                    if (jsonfile.getName().endsWith(".json"))
+                    {
 
                         InputStream stream = new FileInputStream(jsonfile);
                         Gson gson = new GsonBuilder().create();
@@ -96,7 +123,8 @@ public class PaintingPackReader {
 
                         JsonArray array = json.getAsJsonArray("paintings");
 
-                        for (int i = 0; i < array.size(); i++) {
+                        for (int i = 0; i < array.size(); i++)
+                        {
 
                             JsonObject jsonObject = array.get(i).getAsJsonObject();
 
@@ -106,20 +134,24 @@ public class PaintingPackReader {
                             int sizeY = 0;
                             int sizeSquare = 0;
 
-                            if (jsonObject.has("x")) {
+                            if (jsonObject.has("x"))
+                            {
                                 sizeX = jsonObject.get("x").getAsInt();
                             }
 
-                            if (jsonObject.has("y")) {
+                            if (jsonObject.has("y"))
+                            {
                                 sizeY = jsonObject.get("y").getAsInt();
                             }
 
-                            if (jsonObject.has("square")) {
+                            if (jsonObject.has("square"))
+                            {
                                 sizeSquare = jsonObject.get("square").getAsInt();
                             }
 
                             if (sizeSquare == 0)
-                                if ((sizeX == 0 || sizeY == 0)) {
+                                if ((sizeX == 0 || sizeY == 0))
+                                {
                                     Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
                                     Paintings.LOG.error("Painting name is : " + textureName);
                                     Paintings.LOG.error("Skipping...");
@@ -127,7 +159,8 @@ public class PaintingPackReader {
                                 }
 
                             if (sizeSquare % 16 != 0)
-                                if ((sizeX % 16 != 0 || sizeY % 16 != 0)) {
+                                if ((sizeX % 16 != 0 || sizeY % 16 != 0))
+                                {
                                     Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
                                     Paintings.LOG.error("Painting name is : " + textureName);
                                     Paintings.LOG.error("Skipping...");
@@ -143,9 +176,11 @@ public class PaintingPackReader {
                     }
                 }
             }
-        } catch (
+        }
+        catch (
 
-        IOException e) {
+        IOException e)
+        {
             Paintings.LOG.warn("************************************");
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.warn("No Painting Packs Detected. You will not be able to use ");
@@ -158,9 +193,11 @@ public class PaintingPackReader {
         }
     }
 
-    public static void registerToMinecraft(RegistryEvent.Register<Motive> event) {
+    public static void registerToMinecraft(RegistryEvent.Register<Motive> event)
+    {
 
-        for (PaintingEntry entry : addedPaintings) {
+        for (PaintingEntry entry : addedPaintings)
+        {
             Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);
             Paintings.LOG.info("registered painting " + painting);

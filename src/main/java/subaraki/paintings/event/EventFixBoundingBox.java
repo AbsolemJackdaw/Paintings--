@@ -20,7 +20,7 @@ public class EventFixBoundingBox {
         if(event.getEntity() instanceof Painting)
         {
             Painting painting = (Painting) event.getEntity();
-            Paintings.utility.updatePaintingBoundingBox(painting);
+            Paintings.UTILITY.updatePaintingBoundingBox(painting);
         }
     }
 }
