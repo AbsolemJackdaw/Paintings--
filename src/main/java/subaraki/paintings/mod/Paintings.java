@@ -12,10 +12,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import subaraki.paintings.event.EventRegistry;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.util.PaintingUtility;
 import subaraki.paintings.util.json.PaintingPackReader;
@@ -28,13 +26,14 @@ public class Paintings {
     public static final Logger LOG = LogManager.getLogger(MODID);
 
     /** call init here, to read json files before any event is launched. */
-    private static final PaintingPackReader PAINTING_PACK_READER = new PaintingPackReader().init();
+    static
+    {
+        new PaintingPackReader().init();
+    }
 
     public static final PaintingUtility UTILITY = new PaintingUtility();
 
     public Paintings() {
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
@@ -49,16 +48,7 @@ public class Paintings {
     private void commonSetup(final FMLCommonSetupEvent event)
     {
 
-        new EventRegistry();
         new NetworkHandler();
-    }
-
-    private void clientSetup(final FMLClientSetupEvent event)
-    {
-
-        // init on class load to make sure the list is filled before the registry access
-        PAINTING_PACK_READER.registerReloadListener();
-
     }
 
     public void modConfig(ModConfigEvent event)
