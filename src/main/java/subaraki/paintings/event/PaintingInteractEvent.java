@@ -8,15 +8,18 @@ import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.EntityInteractSpecific;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.util.ArtComparator;
 
+@EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PaintingInteractEvent {
 
     @SubscribeEvent
-    public void interact(EntityInteractSpecific event) {
+    public static void interact(EntityInteractSpecific event) {
 
         if (ConfigData.cycle_paintings)
             if (event.getTarget() instanceof Painting) {
@@ -67,12 +70,12 @@ public class PaintingInteractEvent {
             }
     }
 
-    private boolean equalSizes(Motive a, Motive b) {
+    private static boolean equalSizes(Motive a, Motive b) {
 
         return a.getWidth() == b.getWidth() && a.getHeight() == b.getHeight();
     }
 
-    private boolean equalNames(Motive a, Motive b) {
+    private static boolean equalNames(Motive a, Motive b) {
 
         return a.getRegistryName().equals(b.getRegistryName());
     }

@@ -17,6 +17,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
@@ -25,10 +27,11 @@ import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.packet.client.CPacketPainting;
 import subaraki.paintings.util.ArtComparator;
 
+@EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PlacePaintingEventHandler {
 
     @SubscribeEvent
-    public void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event)
+    public static void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event)
     {
 
         if (!ConfigData.use_selection_gui)
@@ -93,15 +96,14 @@ public class PlacePaintingEventHandler {
 
                                 if (ConfigData.use_vanilla_only)
                                 {
-                                    if (art.equals(Motive.KEBAB) || art.equals(Motive.AZTEC) || art.equals(Motive.ALBAN)
-                                            || art.equals(Motive.AZTEC2) || art.equals(Motive.BOMB) || art.equals(Motive.PLANT)
-                                            || art.equals(Motive.WASTELAND) || art.equals(Motive.POOL) || art.equals(Motive.COURBET)
-                                            || art.equals(Motive.SEA) || art.equals(Motive.SUNSET) || art.equals(Motive.CREEBET)
-                                            || art.equals(Motive.WANDERER) || art.equals(Motive.GRAHAM) || art.equals(Motive.MATCH)
-                                            || art.equals(Motive.BUST) || art.equals(Motive.STAGE) || art.equals(Motive.VOID)
-                                            || art.equals(Motive.SKULL_AND_ROSES) || art.equals(Motive.WITHER) || art.equals(Motive.FIGHTERS)
-                                            || art.equals(Motive.POINTER) || art.equals(Motive.PIGSCENE) || art.equals(Motive.BURNING_SKULL)
-                                            || art.equals(Motive.SKELETON) || art.equals(Motive.DONKEY_KONG))
+                                    if (art.equals(Motive.KEBAB) || art.equals(Motive.AZTEC) || art.equals(Motive.ALBAN) || art.equals(Motive.AZTEC2)
+                                            || art.equals(Motive.BOMB) || art.equals(Motive.PLANT) || art.equals(Motive.WASTELAND) || art.equals(Motive.POOL)
+                                            || art.equals(Motive.COURBET) || art.equals(Motive.SEA) || art.equals(Motive.SUNSET) || art.equals(Motive.CREEBET)
+                                            || art.equals(Motive.WANDERER) || art.equals(Motive.GRAHAM) || art.equals(Motive.MATCH) || art.equals(Motive.BUST)
+                                            || art.equals(Motive.STAGE) || art.equals(Motive.VOID) || art.equals(Motive.SKULL_AND_ROSES)
+                                            || art.equals(Motive.WITHER) || art.equals(Motive.FIGHTERS) || art.equals(Motive.POINTER)
+                                            || art.equals(Motive.PIGSCENE) || art.equals(Motive.BURNING_SKULL) || art.equals(Motive.SKELETON)
+                                            || art.equals(Motive.DONKEY_KONG))
                                     {
                                         validArts.add(art);
                                     }
