@@ -1,16 +1,16 @@
 modLoader="javafml" #mandatory
 license="GNU V3"
-loaderVersion="[28,)" #mandatory (26 is current forge version)
+loaderVersion="[37,)" #mandatory (37 is current forge version)
 issueTrackerURL="https://github.com/ArtixAllMighty/Paintings--/issues" #optional
 
 logoFile="banner.png" #optional
 
 [[mods]] #mandatory
 modId="paintings" #mandatory
-version="1.14.4-6.0.1.5" #mandatory
+version="${file.jarVersion}" #mandatory
 displayName="Paintings ++" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/paintings" #optional
-credits="David Goldman : the original Painting Selection Gui. Murphy's Chaos : the 1.12 flexible template update , Serilum for letting me use the Cycle Paintings concept" #optional
+credits="David Goldman : the original Painting Selection Gui. Murphy's Chaos : the 1.12 flexible template update , Serilum for suggesting the Cycle Paintings concept" #optional
 authors="Subaraki" #optional
 description='''
 Add more paintings to your game !! 
