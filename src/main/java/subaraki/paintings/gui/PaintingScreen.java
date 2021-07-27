@@ -1,8 +1,7 @@
 package subaraki.paintings.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -75,10 +74,12 @@ public class PaintingScreen extends Screen {
                 prevHeight = type.getHeight(); // stays the same on row end, changes when heights change
 
             }
-            
+
             this.addRenderableWidget(new PaintingButton(posx, posy, type.getWidth(), type.getHeight(), new TextComponent(""), (Button) -> {
                 NetworkHandler.NETWORK.sendToServer(new SPacketPainting(type, this.entityID));
                 this.removed();
+                this.onClose();
+                
             }, type));
 
             posx += GAP + type.getWidth();
@@ -108,32 +109,29 @@ public class PaintingScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack mat, int mouseX, int mouseY, float p_render_3_)
+    public void render(PoseStack stack, int mouseX, int mouseY, float p_render_3_)
     {
 
-        this.renderBackground(mat);
+        this.renderBackground(stack);
 
-        fill(mat, START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
-
-        GL11.glColor4f(1, 1, 1, 1);
+        fill(stack, START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
 
         Window window = minecraft.getWindow();
         int scale = (int) window.getGuiScale();
-        GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        GL11.glScissor(START_X * scale, START_Y * scale, width * scale, (height - (START_Y * 2)) * scale);
 
-        super.render(mat, mouseX, mouseY, p_render_3_);
-        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        RenderSystem.enableScissor(START_X * scale, START_Y * scale, width * scale, (height - (START_Y * 2)) * scale);
+
+        super.render(stack, mouseX, mouseY, p_render_3_);
+
+        RenderSystem.disableScissor();
 
         if (!renderables.isEmpty())
         {
-            drawFakeScrollBar(mat);
+            drawFakeScrollBar(stack);
         }
-        drawCenteredString(mat, font, title, width / 2, START_Y / 2, 0xffffff);
+        drawCenteredString(stack, font, title, width / 2, START_Y / 2, 0xffffff);
 
-        GL11.glColor4f(1, 1, 1, 1);
-
-        drawToolTips(mat, mouseX, mouseY);
+        drawToolTips(stack, mouseX, mouseY);
     }
 
     @Override
@@ -277,7 +275,7 @@ public class PaintingScreen extends Screen {
         if (index < 0 || index > this.renderables.size())
             return defaultButton;
 
-        Widget w = this.getAbstractWidget(index);
+        Widget w = this.renderables.get(index);
 
         if (w instanceof AbstractWidget)
             return (AbstractWidget) w;
