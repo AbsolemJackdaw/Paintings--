@@ -1,16 +1,22 @@
 package subaraki.paintings.util.json;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,47 +24,27 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.decoration.Motive;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import subaraki.paintings.mod.Paintings;
 
+@EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PaintingPackReader {
 
     private static ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
 
-    public PaintingPackReader registerReloadListener()
+    @SubscribeEvent
+    public static void registerreloadListener(AddReloadListenerEvent event)
     {
 
-        Paintings.LOG.info("Registering Resource Reloading");
-        ResourceManager rm = Minecraft.getInstance().getResourceManager();
-        if (rm instanceof ReloadableResourceManager)
-        {
-            ((ReloadableResourceManager) rm).registerReloadListener(new PreparableReloadListener() {
+//        event.addListener((ResourceManagerReloadListener) ((resourceManager) -> {
+//            new PaintingPackReader().init();
+//        }));
 
-                @Override
-                public CompletableFuture<Void> reload(PreparationBarrier p_10638_, ResourceManager p_10639_, ProfilerFiller p_10640_, ProfilerFiller p_10641_, Executor p_10642_, Executor p_10643_)
-                {
-
-                    return CompletableFuture.runAsync(() -> {
-                        loadFromJson();
-                    });
-                }
-
-            });
-            // (PreparableReloadListener) (resourceManager, resourcePredicate) -> {
-            // if (resourcePredicate.test(VanillaResourceType.TEXTURES))
-            // {
-            // loadFromJson();
-            // }
-            // });
-        }
-
-        return this;
     }
 
     /**
@@ -77,44 +63,120 @@ public class PaintingPackReader {
     private void loadFromJson()
     {
 
+        // duplicate the gbase paintings template to our custom folder
         try
         {
+            Paintings.LOG.info("Copying Over Base Template to /paintings");
+            Path dir = Paths.get("./paintings");
 
-            File directory = new File("./paintings");
-
-            if (!directory.exists())
+            if (!Files.exists(dir))
             {
 
-                directory.mkdir();
+                Files.createDirectory(dir);
+                Files.copy(getClass().getResourceAsStream("/assets/paintings/paintings.json"), dir.resolve("paintings.json"));
+                // copyJsonToFolder
+            }
+        }
+        catch (IOException e)
+        {
+            Paintings.LOG.warn("************************************");
+            Paintings.LOG.warn("!*!*!*!*!");
+            Paintings.LOG.error("Copying Base Template Failed");
+            Paintings.LOG.warn("!*!*!*!*!");
+            Paintings.LOG.warn("************************************");
 
-                // read provided base json
-                // copy over to exterior folder
-                // copy contents of base
-                try (InputStream is = getClass().getResourceAsStream("/assets/paintings/paintings.json");
-                        OutputStream os = new FileOutputStream("./paintings/paintings.json");)
+            e.printStackTrace();
+        }
+
+        // read out all resourcepacks, exclusively in zips,
+        // to look for any other pack
+        // and copy their json file over
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(Paths.get("./resourcepacks"));)
+        {
+            Paintings.LOG.info("Reading out ResourcePacks to find painting related json files");
+
+            for (Path resourcePackPath : ds)
+            {
+                if (resourcePackPath.toString().endsWith(".zip"))
                 {
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = is.read(buffer)) > 0)
+                    URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
+                    
+                    Paintings.LOG.info(jarUri);
+                    
+                    try (FileSystem system = initFileSystem(jarUri))
                     {
-                        os.write(buffer, 0, length);
-                    }
+                        Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
 
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
+                        while (resourcePacks.hasNext())
+                        {
+                            boolean copyOver = false;
+
+                            Path next = resourcePacks.next();
+                            if (Files.isRegularFile(next) && next.toString().endsWith("json"))
+                            {
+                                Paintings.LOG.info("Candidate Found " + next.getFileName());
+                                try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next))))
+                                {
+
+                                    Gson gson = new GsonBuilder().create();
+                                    JsonElement je = gson.fromJson(reader, JsonElement.class);
+                                    JsonObject json = je.getAsJsonObject();
+                                    
+                                    if (json.has("paintings"))
+                                    {
+                                        copyOver = true;
+                                        Paintings.LOG.info("Candidate Validated");
+                                    }
+                                    else
+                                    {
+                                        Paintings.LOG.info("Candidate Not Valid, Rejected");
+                                    }
+                                }
+
+                            }
+
+                            if (copyOver)
+                            {
+                                Files.copy(next, Path.of("./paintings").resolve(next.getFileName().toString()));
+                            }
+
+                        }
+                    }
                 }
             }
+        }
+        catch (IOException | URISyntaxException e)
+        {
 
-            for (File jsonfile : directory.listFiles())
+            Paintings.LOG.warn("************************************");
+            Paintings.LOG.warn("!*!*!*!*!");
+            Paintings.LOG.error("An error occured reading resourcepacks for painting related files. Skipping process.");
+            Paintings.LOG.warn("!*!*!*!*!");
+            Paintings.LOG.warn("************************************");
+
+            e.printStackTrace();
+        }
+
+        // read out all json files in the painting directory
+
+        Path dir = Paths.get("./paintings");
+
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir))
+        {
+            Paintings.LOG.info("Started Reading all json files in /painting directory");
+
+            for (Path filesInDirPath : ds)
             {
-                if (jsonfile.isFile())
-                {
-                    if (jsonfile.getName().endsWith(".json"))
-                    {
+                Paintings.LOG.info(filesInDirPath);
+                Iterator<Path> jsonFiles = Files.walk(filesInDirPath).iterator();
 
-                        InputStream stream = new FileInputStream(jsonfile);
+                while (jsonFiles.hasNext())
+                {
+                    Path nextJson = jsonFiles.next();
+
+                    if (Files.isRegularFile(nextJson) && nextJson.toString().endsWith(".json"))
+                    {
+                        InputStream stream = Files.newInputStream(nextJson);
                         Gson gson = new GsonBuilder().create();
 
                         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
@@ -123,10 +185,10 @@ public class PaintingPackReader {
 
                         JsonArray array = json.getAsJsonArray("paintings");
 
-                        for (int i = 0; i < array.size(); i++)
+                        for (int index = 0; index < array.size(); index++)
                         {
 
-                            JsonObject jsonObject = array.get(i).getAsJsonObject();
+                            JsonObject jsonObject = array.get(index).getAsJsonObject();
 
                             String textureName = jsonObject.get("name").getAsString();
 
@@ -172,14 +234,12 @@ public class PaintingPackReader {
                             addedPaintings.add(entry);
 
                         }
-                        stream.close();
                     }
                 }
+
             }
         }
-        catch (
-
-        IOException e)
+        catch (IOException e)
         {
             Paintings.LOG.warn("************************************");
             Paintings.LOG.warn("!*!*!*!*!");
@@ -200,8 +260,21 @@ public class PaintingPackReader {
         {
             Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
             event.getRegistry().register(painting);
-            Paintings.LOG.info("registered painting " + painting);
+            Paintings.LOG.info("registered painting " + painting.getRegistryName());
         }
     }
-
+    
+    private FileSystem initFileSystem(URI uri) throws IOException
+    {
+        try
+        {
+            return FileSystems.getFileSystem(uri);
+        }
+        catch( FileSystemNotFoundException e )
+        {
+            Map<String, String> env = new HashMap<>();
+            env.put("create", "true");
+            return FileSystems.newFileSystem(uri, env);
+        }
+    }
 }
