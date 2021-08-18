@@ -1,9 +1,5 @@
 package subaraki.paintings.event;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +22,10 @@ import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.packet.client.CPacketPainting;
 import subaraki.paintings.util.ArtComparator;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PlacePaintingEventHandler {

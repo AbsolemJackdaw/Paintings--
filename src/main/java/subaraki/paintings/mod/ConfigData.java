@@ -1,8 +1,7 @@
 package subaraki.paintings.mod;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ConfigData {
 

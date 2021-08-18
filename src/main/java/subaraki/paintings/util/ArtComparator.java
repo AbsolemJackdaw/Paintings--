@@ -1,8 +1,8 @@
 package subaraki.paintings.util;
 
-import java.util.Comparator;
-
 import net.minecraft.world.entity.decoration.Motive;
+
+import java.util.Comparator;
 
 
 public class ArtComparator implements Comparator<Motive> {

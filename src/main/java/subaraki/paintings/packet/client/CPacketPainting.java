@@ -1,7 +1,5 @@
 package subaraki.paintings.packet.client;
 
-import java.util.function.Supplier;
-
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +11,8 @@ import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.packet.IPacketBase;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.util.ClientReferences;
+
+import java.util.function.Supplier;
 
 public class CPacketPainting implements IPacketBase {
 

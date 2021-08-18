@@ -1,7 +1,5 @@
 package subaraki.paintings.event;
 
-import java.util.Arrays;
-
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
@@ -14,6 +12,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.util.ArtComparator;
+
+import java.util.Arrays;
 
 @EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PaintingInteractEvent {
