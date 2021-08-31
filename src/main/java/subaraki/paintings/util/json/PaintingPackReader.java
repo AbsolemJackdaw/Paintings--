@@ -1,10 +1,9 @@
 package subaraki.paintings.util.json;
 
 import com.google.gson.*;
+import net.minecraft.ResourceLocationException;
 import net.minecraft.world.entity.decoration.Motive;
-import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import subaraki.paintings.mod.Paintings;
@@ -24,15 +23,20 @@ import java.util.Map;
 @EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PaintingPackReader {
 
-    private static ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
+    private static final ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
 
-    @SubscribeEvent
-    public static void registerreloadListener(AddReloadListenerEvent event) {
+    public static void registerToMinecraft(RegistryEvent.Register<Motive> event) {
 
-//        event.addListener((ResourceManagerReloadListener) ((resourceManager) -> {
-//            new PaintingPackReader().init();
-//        }));
+        for (PaintingEntry entry : addedPaintings) {
+            try {
+                Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
+                event.getRegistry().register(painting);
+                //Paintings.LOG.info("registered painting " + painting.getRegistryName());
+            } catch (ResourceLocationException e) {
+                Paintings.LOG.error("Skipping. Found Error: {}", e.getMessage());
+            }
 
+        }
     }
 
     /**
@@ -64,23 +68,21 @@ public class PaintingPackReader {
             Paintings.LOG.warn("************************************");
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.error("Copying Base Template Failed");
+            Paintings.LOG.error(e.getMessage());
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.warn("************************************");
-
-            e.printStackTrace();
         }
 
         // read out all resourcepacks, exclusively in zips,
         // to look for any other pack
         // and copy their json file over
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(Paths.get("./resourcepacks"));) {
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get("./resourcepacks"))) {
             Paintings.LOG.info("Reading out ResourcePacks to find painting related json files");
 
-            for (Path resourcePackPath : ds) {
-                if (resourcePackPath.toString().endsWith(".zip")) {
+            for (Path resourcePackPath : directoryStream) {
+                Paintings.LOG.info("Reading `{}`", resourcePackPath.getFileName().toString());
+                try {
                     URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
-
-                    Paintings.LOG.info(jarUri);
 
                     try (FileSystem system = initFileSystem(jarUri)) {
                         Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
@@ -89,7 +91,6 @@ public class PaintingPackReader {
 
                             Path next = resourcePacks.next();
                             if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
-                                Paintings.LOG.info("Candidate Found " + next.getFileName());
                                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
 
                                     Gson gson = new GsonBuilder().create();
@@ -98,12 +99,14 @@ public class PaintingPackReader {
 
                                     if (json.has("paintings")) {
                                         copyOver = true;
-                                        Paintings.LOG.info("Candidate Validated");
-                                    } else {
-                                        Paintings.LOG.info("Candidate Not Valid, Rejected");
+                                        Paintings.LOG.info("Validated: {}", next.getFileName().toString());
                                     }
+                                } catch (Exception e) {
+                                    Paintings.LOG.warn("************************************");
+                                    Paintings.LOG.error("`{}` Errored. Skipping.", next.getFileName().toString());
+                                    Paintings.LOG.error(e.getMessage());
+                                    Paintings.LOG.warn("************************************");
                                 }
-
                             }
 
                             if (copyOver) {
@@ -113,26 +116,29 @@ public class PaintingPackReader {
                             }
 
                         }
+                    } catch (Exception e) {
+                        Paintings.LOG.warn("************************************");
+                        Paintings.LOG.error("Invalid ResourcePack  {}", resourcePackPath.getFileName().toString());
+                        Paintings.LOG.error(e.getMessage());
+                        Paintings.LOG.warn("************************************");
+
                     }
+                } catch (URISyntaxException e) {
+                    Paintings.LOG.warn("************************************");
+                    Paintings.LOG.error("Error Detected in ResourcePack `{}` ", resourcePackPath.getFileName().toString());
+                    Paintings.LOG.warn(e);
+                    Paintings.LOG.warn("************************************");
                 }
             }
         } catch (IOException e) {
 
             Paintings.LOG.warn("************************************");
             Paintings.LOG.warn("!*!*!*!*!");
-            Paintings.LOG.error("An error occured reading resourcepacks for painting related files. Skipping process.");
+            Paintings.LOG.error("A fatal error occurred reading the resource pack directory");
+            Paintings.LOG.error("SKIPPING ENTIRE PROCESS");
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.warn("************************************");
-
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            Paintings.LOG.warn("************************************");
-            Paintings.LOG.warn("!*!*!*!*!");
-            Paintings.LOG.error("An error occured reading resourcepacks for painting related files. Skipping process.");
-            Paintings.LOG.warn("!*!*!*!*!");
-            Paintings.LOG.warn("************************************");
-
-            e.printStackTrace();
+            Paintings.LOG.warn(e);
         }
 
         // read out all json files in the painting directory
@@ -211,20 +217,11 @@ public class PaintingPackReader {
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.warn("No Painting Packs Detected. You will not be able to use ");
             Paintings.LOG.warn("the Paintings ++ Mod correctly.");
-            Paintings.LOG.warn("Make sure to select or set some in the resourcepack gui !");
+            Paintings.LOG.warn("Make sure to select or set some in the resourcepack folder and/or ingame gui !");
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.warn("************************************");
 
             e.printStackTrace();
-        }
-    }
-
-    public static void registerToMinecraft(RegistryEvent.Register<Motive> event) {
-
-        for (PaintingEntry entry : addedPaintings) {
-            Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(Paintings.MODID, entry.getRefName());
-            event.getRegistry().register(painting);
-            Paintings.LOG.info("registered painting " + painting.getRegistryName());
         }
     }
 
