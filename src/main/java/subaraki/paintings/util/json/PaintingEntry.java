@@ -5,7 +5,7 @@ public class PaintingEntry {
     private int sizeX = 16;
     private int sizeY = 16;
 
-    private String refName;
+    private final String refName;
 
     public PaintingEntry(String refName, int sizeX, int sizeY) {
 

@@ -19,12 +19,11 @@ import java.util.function.Supplier;
 
 public class SPacketPainting implements IPacketBase {
 
+    private Motive type;
+    private int entityID;
     public SPacketPainting() {
 
     }
-
-    private Motive type;
-    private int entityID;
 
     public SPacketPainting(Motive type, int entityID) {
 
@@ -67,7 +66,7 @@ public class SPacketPainting implements IPacketBase {
 
                 ServerPlayer playerMP = context.get().getSender();
                 NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> playerMP)),
-                        new CPacketPainting(painting, new ResourceLocation[] { type.getRegistryName() }));
+                        new CPacketPainting(painting, new ResourceLocation[]{type.getRegistryName()}));
             }
         });
         context.get().setPacketHandled(true);

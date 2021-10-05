@@ -13,11 +13,9 @@ public class EventFixBoundingBox {
     // quick hook to fix paintings not having the correct boundingbox when reloading
     // a world, and thus overlapping with other newly placed paintings
     @SubscribeEvent
-    public static void spawnEvent(EntityJoinWorldEvent event)
-    {
+    public static void spawnEvent(EntityJoinWorldEvent event) {
 
-        if (event.getEntity() instanceof Painting)
-        {
+        if (event.getEntity() instanceof Painting) {
             Painting painting = (Painting) event.getEntity();
             Paintings.UTILITY.updatePaintingBoundingBox(painting);
         }

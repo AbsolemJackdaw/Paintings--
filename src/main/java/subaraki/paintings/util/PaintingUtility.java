@@ -7,8 +7,6 @@ import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.phys.AABB;
 
-import java.util.Comparator;
-
 public class PaintingUtility {
 
     public static final ArtComparator ART_COMPARATOR = new ArtComparator();
@@ -30,9 +28,9 @@ public class PaintingUtility {
             hangZ = hangZ + offsetWidth * (double) enumfacing.getStepZ();
 
             painting.setPosRaw(hangX, hangY, hangZ);
-            double widthX = (double) painting.getWidth();
-            double height = (double) painting.getHeight();
-            double widthZ = (double) painting.getWidth();
+            double widthX = painting.getWidth();
+            double height = painting.getHeight();
+            double widthZ = painting.getWidth();
 
             if (painting.getDirection().getAxis() == Direction.Axis.Z) {
                 widthZ = 1.0D;

@@ -24,7 +24,7 @@ public class PaintingScreen extends Screen {
     final int START_Y = 30;
     final int GAP = 5;
     private final int entityID;
-    private Motive[] motiveArray;
+    private final Motive[] motiveArray;
     private int scrollbarscroll = 0;
 
     public PaintingScreen(Motive[] motiveArray, int entityID) {
@@ -226,7 +226,7 @@ public class PaintingScreen extends Screen {
             float containerSize = height - START_Y * 2;
 
             // relative % of the scale between the buttons drawn and the screen size
-            float percent = (((float) containerSize / (float) totalSize) * 100f);
+            float percent = ((containerSize / totalSize) * 100f);
 
             if (percent < 100) {
 
