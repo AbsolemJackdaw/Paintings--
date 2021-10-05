@@ -11,9 +11,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
-import subaraki.paintings.util.ArtComparator;
+import subaraki.paintings.util.PaintingUtility;
 
-import java.util.Arrays;
+import java.util.List;
 
 @EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PaintingInteractEvent {
@@ -33,8 +33,9 @@ public class PaintingInteractEvent {
 
                         // it is important to sort the paintings from big to small so all same size
                         // paintings will be next to one another
-                        Motive[] validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().toArray(new Motive[0]);
-                        Arrays.sort(validArtsArray, new ArtComparator());
+                        //Motive[] validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().toArray(new Motive[0]);
+                        //Arrays.sort(validArtsArray, new ArtComparator());
+                        List<Motive> validArtsArray = ForgeRegistries.PAINTING_TYPES.getValues().stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
 
                         boolean takeNext = false;
                         for (Motive type : validArtsArray) {

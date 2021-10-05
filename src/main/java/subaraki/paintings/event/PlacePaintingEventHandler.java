@@ -21,26 +21,23 @@ import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.packet.client.CPacketPainting;
-import subaraki.paintings.util.ArtComparator;
+import subaraki.paintings.util.PaintingUtility;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
 public class PlacePaintingEventHandler {
 
     @SubscribeEvent
-    public static void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event)
-    {
+    public static void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event) {
 
         if (!ConfigData.use_selection_gui)
             return;
 
         ItemStack itemStack = event.getItemStack();
 
-        if (itemStack.getItem() == Items.PAINTING)
-        {
+        if (itemStack.getItem() == Items.PAINTING) {
 
             Player player = event.getPlayer();
             Direction face = event.getFace();
@@ -52,23 +49,20 @@ public class PlacePaintingEventHandler {
 
             flag = face.getAxis().isHorizontal();
 
-            if (flag && player.mayUseItemAt(actualPos, face, itemStack))
-            {
+            if (flag && player.mayUseItemAt(actualPos, face, itemStack)) {
 
                 Painting painting = new Painting(world, actualPos, face);
                 painting.setYRot(face.toYRot());
                 // Set position updates bounding box
                 painting.setPos(actualPos.getX(), blockpos.getY(), actualPos.getZ());
 
-                if (painting.survives())
-                {
+                if (painting.survives()) {
                     event.getPlayer().swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
 
                     if (!event.getPlayer().isCreative())
                         itemStack.shrink(1);
 
-                    if (!event.getWorld().isClientSide())
-                    {
+                    if (!event.getWorld().isClientSide()) {
 
                         ServerPlayer playerMP = (ServerPlayer) event.getPlayer();
 
@@ -78,8 +72,7 @@ public class PlacePaintingEventHandler {
                         Motive originalArt = painting.motive;
 
                         List<Motive> validArts = new ArrayList<Motive>(); // list of paintings placeable at current location
-                        for (ResourceLocation resLoc : ForgeRegistries.PAINTING_TYPES.getKeys())
-                        {
+                        for (ResourceLocation resLoc : ForgeRegistries.PAINTING_TYPES.getKeys()) {
                             Motive art = ForgeRegistries.PAINTING_TYPES.getValue(resLoc);
 
                             painting.motive = art;
@@ -91,11 +84,9 @@ public class PlacePaintingEventHandler {
 
                             // simulate placing down a painting. if possible, add it to a list of paintings
                             // that are possible to place at this location
-                            if (painting.survives())
-                            {
+                            if (painting.survives()) {
 
-                                if (ConfigData.use_vanilla_only)
-                                {
+                                if (ConfigData.use_vanilla_only) {
                                     if (art.equals(Motive.KEBAB) || art.equals(Motive.AZTEC) || art.equals(Motive.ALBAN) || art.equals(Motive.AZTEC2)
                                             || art.equals(Motive.BOMB) || art.equals(Motive.PLANT) || art.equals(Motive.WASTELAND) || art.equals(Motive.POOL)
                                             || art.equals(Motive.COURBET) || art.equals(Motive.SEA) || art.equals(Motive.SUNSET) || art.equals(Motive.CREEBET)
@@ -103,12 +94,10 @@ public class PlacePaintingEventHandler {
                                             || art.equals(Motive.STAGE) || art.equals(Motive.VOID) || art.equals(Motive.SKULL_AND_ROSES)
                                             || art.equals(Motive.WITHER) || art.equals(Motive.FIGHTERS) || art.equals(Motive.POINTER)
                                             || art.equals(Motive.PIGSCENE) || art.equals(Motive.BURNING_SKULL) || art.equals(Motive.SKELETON)
-                                            || art.equals(Motive.DONKEY_KONG))
-                                    {
+                                            || art.equals(Motive.DONKEY_KONG)) {
                                         validArts.add(art);
                                     }
-                                }
-                                else
+                                } else
                                     validArts.add(art);
                             }
 
@@ -118,14 +107,14 @@ public class PlacePaintingEventHandler {
 
                         Paintings.UTILITY.updatePaintingBoundingBox(painting); // reset bounding box
 
-                        Motive[] validArtsArray = validArts.toArray(new Motive[0]);
+                        // Motive[] validArtsArray = validArts.toArray(new Motive[0]);
                         // sort paintings from high to low, and from big to small
-                        Arrays.sort(validArtsArray, new ArtComparator());
+                        // Arrays.sort(validArtsArray, new ArtComparator());
+                        List<Motive> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
 
-                        ResourceLocation[] names = new ResourceLocation[validArtsArray.length];
-                        for (int i = 0; i < validArtsArray.length; ++i)
-                        {
-                            names[i] = validArtsArray[i].getRegistryName();
+                        ResourceLocation[] names = new ResourceLocation[validArtsArray.size()];
+                        for (Motive m : validArtsArray) {
+                            names[validArtsArray.indexOf(m)] = m.getRegistryName();
                         }
 
                         // send to one player only, the player that needs his Gui opened !!

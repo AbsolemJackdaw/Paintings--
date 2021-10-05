@@ -23,48 +23,40 @@ public class Paintings {
 
     public static final String MODID = "paintings";
     public static final Logger LOG = LogManager.getLogger(MODID);
+    public static final PaintingUtility UTILITY = new PaintingUtility();
 
     /** call init here, to read json files before any event is launched. */
-    static
-    {
+    static {
         new PaintingPackReader().init();
     }
-
-    public static final PaintingUtility UTILITY = new PaintingUtility();
 
     public Paintings() {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::modConfig);
-
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
-
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
+    @SubscribeEvent
+    public static void registerPaintings(RegistryEvent.Register<Motive> event) {
+
+        PaintingPackReader.registerToMinecraft(event);
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
 
         new NetworkHandler();
     }
 
-    public void modConfig(ModConfigEvent event)
-    {
+    public void modConfig(ModConfigEvent event) {
 
         ModConfig config = event.getConfig();
         if (config.getSpec() == ConfigData.CLIENT_SPEC)
             ConfigData.refreshClient();
-        else
-            if (config.getSpec() == ConfigData.SERVER_SPEC)
-                ConfigData.refreshServer();
-    }
-
-    @SubscribeEvent
-    public static void registerPaintings(RegistryEvent.Register<Motive> event)
-    {
-
-        PaintingPackReader.registerToMinecraft(event);
+        else if (config.getSpec() == ConfigData.SERVER_SPEC)
+            ConfigData.refreshServer();
     }
 }

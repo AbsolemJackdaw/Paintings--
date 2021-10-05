@@ -12,24 +12,22 @@ import subaraki.paintings.packet.IPacketBase;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.util.ClientReferences;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class CPacketPainting implements IPacketBase {
 
+    private int entityID;
+    private String[] resLocNames;
+
+    //needed for packet init
     public CPacketPainting() {
 
     }
 
-    private int entityID;
-    private String resLocNames[];
-
     public CPacketPainting(Painting painting, ResourceLocation[] resLocs) {
-
         this.entityID = painting.getId();
-        resLocNames = new String[resLocs.length];
-        int index = 0;
-        for (ResourceLocation resLoc : resLocs)
-            resLocNames[index++] = resLoc.toString();
+        resLocNames = Arrays.stream(resLocs).map(ResourceLocation::toString).toArray(String[]::new);
     }
 
     public CPacketPainting(FriendlyByteBuf buf) {
@@ -41,12 +39,8 @@ public class CPacketPainting implements IPacketBase {
     public void encode(FriendlyByteBuf buf) {
 
         buf.writeInt(entityID);
-
         buf.writeInt(resLocNames.length);
-
-        for (String path : resLocNames)
-            buf.writeUtf(path);
-
+        Arrays.stream(resLocNames).forEach(buf::writeUtf);
     }
 
     @Override
@@ -67,8 +61,7 @@ public class CPacketPainting implements IPacketBase {
             if (resLocNames.length == 1) // we know what painting to set
             {
                 Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityID);
-                if (entity instanceof Painting) {
-                    Painting painting = (Painting) entity;
+                if (entity instanceof Painting painting) {
                     Motive type = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(resLocNames[0]));
                     Paintings.UTILITY.setArt(painting, type);
                     Paintings.UTILITY.updatePaintingBoundingBox(painting);
@@ -77,9 +70,7 @@ public class CPacketPainting implements IPacketBase {
             } else // we need to open the painting gui to select a painting
             {
                 Motive[] types = new Motive[resLocNames.length];
-                int dex = 0;
-                for (String path : resLocNames)
-                    types[dex++] = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(path));
+                types = Arrays.stream(resLocNames).map(path -> ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(path))).toArray(Motive[]::new);
                 ClientReferences.openPaintingScreen(types, this.entityID);
             }
         });

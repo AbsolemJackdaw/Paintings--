@@ -35,12 +35,11 @@ public class PaintingPackReader {
             } catch (ResourceLocationException e) {
                 Paintings.LOG.error("Skipping. Found Error: {}", e.getMessage());
             }
-
         }
     }
 
     /**
-     * called once on mod clas initialization. the loadFromJson called in here reads
+     * called once on mod class initialization. the loadFromJson called in here reads
      * json files directly out of a directory.
      */
     public PaintingPackReader init() {
@@ -64,7 +63,7 @@ public class PaintingPackReader {
                 Files.copy(getClass().getResourceAsStream("/assets/paintings/paintings.json"), dir.resolve("paintings.json"));
                 // copyJsonToFolder
             }
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             Paintings.LOG.warn("************************************");
             Paintings.LOG.warn("!*!*!*!*!");
             Paintings.LOG.error("Copying Base Template Failed");
@@ -173,7 +172,6 @@ public class PaintingPackReader {
 
                             int sizeX = 0;
                             int sizeY = 0;
-                            int sizeSquare = 0;
 
                             if (jsonObject.has("x")) {
                                 sizeX = jsonObject.get("x").getAsInt();
@@ -184,33 +182,27 @@ public class PaintingPackReader {
                             }
 
                             if (jsonObject.has("square")) {
-                                sizeSquare = jsonObject.get("square").getAsInt();
+                                sizeX = sizeY = jsonObject.get("square").getAsInt();
                             }
 
-                            if (sizeSquare == 0)
-                                if ((sizeX == 0 || sizeY == 0)) {
-                                    Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
-                                    Paintings.LOG.error("Painting name is : " + textureName);
-                                    Paintings.LOG.error("Skipping...");
-                                    continue;
-                                }
+                            if (sizeX == 0 || sizeY == 0) {
+                                Paintings.LOG.error("Tried loading a painting where one of the sides was 0 ! ");
+                                Paintings.LOG.error("Painting name is : " + textureName);
+                                Paintings.LOG.error("Skipping...");
+                                continue;
+                            } else if (sizeX % 16 != 0 || sizeY % 16 != 0) {
+                                Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
+                                Paintings.LOG.error("Painting name is : " + textureName);
+                                Paintings.LOG.error("Skipping...");
+                                continue;
+                            }
 
-                            if (sizeSquare % 16 != 0)
-                                if ((sizeX % 16 != 0 || sizeY % 16 != 0)) {
-                                    Paintings.LOG.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
-                                    Paintings.LOG.error("Painting name is : " + textureName);
-                                    Paintings.LOG.error("Skipping...");
-                                    continue;
-                                }
-
-                            PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY, sizeSquare);
+                            PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY);
                             Paintings.LOG.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
                             addedPaintings.add(entry);
-
                         }
                     }
                 }
-
             }
         } catch (IOException e) {
             Paintings.LOG.warn("************************************");

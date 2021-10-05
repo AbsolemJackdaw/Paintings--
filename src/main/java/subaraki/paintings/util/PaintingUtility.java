@@ -7,7 +7,11 @@ import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.phys.AABB;
 
+import java.util.Comparator;
+
 public class PaintingUtility {
+
+    public static final ArtComparator ART_COMPARATOR = new ArtComparator();
 
     // copied this from vanilla , the original one is protected for some reason
     public void updatePaintingBoundingBox(HangingEntity painting) {
@@ -24,7 +28,7 @@ public class PaintingUtility {
             Direction enumfacing = painting.getDirection().getCounterClockWise();
             hangX = hangX + offsetWidth * (double) enumfacing.getStepX();
             hangZ = hangZ + offsetWidth * (double) enumfacing.getStepZ();
-            
+
             painting.setPosRaw(hangX, hangY, hangZ);
             double widthX = (double) painting.getWidth();
             double height = (double) painting.getHeight();
@@ -42,12 +46,11 @@ public class PaintingUtility {
             painting.setBoundingBox(new AABB(hangX - widthX, hangY - height, hangZ - widthZ, hangX + widthX, hangY + height, hangZ + widthZ));
         }
     }
-    
+
     public void setArt(Painting painting, Motive type) {
         CompoundTag tag = new CompoundTag();
         painting.addAdditionalSaveData(tag);
         tag.putString("Motive", type.getRegistryName().toString());
         painting.readAdditionalSaveData(tag);
     }
-
 }

@@ -8,6 +8,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.Motive;
 
+import java.util.Objects;
+
 public class PaintingButton extends Button {
 
     private static final int BORDER = 3;
@@ -15,24 +17,23 @@ public class PaintingButton extends Button {
 
     ResourceLocation resLoc;
 
-    public PaintingButton(int x, int y, int w, int h, Component text, OnPress onPress, Motive pt) {
+    public PaintingButton(int x, int y, int w, int h, Component text, OnPress onPress, Motive motive) throws NullPointerException {
 
         super(x, y, w, h, text, onPress);
-        String combo = pt.getRegistryName().getNamespace() + ":textures/painting/" + pt.getRegistryName().getPath() + ".png";
+        ResourceLocation motiveResLoc = Objects.requireNonNull(motive.getRegistryName());
+        String combo = motiveResLoc.getNamespace() + ":textures/painting/" + motiveResLoc.getPath() + ".png";
         this.resLoc = new ResourceLocation(combo);
     }
 
     @Override
-    public void renderButton(PoseStack mat, int mouseX, int mouseY, float partial_ticks)
-    {
+    public void renderButton(PoseStack mat, int mouseX, int mouseY, float partial_ticks) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, resLoc);
 
         blit(mat, this.x, this.y, 0, 0, width, height, width, height);
 
-        if (isHovered)
-        {
+        if (isHovered) {
             fill(mat, x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); // upper left to upper right
             fill(mat, x - BORDER, y + height, x + width + BORDER, y + height + BORDER, YELLOW); // lower left to lower right
             fill(mat, x - BORDER, y, x, y + height, YELLOW); // middle rectangle to the left
@@ -41,14 +42,12 @@ public class PaintingButton extends Button {
 
     }
 
-    public void shiftY(int dy)
-    {
+    public void shiftY(int dy) {
 
         this.y += dy;
     }
 
-    public void shiftX(int dx)
-    {
+    public void shiftX(int dx) {
 
         this.x += dx;
     }
