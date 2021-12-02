@@ -1,5 +1,6 @@
 package subaraki.paintings.event;
 
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -13,9 +14,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.ConfigData;
 import subaraki.paintings.mod.Paintings;
@@ -26,7 +26,7 @@ import subaraki.paintings.util.PaintingUtility;
 import java.util.ArrayList;
 import java.util.List;
 
-@EventBusSubscriber(modid = Paintings.MODID, bus = Bus.FORGE)
+@Mod.EventBusSubscriber(modid = Paintings.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlacePaintingEventHandler {
 
     @SubscribeEvent

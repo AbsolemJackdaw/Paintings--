@@ -17,11 +17,11 @@ version = '1.17.1-8.0.0.1'
 group = 'subaraki.paintings' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'paintings'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '16' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
 
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18'
     
 
     // Default run configurations.
@@ -37,7 +37,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                runClient {
                     source sourceSets.main
                 }
             }
@@ -53,7 +53,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                runServer {
                     source sourceSets.main
                 }
             }
@@ -81,7 +81,7 @@ minecraft {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.10'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.10'
 
 }
 

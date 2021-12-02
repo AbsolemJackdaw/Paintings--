@@ -5,7 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.mod.Paintings;
 import subaraki.paintings.packet.IPacketBase;
