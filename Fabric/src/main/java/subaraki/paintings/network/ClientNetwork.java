@@ -7,6 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import subaraki.paintings.Paintings;
+import subaraki.paintings.gui.PaintingScreen;
 import subaraki.paintings.util.ClientReferences;
 
 import java.util.Arrays;
@@ -36,9 +37,10 @@ public class ClientNetwork {
                 } else // we need to open the painting gui to select a painting
                 {
                     Motive[] types = Arrays.stream(resLocNames).map(path -> Registry.MOTIVE.get(new ResourceLocation(path))).toArray(Motive[]::new);
-                    ClientReferences.openPaintingScreen(types, entityId);
+                    ClientReferences.openPaintingScreen(new PaintingScreen(types, entityId));
                 }
             });
         });
     }
+
 }

@@ -8,6 +8,7 @@ import net.minecraft.world.entity.decoration.Painting;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.Paintings;
+import subaraki.paintings.gui.PaintingScreen;
 import subaraki.paintings.packet.IPacketBase;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.util.ClientReferences;
@@ -70,7 +71,7 @@ public class CPacketPainting implements IPacketBase {
             } else // we need to open the painting gui to select a painting
             {
                 Motive[] types = Arrays.stream(resLocNames).map(path -> ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(path))).toArray(Motive[]::new);
-                ClientReferences.openPaintingScreen(types, this.entityID);
+                ClientReferences.openPaintingScreen(new PaintingScreen(types, this.entityID));
             }
         });
 
