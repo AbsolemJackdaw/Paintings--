@@ -2,6 +2,7 @@ package subaraki.paintings.mod;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
+import subaraki.paintings.util.CommonConfig;
 
 public class ConfigData {
 
@@ -9,10 +10,6 @@ public class ConfigData {
     public static final ForgeConfigSpec SERVER_SPEC;
     public static final ClientConfig CLIENT;
     public static final ForgeConfigSpec CLIENT_SPEC;
-    public static boolean use_vanilla_only = false;
-    public static boolean use_selection_gui = true;
-    public static boolean cycle_paintings = false;
-    public static boolean show_painting_size = true;
 
     static {
         final Pair<ServerConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
@@ -28,15 +25,15 @@ public class ConfigData {
 
     public static void refreshClient() {
 
-        show_painting_size = CLIENT.show_painting_size.get();
+        CommonConfig.show_painting_size = CLIENT.show_painting_size.get();
 
     }
 
     public static void refreshServer() {
 
-        use_vanilla_only = SERVER.use_vanilla_only.get();
-        use_selection_gui = SERVER.use_selection_gui.get();
-        cycle_paintings = SERVER.cycle_paintings.get();
+        CommonConfig.use_vanilla_only = SERVER.use_vanilla_only.get();
+        CommonConfig.use_selection_gui = SERVER.use_selection_gui.get();
+        CommonConfig.cycle_paintings = SERVER.cycle_paintings.get();
 
     }
 
