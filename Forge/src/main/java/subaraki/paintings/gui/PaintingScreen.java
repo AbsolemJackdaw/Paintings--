@@ -3,9 +3,10 @@ package subaraki.paintings.gui;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.world.entity.decoration.Motive;
-import subaraki.paintings.packet.NetworkHandler;
-import subaraki.paintings.packet.server.SPacketPainting;
+import subaraki.paintings.network.NetworkHandler;
+import subaraki.paintings.network.server.SPacketPainting;
 
+import java.util.List;
 import java.util.Optional;
 
 public class PaintingScreen extends CommonPaintingScreen {
@@ -27,5 +28,10 @@ public class PaintingScreen extends CommonPaintingScreen {
     public void sendPacket(Motive motive, int entityID) {
         NetworkHandler.NETWORK.sendToServer(new SPacketPainting(motive, entityID));
 
+    }
+
+    @Override
+    public List<Widget> getRenderablesWithCast() {
+        return renderables;
     }
 }

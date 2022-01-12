@@ -1,13 +1,11 @@
 package subaraki.paintings.gui;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.core.Registry;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.decoration.Motive;
 import subaraki.paintings.mixins.ScreenAccessor;
+import subaraki.paintings.network.PacketId;
 import subaraki.paintings.network.ServerNetwork;
 
 import java.util.List;
@@ -28,12 +26,8 @@ public class PaintingScreen extends CommonPaintingScreen {
     }
 
     @Override
-    public void sendPacket(Motive motive, int entityID) {
-        //Encodes needed data and sends to server
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeUtf(Registry.MOTIVE.getKey(motive).toString());
-        buf.writeInt(entityID);
-        ClientPlayNetworking.send(ServerNetwork.SERVER_PACKET, buf);
+    public void sendPacket(Motive motive, int entityId) {
+        ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacket(entityId, motive));
     }
 
     public List<Widget> getRenderablesWithCast() {

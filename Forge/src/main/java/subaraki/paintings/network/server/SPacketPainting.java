@@ -1,4 +1,4 @@
-package subaraki.paintings.packet.server;
+package subaraki.paintings.network.server;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -8,9 +8,9 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.network.ProcessServerPacket;
-import subaraki.paintings.packet.IPacketBase;
-import subaraki.paintings.packet.NetworkHandler;
-import subaraki.paintings.packet.client.CPacketPainting;
+import subaraki.paintings.network.IPacketBase;
+import subaraki.paintings.network.NetworkHandler;
+import subaraki.paintings.network.client.CPacketPainting;
 
 import java.util.function.Supplier;
 

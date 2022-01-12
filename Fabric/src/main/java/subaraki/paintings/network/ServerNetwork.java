@@ -11,28 +11,33 @@ import net.minecraft.world.entity.decoration.Motive;
 
 public class ServerNetwork {
 
-    public static final ResourceLocation SERVER_PACKET = new ResourceLocation(subaraki.paintings.Paintings.MODID, "server_packet");
-
     public static void registerServerPackets() {
         //Handles when server packet is received on server
-        ServerPlayNetworking.registerGlobalReceiver(SERVER_PACKET, (server, serverPlayer, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(PacketId.CHANNEL, (server, serverPlayer, handler, buf, responseSender) -> {
+            byte FORGE_PACKET_ID = buf.readByte();//FORGE PACKET COMPAT
+            if (FORGE_PACKET_ID == PacketId.SPACKET) {//FORGE PACKET COMPAT
+                String name = buf.readUtf();
+                Motive type = Registry.MOTIVE.get(new ResourceLocation(name));
+                int entityId = buf.readInt();
 
-            String name = buf.readUtf();
-            Motive type = Registry.MOTIVE.get(new ResourceLocation(name));
-            int entityID = buf.readInt();
-
-            server.execute(() ->
-                    ProcessServerPacket.handle(serverPlayer.level, serverPlayer, entityID, type, (painting, p) -> {
-                        FriendlyByteBuf byteBuf = PacketByteBufs.create();
-                        byteBuf.writeInt(entityID);
-                        byteBuf.writeInt(1);
-                        byteBuf.writeUtf(Registry.MOTIVE.getKey(type).toString());
-                        for (ServerPlayer tracking : PlayerLookup.tracking(serverPlayer)) {
-                            ServerPlayNetworking.send(tracking, ClientNetwork.CLIENT_PACKET, byteBuf);
-                        }
-                        ServerPlayNetworking.send(serverPlayer, ClientNetwork.CLIENT_PACKET, byteBuf);
-                    })
-            );
+                server.execute(() ->
+                        ProcessServerPacket.handle(serverPlayer.level, serverPlayer, entityId, type, (painting, p) -> {
+                            FriendlyByteBuf byteBuf = ClientNetwork.cPacket(entityId, new String[]{Registry.MOTIVE.getKey(type).toString()});
+                            for (ServerPlayer tracking : PlayerLookup.tracking(serverPlayer)) {
+                                ServerPlayNetworking.send(tracking, PacketId.CHANNEL, byteBuf);
+                            }
+                            ServerPlayNetworking.send(serverPlayer, PacketId.CHANNEL, byteBuf);
+                        })
+                );
+            }
         });
+    }
+
+    public static FriendlyByteBuf sPacket(int entityId, Motive motive) {
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeByte(PacketId.SPACKET); //FORGE PACKET COMPAT
+        buf.writeUtf(Registry.MOTIVE.getKey(motive).toString());
+        buf.writeInt(entityId);
+        return buf;
     }
 }

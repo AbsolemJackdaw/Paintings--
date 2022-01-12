@@ -12,7 +12,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import subaraki.paintings.packet.NetworkHandler;
+import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.utils.PaintingEntry;
 import subaraki.paintings.utils.PaintingPackReader;
 

@@ -6,8 +6,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;
-import subaraki.paintings.packet.NetworkHandler;
-import subaraki.paintings.packet.client.CPacketPainting;
+import subaraki.paintings.network.NetworkHandler;
+import subaraki.paintings.network.client.CPacketPainting;
 
 @Mod.EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PlacePaintingEventHandler {
