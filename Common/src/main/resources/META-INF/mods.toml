@@ -10,16 +10,14 @@ modId="paintings" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="Paintings ++" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/paintings" #optional
-credits="David Goldman : the original Painting Selection Gui. Murphy's Chaos : the 1.12 flexible template update , Serilum for suggesting the Cycle Paintings concept" #optional
+credits="David Goldman : the original Painting Selection Gui. Gigaherz for advice on networking. Darkhax and Jared for Multiloader" #optional
 authors="Subaraki" #optional
 description='''
 Add more paintings to your game !! 
 Check out the wiki for more info !
 https://github.com/ArtixAllMighty/Paintings--/wiki
 
-Enjoy picking which painting you want to place down with the integrated Painting Selection GUI ! 
-
-Credit for Serilum : https://www.curseforge.com/minecraft/mc-mods/cycle-paintings
+Enjoy picking which painting you want to place down with the integrated Painting Selection GUI !
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.paintings]] #optional
