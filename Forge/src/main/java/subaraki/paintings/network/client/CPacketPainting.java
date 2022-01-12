@@ -28,13 +28,11 @@ public class CPacketPainting implements IPacketBase {
     }
 
     public CPacketPainting(FriendlyByteBuf buf) {
-
         decode(buf);
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-
         buf.writeInt(entityID);
         buf.writeInt(resLocNames.length);
         Arrays.stream(resLocNames).forEach(buf::writeUtf);
@@ -42,12 +40,8 @@ public class CPacketPainting implements IPacketBase {
 
     @Override
     public void decode(FriendlyByteBuf buf) {
-        System.out.println(buf);
-
         entityID = buf.readInt();
-
         resLocNames = new String[buf.readInt()];
-
         for (int i = 0; i < resLocNames.length; i++)
             resLocNames[i] = buf.readUtf();
     }
@@ -62,7 +56,6 @@ public class CPacketPainting implements IPacketBase {
 
     @Override
     public void encrypt(int id) {
-
         NetworkHandler.NETWORK.registerMessage(id, CPacketPainting.class, CPacketPainting::encode, CPacketPainting::new, CPacketPainting::handle);
     }
 
