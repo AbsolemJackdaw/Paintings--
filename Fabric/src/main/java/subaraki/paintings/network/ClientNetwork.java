@@ -1,16 +1,8 @@
 package subaraki.paintings.network;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.Motive;
-import net.minecraft.world.entity.decoration.Painting;
-import subaraki.paintings.Paintings;
 import subaraki.paintings.gui.PaintingScreen;
-import subaraki.paintings.utils.ClientReferences;
-
-import java.util.Arrays;
 
 public class ClientNetwork {
 
@@ -26,19 +18,7 @@ public class ClientNetwork {
                 resLocNames[i] = buf.readUtf();
             }
             client.execute(() -> {
-                if (resLocNames.length == 1) // we know what painting to set
-                {
-                    Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityId);
-                    if (entity instanceof Painting painting) {
-                        Motive type = Registry.MOTIVE.get(new ResourceLocation(resLocNames[0]));
-                        subaraki.paintings.Paintings.UTILITY.setArt(painting, type);
-                        Paintings.UTILITY.updatePaintingBoundingBox(painting);
-                    }
-                } else // we need to open the painting gui to select a painting
-                {
-                    Motive[] types = Arrays.stream(resLocNames).map(path -> Registry.MOTIVE.get(new ResourceLocation(path))).toArray(Motive[]::new);
-                    ClientReferences.openPaintingScreen(new PaintingScreen(types, entityId));
-                }
+                ProcessClientPacket.handle(entityId, resLocNames, PaintingScreen::new);
             });
         });
     }

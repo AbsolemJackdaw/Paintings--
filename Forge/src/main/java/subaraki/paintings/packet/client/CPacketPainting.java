@@ -2,16 +2,12 @@ package subaraki.paintings.packet.client;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraftforge.network.NetworkEvent.Context;
-import net.minecraftforge.registries.ForgeRegistries;
-import subaraki.paintings.Paintings;
 import subaraki.paintings.gui.PaintingScreen;
+import subaraki.paintings.network.ProcessClientPacket;
 import subaraki.paintings.packet.IPacketBase;
 import subaraki.paintings.packet.NetworkHandler;
-import subaraki.paintings.utils.ClientReferences;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -57,24 +53,9 @@ public class CPacketPainting implements IPacketBase {
 
     @Override
     public void handle(Supplier<Context> context) {
-
         context.get().enqueueWork(() -> {
-            if (resLocNames.length == 1) // we know what painting to set
-            {
-                Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityID);
-                if (entity instanceof Painting painting) {
-                    Motive type = ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(resLocNames[0]));
-                    subaraki.paintings.Paintings.UTILITY.setArt(painting, type);
-                    Paintings.UTILITY.updatePaintingBoundingBox(painting);
-
-                }
-            } else // we need to open the painting gui to select a painting
-            {
-                Motive[] types = Arrays.stream(resLocNames).map(path -> ForgeRegistries.PAINTING_TYPES.getValue(new ResourceLocation(path))).toArray(Motive[]::new);
-                ClientReferences.openPaintingScreen(new PaintingScreen(types, this.entityID));
-            }
+            ProcessClientPacket.handle(this.entityID, resLocNames, PaintingScreen::new);
         });
-
         context.get().setPacketHandled(true);
     }
 
