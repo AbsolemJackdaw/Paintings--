@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
-import subaraki.paintings.network.SendForPlacement;
+import subaraki.paintings.network.PlacementPacketSupplier;
 import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ProcessPlacementEvent {
 
-    public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, SendForPlacement send) {
+    public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier send) {
         if (!CommonConfig.use_selection_gui)
             return false;
 
@@ -95,7 +95,7 @@ public class ProcessPlacementEvent {
                         for (Motive m : validArtsArray) {
                             names[validArtsArray.indexOf(m)] = Registry.MOTIVE.getKey(m);
                         }
-                        send.away((ServerPlayer) player, painting, names);
+                        send.send((ServerPlayer) player, painting, names);
                     }
 
                 }

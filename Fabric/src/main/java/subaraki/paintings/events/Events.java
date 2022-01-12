@@ -13,7 +13,7 @@ import net.minecraft.world.entity.decoration.Painting;
 import subaraki.paintings.event.ProcessInteractEvent;
 import subaraki.paintings.event.ProcessPlacementEvent;
 import subaraki.paintings.network.ClientNetwork;
-import subaraki.paintings.network.SendForPlacement;
+import subaraki.paintings.network.PlacementPacketSupplier;
 
 import java.util.Arrays;
 
@@ -38,7 +38,7 @@ public class Events {
             }
         });
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            SendForPlacement SENDER = (serverPlayer, painting, names) -> {
+            PlacementPacketSupplier SENDER = (serverPlayer, painting, names) -> {
                 FriendlyByteBuf buf = PacketByteBufs.create();
                 buf.writeInt(painting.getId());
                 buf.writeInt(names.length);

@@ -5,6 +5,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.Painting;
 
 @FunctionalInterface
-public interface SendForPlacement {
-    void away(ServerPlayer player, Painting painting, ResourceLocation[] names);
+public interface PlacementPacketSupplier {
+    void send(ServerPlayer player, Painting painting, ResourceLocation[] names);
 }
