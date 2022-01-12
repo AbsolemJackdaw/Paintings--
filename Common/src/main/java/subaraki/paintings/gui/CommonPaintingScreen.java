@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.decoration.Motive;
-import subaraki.paintings.util.CommonConfig;
+import subaraki.paintings.utils.CommonConfig;
 
 import java.util.List;
 import java.util.Optional;

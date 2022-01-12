@@ -11,7 +11,7 @@ import subaraki.paintings.Paintings;
 import subaraki.paintings.gui.PaintingScreen;
 import subaraki.paintings.packet.IPacketBase;
 import subaraki.paintings.packet.NetworkHandler;
-import subaraki.paintings.util.ClientReferences;
+import subaraki.paintings.utils.ClientReferences;
 
 import java.util.Arrays;
 import java.util.function.Supplier;

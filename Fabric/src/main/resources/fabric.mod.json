@@ -22,6 +22,9 @@
     ],
     "client": [
       "subaraki.paintings.mod.PaintingsClient"
+    ],
+    "modmenu": [
+      "subaraki.paintings.util.ModMenuConfigScreen"
     ]
   },
   "mixins": [

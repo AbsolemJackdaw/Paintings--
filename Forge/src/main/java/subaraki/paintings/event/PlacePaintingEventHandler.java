@@ -16,6 +16,6 @@ public class PlacePaintingEventHandler {
     public static void onPaintingPlaced(PlayerInteractEvent.RightClickBlock event) {
 
         SendForPlacement SENDER = (serverPlayer, painting, names) -> NetworkHandler.NETWORK.send(PacketDistributor.PLAYER.with((() -> serverPlayer)), new CPacketPainting(painting, names));
-        event.setCanceled(ProcessPlacementEvent.processplacementEvent(event.getItemStack(), event.getPlayer(), event.getFace(), event.getPos(), event.getWorld(), SENDER));
+        event.setCanceled(ProcessPlacementEvent.processPlacementEvent(event.getItemStack(), event.getPlayer(), event.getFace(), event.getPos(), event.getWorld(), SENDER));
     }
 }

@@ -45,7 +45,7 @@ public class Events {
                 Arrays.stream(names).forEach(rl -> buf.writeUtf(rl.toString()));
                 ServerPlayNetworking.send(serverPlayer, ClientNetwork.CLIENT_PACKET, buf);
             };
-            return ProcessPlacementEvent.processplacementEvent(player.getItemInHand(hand), player, hitResult.getDirection(), hitResult.getBlockPos(), world, SENDER) ?
+            return ProcessPlacementEvent.processPlacementEvent(player.getItemInHand(hand), player, hitResult.getDirection(), hitResult.getBlockPos(), world, SENDER) ?
                     InteractionResult.SUCCESS : InteractionResult.PASS;
         });
     }

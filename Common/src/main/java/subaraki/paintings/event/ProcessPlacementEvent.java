@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.network.SendForPlacement;
-import subaraki.paintings.util.CommonConfig;
+import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ProcessPlacementEvent {
 
-    public static boolean processplacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, SendForPlacement send) {
+    public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, SendForPlacement send) {
         if (!CommonConfig.use_selection_gui)
             return false;
 
@@ -58,7 +58,7 @@ public class ProcessPlacementEvent {
 
                             // update the bounding box of the painting to make sure the simulation of
                             // placing down a painting
-                            // happens correctly. Omiting this will result in overlapping paintings
+                            // happens correctly. Omitting this will result in overlapping paintings
                             subaraki.paintings.Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
                             // simulate placing down a painting. if possible, add it to a list of paintings

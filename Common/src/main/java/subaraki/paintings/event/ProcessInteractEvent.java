@@ -8,7 +8,7 @@ import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import subaraki.paintings.Paintings;
-import subaraki.paintings.util.CommonConfig;
+import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
 import java.util.List;

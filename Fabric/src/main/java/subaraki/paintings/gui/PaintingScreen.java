@@ -15,7 +15,6 @@ import java.util.Optional;
 
 public class PaintingScreen extends CommonPaintingScreen {
 
-
     public PaintingScreen(Motive[] types, int entityID) {
         super(types, entityID);
     }

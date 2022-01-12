@@ -6,10 +6,12 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.decoration.Motive;
 import subaraki.paintings.events.Events;
 import subaraki.paintings.network.ServerNetwork;
 import subaraki.paintings.util.ModConfig;
+import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingEntry;
 import subaraki.paintings.utils.PaintingPackReader;
 
@@ -17,8 +19,6 @@ import static subaraki.paintings.Paintings.LOGGER;
 import static subaraki.paintings.Paintings.MODID;
 
 public class Paintings implements ModInitializer {
-
-    public static ModConfig config;
 
     /* call init here, to read json files before any event is launched. */
     static {
@@ -37,7 +37,13 @@ public class Paintings implements ModInitializer {
             LOGGER.error("Skipping. Found Error: {}", e.getMessage());
         }
         AutoConfig.register(ModConfig.class, Toml4jConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
+        AutoConfig.getConfigHolder(ModConfig.class).registerSaveListener((configHolder, config) -> {
+            CommonConfig.use_vanilla_only = config.use_vanilla_only;
+            CommonConfig.use_selection_gui = config.use_selection_gui;
+            CommonConfig.cycle_paintings = config.cycle_paintings;
+            CommonConfig.show_painting_size = config.show_painting_size;
+            return InteractionResult.PASS;
+        });
         ServerNetwork.registerServerPackets();
         Events.events();
     }

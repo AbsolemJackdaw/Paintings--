@@ -1,4 +1,4 @@
-package subaraki.paintings.util;
+package subaraki.paintings.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;

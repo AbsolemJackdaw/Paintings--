@@ -8,7 +8,7 @@ import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.gui.PaintingScreen;
-import subaraki.paintings.util.ClientReferences;
+import subaraki.paintings.utils.ClientReferences;
 
 import java.util.Arrays;
 
