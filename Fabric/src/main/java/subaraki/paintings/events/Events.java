@@ -13,7 +13,7 @@ import net.minecraft.world.entity.decoration.Painting;
 import subaraki.paintings.event.ProcessInteractEvent;
 import subaraki.paintings.event.ProcessPlacementEvent;
 import subaraki.paintings.network.ClientNetwork;
-import subaraki.paintings.network.PlacementPacketSupplier;
+import subaraki.paintings.network.supplier.PlacementPacketSupplier;
 
 import java.util.Arrays;
 

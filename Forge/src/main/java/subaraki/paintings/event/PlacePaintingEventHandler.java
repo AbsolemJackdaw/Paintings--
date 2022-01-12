@@ -5,7 +5,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
-import subaraki.paintings.network.PlacementPacketSupplier;
+import subaraki.paintings.network.supplier.PlacementPacketSupplier;
 import subaraki.paintings.packet.NetworkHandler;
 import subaraki.paintings.packet.client.CPacketPainting;
 

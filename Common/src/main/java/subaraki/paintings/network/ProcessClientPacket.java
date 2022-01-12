@@ -6,6 +6,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import subaraki.paintings.Paintings;
+import subaraki.paintings.network.supplier.ScreenSupplier;
 import subaraki.paintings.utils.ClientReferences;
 
 import java.util.Arrays;

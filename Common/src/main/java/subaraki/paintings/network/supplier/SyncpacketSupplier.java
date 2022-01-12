@@ -1,4 +1,4 @@
-package subaraki.paintings.network;
+package subaraki.paintings.network.supplier;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.Painting;

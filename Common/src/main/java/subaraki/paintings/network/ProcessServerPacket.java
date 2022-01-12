@@ -6,6 +6,7 @@ import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
+import subaraki.paintings.network.supplier.SyncpacketSupplier;
 
 public class ProcessServerPacket {
     public static void handle(Level level, ServerPlayer player, int entityId, Motive motive, SyncpacketSupplier packet) {

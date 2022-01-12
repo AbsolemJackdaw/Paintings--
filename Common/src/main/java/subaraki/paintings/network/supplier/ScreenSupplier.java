@@ -1,4 +1,4 @@
-package subaraki.paintings.network;
+package subaraki.paintings.network.supplier;
 
 import net.minecraft.world.entity.decoration.Motive;
 import subaraki.paintings.gui.CommonPaintingScreen;

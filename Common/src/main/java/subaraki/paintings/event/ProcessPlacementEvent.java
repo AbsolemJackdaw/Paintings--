@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
-import subaraki.paintings.network.PlacementPacketSupplier;
+import subaraki.paintings.network.supplier.PlacementPacketSupplier;
 import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
