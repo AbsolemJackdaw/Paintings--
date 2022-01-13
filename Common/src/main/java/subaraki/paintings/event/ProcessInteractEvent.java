@@ -1,13 +1,14 @@
 package subaraki.paintings.event;
 
 import net.minecraft.core.Registry;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
-import subaraki.paintings.Paintings;
+import subaraki.paintings.network.supplier.SyncpacketSupplier;
 import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
@@ -24,11 +25,11 @@ public class ProcessInteractEvent {
         return Registry.MOTIVE.getKey(a).equals(Registry.MOTIVE.getKey(b));
     }
 
-    public static void processInteractPainting(Player player, Entity target, InteractionHand hand) {
+    public static void processInteractPainting(Player player, Entity target, InteractionHand hand, SyncpacketSupplier syncpacketSupplier) {
         if (CommonConfig.cycle_paintings)
             if (target instanceof Painting painting) {
                 if (hand.equals(InteractionHand.MAIN_HAND)) {
-                    if (player != null && player.getMainHandItem().getItem().equals(Items.PAINTING)) {
+                    if (player instanceof ServerPlayer serverPlayer && serverPlayer.getMainHandItem().getItem().equals(Items.PAINTING)) {
                         Motive original = painting.motive;
                         Motive firstMatch = null;
                         Motive newArt = null;
@@ -67,10 +68,10 @@ public class ProcessInteractEvent {
                         if (newArt == null && takeNext)
                             newArt = firstMatch;
 
-                        Paintings.UTILITY.setArt(painting, newArt);
+                        painting.motive = newArt;
+                        syncpacketSupplier.send(painting, serverPlayer);
                     }
                 }
             }
     }
-
 }

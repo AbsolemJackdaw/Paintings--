@@ -20,4 +20,5 @@ public class NetworkHandler {
         new CPacketPainting().encrypt(PacketId.CPACKET);
         new SPacketPainting().encrypt(PacketId.SPACKET);
     }
+
 }

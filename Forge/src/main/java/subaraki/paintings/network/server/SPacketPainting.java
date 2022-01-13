@@ -7,9 +7,9 @@ import net.minecraft.world.entity.decoration.Motive;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
-import subaraki.paintings.network.ProcessServerPacket;
 import subaraki.paintings.network.IPacketBase;
 import subaraki.paintings.network.NetworkHandler;
+import subaraki.paintings.network.ProcessServerPacket;
 import subaraki.paintings.network.client.CPacketPainting;
 
 import java.util.function.Supplier;
@@ -55,8 +55,9 @@ public class SPacketPainting implements IPacketBase {
         context.get().enqueueWork(() -> {
             ServerPlayer serverPlayer = context.get().getSender();
             if (serverPlayer != null)
-                ProcessServerPacket.handle(serverPlayer.level, serverPlayer, this.entityID, this.type, (painting, player) -> NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> player)),
-                        new CPacketPainting(painting, new ResourceLocation[]{type.getRegistryName()})));
+                ProcessServerPacket.handle(serverPlayer.level, serverPlayer, this.entityID, this.type,
+                        (painting, player) -> NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> player)),
+                                new CPacketPainting(painting, new ResourceLocation[]{this.type.getRegistryName()})));
         });
         context.get().setPacketHandled(true);
     }
