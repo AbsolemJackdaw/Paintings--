@@ -29,7 +29,7 @@ public class ProcessInteractEvent {
         if (CommonConfig.cycle_paintings)
             if (target instanceof Painting painting) {
                 if (hand.equals(InteractionHand.MAIN_HAND)) {
-                    if (player instanceof ServerPlayer serverPlayer && serverPlayer.getMainHandItem().getItem().equals(Items.PAINTING)) {
+                    if (player instanceof ServerPlayer serverPlayer && serverPlayer.getItemInHand(hand).getItem().equals(Items.PAINTING)) {
                         Motive original = painting.motive;
                         Motive firstMatch = null;
                         Motive newArt = null;
