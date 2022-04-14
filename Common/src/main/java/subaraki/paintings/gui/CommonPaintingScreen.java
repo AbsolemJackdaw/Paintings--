@@ -166,7 +166,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
         scrollBarScroll -= scroll * 16;
         for (Widget w : this.getRenderablesWithCast()) {
             if (w instanceof AbstractWidget widget)
-                widget.y += scroll * 16;
+                widget.y += (int)(scroll * 16);
         }
     }
 
