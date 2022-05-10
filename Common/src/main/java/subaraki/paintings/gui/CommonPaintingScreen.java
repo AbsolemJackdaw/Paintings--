@@ -118,57 +118,51 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double mouseScroll) {
         if (optionalFirstWidget().isPresent() && optionalLastWidget().isPresent()) {
-            int foreseeBottomLimit = (optionalLastWidget().get().y + optionalLastWidget().get().getHeight() + (16));
-            int bottomLimit = height - START_Y - optionalLastWidget().get().getHeight();
 
-            int foreseeTopLimit = (optionalFirstWidget().get().y + 16);
-            int topLimit = GAP + START_Y;
-            // scrolling up
-            if (mouseScroll < 0.0 && foreseeBottomLimit < bottomLimit)
-                return super.mouseScrolled(mouseX, mouseY, mouseScroll);
-            // down
-            if (mouseScroll > 0.0 && foreseeTopLimit > topLimit)
-                return super.mouseScrolled(mouseX, mouseY, mouseScroll);
-
-            move(mouseScroll);
+            int move = (mouseScroll < 0 ? -1 : mouseScroll > 0 ? 1 : 0) * 16;
+            movePaintinWidgets(move);
         }
-
-
         return super.mouseScrolled(mouseX, mouseY, mouseScroll);
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int buttonID, double amountX, double amountY) {
         if (optionalFirstWidget().isPresent() && optionalLastWidget().isPresent()) {
-            // correct speed and inversion of dragging
-            amountY *= -1d;
-            amountY /= 2d;
-            int foreseeBottomLimit = (int) (optionalLastWidget().get().y + optionalLastWidget().get().getHeight() + (amountY * 16));
-            int bottomLimit = height - START_Y - optionalLastWidget().get().getHeight();
 
-            int foreseeTopLimit = (int) (optionalFirstWidget().get().y + amountY * 16);
-            int topLimit = GAP + START_Y;
-            // scrolling up
-            if (amountY < 0.0 && foreseeBottomLimit < bottomLimit)
-                return super.mouseDragged(mouseX, mouseY, buttonID, amountX, amountY);
-            // down
-            if (amountY > 0.0 && foreseeTopLimit > topLimit)
-                return super.mouseDragged(mouseX, mouseY, buttonID, amountX, amountY);
+            float move = (float) amountY * -1.0f;
 
-            move(amountY);
+            int paintingCanvasTopY = (optionalFirstWidget().get().y);
+            int paintingCanvasBotY = (optionalLastWidget().get().y + optionalLastWidget().get().getHeight());
+
+            int paintingContainerSize = paintingCanvasBotY - paintingCanvasTopY; //total height span of all shown paintings. gaps accounted for
+            int viewport = height - (START_Y); //height of cutout rect in which paintings are shown
+            float portToCanvasScale = (((float) viewport / (float) paintingContainerSize)); // scale from viewport to total span
+            float barsize = ((float) viewport * portToCanvasScale); //size of the scrollbar
+            float scaledViewport = viewport - barsize; //scale of viewport - bar height. top of the scrollbar can only scroll between this 'bar'
+            float usableSpaceScale = ((float) paintingContainerSize / scaledViewport);
+
+            float scaledDrageMove = (move * usableSpaceScale);
+
+            movePaintinWidgets((int) scaledDrageMove);
         }
-
         return super.mouseDragged(mouseX, mouseY, buttonID, amountX, amountY);
     }
 
+    private void movePaintinWidgets(int scrollAmount) {
 
-    private void move(double scroll) {
-        scrollBarScroll -= scroll * 16;
-        for (Widget w : this.getRenderablesWithCast()) {
-            if (w instanceof AbstractWidget widget)
-                widget.y += (int)(scroll * 16);
+        int paintingCanvasTopY = (optionalFirstWidget().get().y);
+        int onScreenTopLimit = GAP + START_Y; //relative screen position, first painting can only scroll up until here
+        int paintingCanvasBotY = (optionalLastWidget().get().y + optionalLastWidget().get().getHeight());
+        int onScreenBottomLimit = height - (onScreenTopLimit); //relative screen position, last painting can only scroll up until here
+
+        if ((scrollAmount > 0 && paintingCanvasTopY < onScreenTopLimit) || (scrollAmount < 0 && paintingCanvasBotY >= onScreenBottomLimit)) {
+            getRenderablesWithCast().forEach(widget -> {
+                ((AbstractWidget) widget).y += scrollAmount;
+            });
+            scrollBarScroll -= scrollAmount;
         }
     }
+
 
     private void drawToolTips(PoseStack mat, int mouseX, int mouseY) {
         if (!CommonConfig.show_painting_size)
@@ -194,17 +188,17 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
             int top = optionalFirstWidget().get().y;
             int bot = optionalLastWidget().get().y + optionalLastWidget().get().getHeight();
             // get total size for buttons drawn
-            float totalSize = (bot - top) + (GAP);
-            float containerSize = height - START_Y * 2;
+            int totalSize = (bot - top);
+            int containerSize = (height - (START_Y * 2));
 
             // relative % of the scale between the buttons drawn and the screen size
-            float percent = ((containerSize / totalSize) * 100f);
+            float percent = (((float) containerSize / (float) totalSize) * 100f);
 
-            if (percent < 100) {
+            if (percent < 100.0) {
 
-                float sizeBar = (containerSize / 100f * percent);
+                int sizeBar = (int) ((float) containerSize / 100f * percent);
 
-                float relativeScroll = ((float) scrollBarScroll / 100f * percent);
+                int relativeScroll = (int) ((float) scrollBarScroll / 100f * percent);
 
                 // what kind of dumbfuck decided it was intelligent to have 'fill' fill in from
                 // left to right
@@ -213,7 +207,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
                 // draw a black background background
                 this.fillGradient(mat, width - START_X, START_Y, width, START_Y + (int) containerSize, 0x80000000, 0x80222222);
                 // Draw scrollbar
-                this.fillGradient(mat, width - START_X, START_Y + (int) relativeScroll, width, START_Y + (int) relativeScroll + (int) sizeBar, 0x80ffffff, 0x80222222);
+                this.fillGradient(mat, width - START_X, START_Y + relativeScroll, width, START_Y + relativeScroll + sizeBar, 0x80ffffff, 0x80222222);
 
             }
         }
