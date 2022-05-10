@@ -8,6 +8,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.Motive;
+import subaraki.paintings.utils.PaintingPackReader;
 
 public class PaintingButton extends Button {
 
@@ -15,12 +16,16 @@ public class PaintingButton extends Button {
     private static final int YELLOW = -256;
 
     ResourceLocation resLoc;
+    private int animationY = 0;
 
     public PaintingButton(int x, int y, int w, int h, Component text, OnPress onPress, Motive pt) {
         super(x, y, w, h, text, onPress);
         ResourceLocation rl = Registry.MOTIVE.getKey(pt);
         String combo = rl.getNamespace() + ":textures/painting/" + rl.getPath() + ".png";
         this.resLoc = new ResourceLocation(combo);
+
+        animationY = height;
+        PaintingPackReader.addedPaintings.stream().filter(paintingEntry -> paintingEntry.getRefName().equals(rl.getPath())).findFirst().ifPresent(paintingEntry -> animationY = paintingEntry.getAnimY());
     }
 
     @Override
@@ -29,7 +34,8 @@ public class PaintingButton extends Button {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, resLoc);
 
-        blit(stack, this.x, this.y, 0, 0, width, height, width, height);
+        //blit(stack, this.x, this.y, 0, 0, width, 16, width, 16);
+        blit(stack, this.x,this.y, width, height, 0, 0, width, height, width, animationY);
 
         if (isHovered) {
             fill(stack, x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); // upper left to upper right

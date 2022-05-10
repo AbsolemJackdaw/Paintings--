@@ -62,6 +62,7 @@ public class PaintingPackReader {
 
             int sizeX = 0;
             int sizeY = 0;
+            int animY = 0;
 
             if (jsonObject.has("x")) {
                 sizeX = jsonObject.get("x").getAsInt();
@@ -73,6 +74,11 @@ public class PaintingPackReader {
 
             if (jsonObject.has("square")) {
                 sizeX = sizeY = jsonObject.get("square").getAsInt();
+            }
+
+            animY = sizeY; //init variable if there is no data
+            if (jsonObject.has("anim")) {
+                animY = jsonObject.get("anim").getAsInt();
             }
 
             if (sizeX == 0 || sizeY == 0) {
@@ -87,7 +93,7 @@ public class PaintingPackReader {
                 continue;
             }
 
-            PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY);
+            PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY, animY);
             LOGGER.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
             addedPaintings.add(entry);
         }
