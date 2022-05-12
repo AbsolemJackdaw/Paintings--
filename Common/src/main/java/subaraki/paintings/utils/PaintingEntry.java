@@ -1,5 +1,7 @@
 package subaraki.paintings.utils;
 
+import net.minecraft.resources.ResourceLocation;
+
 public class PaintingEntry {
 
     private final String refName;
@@ -32,5 +34,9 @@ public class PaintingEntry {
 
     public String getRefName() {
         return this.refName;
+    }
+
+    public ResourceLocation getResLoc() {
+        return getRefName().contains(":") ? new ResourceLocation(getRefName()) : new ResourceLocation(subaraki.paintings.Paintings.MODID, getRefName());
     }
 }

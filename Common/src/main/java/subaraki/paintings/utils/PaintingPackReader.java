@@ -20,6 +20,7 @@ import static subaraki.paintings.Paintings.LOGGER;
 public class PaintingPackReader {
 
     public static final ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
+    private static final Gson gson = new GsonBuilder().create();
 
     /**
      * called once on mod class initialization. the loadFromJson called in here reads
@@ -42,7 +43,6 @@ public class PaintingPackReader {
     }
 
     private void makeEntriesFromStream(InputStream stream) {
-        Gson gson = new GsonBuilder().create();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         JsonElement je = gson.fromJson(reader, JsonElement.class);

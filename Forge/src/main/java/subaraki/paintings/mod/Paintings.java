@@ -41,9 +41,9 @@ public class Paintings {
     public static void registerPaintings(RegistryEvent.Register<Motive> event) {
         for (PaintingEntry entry : PaintingPackReader.addedPaintings) {
             try {
-                Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(subaraki.paintings.Paintings.MODID, entry.getRefName());
+                Motive painting = new Motive(entry.getSizeX(), entry.getSizeY()).setRegistryName(entry.getRefName());
                 event.getRegistry().register(painting);
-                //Paintings.LOGGER.info("registered painting " + painting.getRegistryName());
+                LOGGER.info("Registered painting " + entry.getRefName());
             } catch (ResourceLocationException e) {
                 LOGGER.error("Skipping. Found Error: {}", e.getMessage());
             }
