@@ -25,7 +25,7 @@ public class PaintingButton extends Button {
         this.resLoc = new ResourceLocation(combo);
 
         animationY = height;
-        PaintingPackReader.addedPaintings.stream().filter(paintingEntry -> paintingEntry.getRefName().equals(rl.getPath())).findFirst().ifPresent(paintingEntry -> animationY = paintingEntry.getAnimY());
+        PaintingPackReader.addedPaintings.stream().filter(paintingEntry -> paintingEntry.getRefName().equals(rl.getPath()) && !resLoc.getNamespace().equals("minecraft")).findFirst().ifPresent(paintingEntry -> animationY = paintingEntry.getAnimY());
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PaintingButton extends Button {
         RenderSystem.setShaderTexture(0, resLoc);
 
         //blit(stack, this.x, this.y, 0, 0, width, 16, width, 16);
-        blit(stack, this.x,this.y, width, height, 0, 0, width, height, width, animationY);
+        blit(stack, this.x, this.y, width, height, 0, 0, width, height, width, animationY);
 
         if (isHovered) {
             fill(stack, x - BORDER, y - BORDER, x + width + BORDER, y, YELLOW); // upper left to upper right
