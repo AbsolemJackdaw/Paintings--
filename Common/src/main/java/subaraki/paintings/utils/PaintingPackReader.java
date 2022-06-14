@@ -19,7 +19,7 @@ import static subaraki.paintings.Paintings.LOGGER;
 
 public class PaintingPackReader {
 
-    public static final ArrayList<PaintingEntry> addedPaintings = new ArrayList<>();
+    public static final ArrayList<PaintingEntry> PAINTINGS = new ArrayList<>();
     private static final Gson gson = new GsonBuilder().create();
 
     /**
@@ -94,8 +94,8 @@ public class PaintingPackReader {
             }
 
             PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY, animY);
-            LOGGER.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
-            addedPaintings.add(entry);
+            LOGGER.info(String.format("Loaded json painting %s , %d x %d", entry.getPaintingName(), entry.getSizeX(), entry.getSizeY()));
+            PAINTINGS.add(entry);
         }
     }
 

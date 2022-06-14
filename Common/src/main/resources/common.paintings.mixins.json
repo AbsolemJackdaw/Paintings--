@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "subaraki.paintings.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "IPaintingAccessor"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+  

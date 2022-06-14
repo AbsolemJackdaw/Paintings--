@@ -1,5 +1,6 @@
 package subaraki.paintings.event;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -8,6 +9,7 @@ import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
+import subaraki.paintings.mixin.IPaintingAccessor;
 import subaraki.paintings.network.supplier.SyncpacketSupplier;
 import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
@@ -68,7 +70,8 @@ public class ProcessInteractEvent {
                         if (newArt == null && takeNext)
                             newArt = firstMatch;
 
-                        painting.motive = newArt;
+                        ((IPaintingAccessor) painting).callSetVariant(Holder.direct(newArt));
+
                         syncpacketSupplier.send(painting, serverPlayer);
                     }
                 }

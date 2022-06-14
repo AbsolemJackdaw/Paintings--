@@ -2,24 +2,27 @@ package subaraki.paintings.event;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.PaintingVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
+import subaraki.paintings.mixin.IPaintingAccessor;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;
 import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProcessPlacementEvent {
 
@@ -35,71 +38,73 @@ public class ProcessPlacementEvent {
 
             if (flag && player.mayUseItemAt(actualPos, face, itemStack)) {
 
-                Painting painting = new Painting(level, actualPos, face);
-                painting.setYRot(face.toYRot());
-                // Set position updates bounding box
-                painting.setPos(actualPos.getX(), blockPos.getY(), actualPos.getZ());
+                Optional<Painting> optPainting = Painting.create(level, actualPos, face);
+                optPainting.ifPresent(painting -> {
+                    painting.setYRot(face.toYRot());
+                    // Set position updates bounding box
+                    painting.setPos(actualPos.getX(), blockPos.getY(), actualPos.getZ());
 
-                if (painting.survives()) {
-                    player.swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
+                    if (painting.survives()) {
+                        player.swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
 
-                    if (!player.isCreative())
-                        itemStack.shrink(1);
+                        if (!player.isCreative())
+                            itemStack.shrink(1);
 
-                    if (!level.isClientSide()) {
+                        if (!level.isClientSide()) {
 
-                        painting.playPlacementSound();
-                        level.addFreshEntity(painting);
+                            painting.playPlacementSound();
+                            level.addFreshEntity(painting);
 
-                        PaintingVariant originalArt = painting.getVariant().value();
+                            PaintingVariant originalArt = painting.getVariant().value();
 
-                        List<PaintingVariant> validArts = new ArrayList<>(); // list of paintings placeable at current location
-                        Registry.PAINTING_VARIANT.stream().forEach(art -> {
-                            painting.motive = art;
+                            List<PaintingVariant> validArts = new ArrayList<>(); // list of paintings placeable at current location
 
-                            // update the bounding box of the painting to make sure the simulation of
-                            // placing down a painting
-                            // happens correctly. Omitting this will result in overlapping paintings
-                            subaraki.paintings.Paintings.UTILITY.updatePaintingBoundingBox(painting);
+                            Registry.PAINTING_VARIANT.stream().forEach(art -> {
+                                ((IPaintingAccessor) painting).callSetVariant(Holder.direct(art));
 
-                            // simulate placing down a painting. if possible, add it to a list of paintings
-                            // that are possible to place at this location
-                            if (painting.survives()) {
+                                // update the bounding box of the painting to make sure the simulation of
+                                // placing down a painting
+                                // happens correctly. Omitting this will result in overlapping paintings
+                                Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
-                                if (CommonConfig.use_vanilla_only) {
-                                    if (art.equals(Motive.KEBAB) || art.equals(Motive.AZTEC) || art.equals(Motive.ALBAN) || art.equals(Motive.AZTEC2)
-                                            || art.equals(Motive.BOMB) || art.equals(Motive.PLANT) || art.equals(Motive.WASTELAND) || art.equals(Motive.POOL)
-                                            || art.equals(Motive.COURBET) || art.equals(Motive.SEA) || art.equals(Motive.SUNSET) || art.equals(Motive.CREEBET)
-                                            || art.equals(Motive.WANDERER) || art.equals(Motive.GRAHAM) || art.equals(Motive.MATCH) || art.equals(Motive.BUST)
-                                            || art.equals(Motive.STAGE) || art.equals(Motive.VOID) || art.equals(Motive.SKULL_AND_ROSES)
-                                            || art.equals(Motive.WITHER) || art.equals(Motive.FIGHTERS) || art.equals(Motive.POINTER)
-                                            || art.equals(Motive.PIGSCENE) || art.equals(Motive.BURNING_SKULL) || art.equals(Motive.SKELETON)
-                                            || art.equals(Motive.DONKEY_KONG)) {
+                                // simulate placing down a painting. if possible, add it to a list of paintings
+                                // that are possible to place at this location
+                                if (painting.survives()) {
+                                    if (CommonConfig.use_vanilla_only) {
+                                        if (art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.KEBAB)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.AZTEC)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.ALBAN)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.AZTEC2))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BOMB)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.PLANT)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WASTELAND)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.POOL))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.COURBET)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SEA)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SUNSET)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.CREEBET))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WANDERER)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.GRAHAM)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.MATCH)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BUST))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.STAGE)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.VOID)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SKULL_AND_ROSES))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WITHER)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.FIGHTERS)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.POINTER))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.PIGSCENE)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BURNING_SKULL)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SKELETON))
+                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.DONKEY_KONG))) {
+                                            validArts.add(art);
+                                        }
+                                    } else
                                         validArts.add(art);
-                                    }
-                                } else
-                                    validArts.add(art);
+                                }
+
+                            });
+                            // reset the art of the painting to the one registered before
+                            ((IPaintingAccessor) painting).callSetVariant(Holder.direct(originalArt));
+
+                            Paintings.UTILITY.updatePaintingBoundingBox(painting); // reset bounding box
+
+                            // PaintingVariants[] validArtsArray = validArts.toArray(new PaintingVariants[0]);
+                            // sort paintings from high to low, and from big to small
+                            // Arrays.sort(validArtsArray, new ArtComparator());
+                            List<PaintingVariant> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
+
+                            ResourceLocation[] names = new ResourceLocation[validArtsArray.size()];
+                            for (PaintingVariant m : validArtsArray) {
+                                names[validArtsArray.indexOf(m)] = Registry.PAINTING_VARIANT.getKey(m);
                             }
-
-                        });
-                        // reset the art of the painting to the one registered before
-                        painting.motive = originalArt;
-
-                        Paintings.UTILITY.updatePaintingBoundingBox(painting); // reset bounding box
-
-                        // Motive[] validArtsArray = validArts.toArray(new Motive[0]);
-                        // sort paintings from high to low, and from big to small
-                        // Arrays.sort(validArtsArray, new ArtComparator());
-                        List<PaintingVariant> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
-
-                        ResourceLocation[] names = new ResourceLocation[validArtsArray.size()];
-                        for (PaintingVariant m : validArtsArray) {
-                            names[validArtsArray.indexOf(m)] = Registry.PAINTING_VARIANT.getKey(m);
+                            send.send((ServerPlayer) player, painting, names);
                         }
-                        send.send((ServerPlayer) player, painting, names);
                     }
+                });
 
-                }
                 return true;
             }
         }

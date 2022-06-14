@@ -1,5 +1,6 @@
 package subaraki.paintings.event;
 
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,6 +17,6 @@ public class PaintingInteractEvent {
     public static void interact(PlayerInteractEvent.EntityInteract event) {
         ProcessInteractEvent.processInteractPainting(event.getPlayer(), event.getTarget(), event.getHand(),
                 (painting, player) -> NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> player)),
-                        new CPacketPainting(painting, new ResourceLocation[]{painting.motive.getRegistryName()})));
+                        new CPacketPainting(painting, new ResourceLocation[]{Registry.PAINTING_VARIANT.getKey(painting.getVariant().get())})));
     }
 }

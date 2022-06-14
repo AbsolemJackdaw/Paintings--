@@ -174,7 +174,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
                     HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
 
                     Style style = Style.EMPTY.withHoverEvent(hover);
-                    this.renderComponentHoverEffect(mat, style, width / 2 - font.width(text.getContents()) - 4, height - START_Y / 4);
+                    this.renderComponentHoverEffect(mat, style, width / 2 - font.width(text) - 4, height - START_Y / 4);
                 }
             }
         }

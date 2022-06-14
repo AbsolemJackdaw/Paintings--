@@ -25,7 +25,7 @@ public class PaintingButton extends Button {
         this.resLoc = new ResourceLocation(combo);
 
         animationY = height;
-        PaintingPackReader.addedPaintings.stream().filter(paintingEntry -> paintingEntry.getRefName().equals(rl.getPath()) && !resLoc.getNamespace().equals("minecraft")).findFirst().ifPresent(paintingEntry -> animationY = paintingEntry.getAnimY());
+        PaintingPackReader.PAINTINGS.stream().filter(paintingEntry -> paintingEntry.getResLoc().equals(rl.getPath()) && !resLoc.getNamespace().equals("minecraft")).findFirst().ifPresent(paintingEntry -> animationY = paintingEntry.getAnimY());
     }
 
     @Override

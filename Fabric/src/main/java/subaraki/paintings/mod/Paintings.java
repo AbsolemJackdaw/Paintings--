@@ -6,7 +6,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.ResourceLocationException;
 import net.minecraft.core.Registry;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.events.Events;
 import subaraki.paintings.network.ServerNetwork;
 import subaraki.paintings.util.ModConfig;
@@ -26,9 +26,9 @@ public class Paintings implements ModInitializer {
     @Override
     public void onInitialize() {
         try {
-            for (PaintingEntry entry : PaintingPackReader.addedPaintings) {
-                Registry.register(Registry.MOTIVE, entry.getResLoc(), new Motive(entry.getSizeX(), entry.getSizeY()));
-                LOGGER.info("Registered painting " + entry.getRefName());
+            for (PaintingEntry entry : PaintingPackReader.PAINTINGS) {
+                Registry.register(Registry.PAINTING_VARIANT, entry.getResLoc(), new PaintingVariant(entry.getSizeX(), entry.getSizeY()));
+                LOGGER.info("Registered painting " + entry.getPaintingName());
             }
         } catch (ResourceLocationException e) {
             LOGGER.error("Skipping. Found Error: {}", e.getMessage());
