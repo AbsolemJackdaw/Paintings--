@@ -4,8 +4,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.phys.AABB;
 
 public class PaintingUtility {
@@ -45,10 +45,10 @@ public class PaintingUtility {
         }
     }
 
-    public void setArt(Painting painting, Motive type) {
+    public void setArt(Painting painting, PaintingVariant type) {
         CompoundTag tag = new CompoundTag();
         painting.addAdditionalSaveData(tag);
-        tag.putString("Motive", Registry.MOTIVE.getKey(type).toString());
+        tag.putString("Motive", Registry.PAINTING_VARIANT.getKey(type).toString());
         painting.readAdditionalSaveData(tag);
     }
 

@@ -3,7 +3,7 @@ package subaraki.paintings.gui;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.mixins.ScreenAccessor;
 import subaraki.paintings.network.PacketId;
 import subaraki.paintings.network.ServerNetwork;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class PaintingScreen extends CommonPaintingScreen {
 
-    public PaintingScreen(Motive[] types, int entityID) {
+    public PaintingScreen(PaintingVariant[] types, int entityID) {
         super(types, entityID);
     }
 
@@ -26,7 +26,7 @@ public class PaintingScreen extends CommonPaintingScreen {
     }
 
     @Override
-    public void sendPacket(Motive motive, int entityId) {
+    public void sendPacket(PaintingVariant motive, int entityId) {
         ClientPlayNetworking.send(PacketId.CHANNEL, ServerNetwork.sPacket(entityId, motive));
     }
 

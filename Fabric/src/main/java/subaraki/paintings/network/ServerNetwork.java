@@ -7,7 +7,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 
 public class ServerNetwork {
 
@@ -17,12 +17,12 @@ public class ServerNetwork {
             byte FORGE_PACKET_ID = buf.readByte();//FORGE PACKET COMPAT
             if (FORGE_PACKET_ID == PacketId.SPACKET) {//FORGE PACKET COMPAT
                 String name = buf.readUtf();
-                Motive type = Registry.MOTIVE.get(new ResourceLocation(name));
+                PaintingVariant type = Registry.PAINTING_VARIANT.get(new ResourceLocation(name));
                 int entityId = buf.readInt();
 
                 server.execute(() ->
                         ProcessServerPacket.handle(serverPlayer.level, serverPlayer, entityId, type, (painting, p) -> {
-                            FriendlyByteBuf byteBuf = ClientNetwork.cPacket(entityId, new String[]{Registry.MOTIVE.getKey(type).toString()});
+                            FriendlyByteBuf byteBuf = ClientNetwork.cPacket(entityId, new String[]{Registry.PAINTING_VARIANT.getKey(type).toString()});
                             for (ServerPlayer tracking : PlayerLookup.tracking(serverPlayer)) {
                                 ServerPlayNetworking.send(tracking, PacketId.CHANNEL, byteBuf);
                             }
@@ -33,10 +33,10 @@ public class ServerNetwork {
         });
     }
 
-    public static FriendlyByteBuf sPacket(int entityId, Motive motive) {
+    public static FriendlyByteBuf sPacket(int entityId, PaintingVariant motive) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeByte(PacketId.SPACKET); //FORGE PACKET COMPAT
-        buf.writeUtf(Registry.MOTIVE.getKey(motive).toString());
+        buf.writeUtf(Registry.PAINTING_VARIANT.getKey(motive).toString());
         buf.writeInt(entityId);
         return buf;
     }

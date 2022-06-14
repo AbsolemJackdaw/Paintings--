@@ -3,8 +3,8 @@ package subaraki.paintings.network;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.network.supplier.ScreenSupplier;
 import subaraki.paintings.utils.ClientReferences;
@@ -18,14 +18,14 @@ public class ProcessClientPacket {
         {
             Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityID);
             if (entity instanceof Painting painting) {
-                Motive type = Registry.MOTIVE.get(new ResourceLocation(resLocNames[0]));
+                PaintingVariant type = Registry.PAINTING_VARIANT.get(new ResourceLocation(resLocNames[0]));
                 subaraki.paintings.Paintings.UTILITY.setArt(painting, type);
                 Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
             }
         } else // we need to open the painting gui to select a painting
         {
-            Motive[] types = Arrays.stream(resLocNames).map(path -> Registry.MOTIVE.get(new ResourceLocation(path))).toArray(Motive[]::new);
+            PaintingVariant[] types = Arrays.stream(resLocNames).map(path -> Registry.PAINTING_VARIANT.get(new ResourceLocation(path))).toArray(PaintingVariant[]::new);
             ClientReferences.openPaintingScreen(screen.make(types, entityID));
         }
     }

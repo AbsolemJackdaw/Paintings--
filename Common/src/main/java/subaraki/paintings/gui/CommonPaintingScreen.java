@@ -7,11 +7,11 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.utils.CommonConfig;
 
 import java.util.List;
@@ -23,13 +23,13 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     public static final int START_Y = 30;
     public static final int GAP = 5;
     private final int entityID;
-    private final Button defaultButton = new Button(0, 0, 0, 0, new TextComponent("default"), button -> {
+    private final Button defaultButton = new Button(0, 0, 0, 0, Component.literal("default"), button -> {
     });
-    private final Motive[] types;
+    private final PaintingVariant[] types;
     private int scrollBarScroll = 0;
 
-    public CommonPaintingScreen(Motive[] types, int entityID) {
-        super(new TranslatableComponent("select.a.painting"));
+    public CommonPaintingScreen(PaintingVariant[] types, int entityID) {
+        super(Component.translatable("select.a.painting"));
         this.types = types;
         this.entityID = entityID;
     }
@@ -51,29 +51,29 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
         int index = 0;
         int rowstart = 0;
 
-        for (Motive motive : types) {
+        for (PaintingVariant variant : types) {
             // if the painting size is different, or we're at the end of the row, jump down
             // and start at the beginning of the row again
-            if (posx + motive.getWidth() > END_X || prevHeight > motive.getHeight()) {
+            if (posx + variant.getWidth() > END_X || prevHeight > variant.getHeight()) {
                 centerRow(rowstart, index - 1);
                 rowstart = index;
                 posx = START_X;
                 posy += prevHeight + GAP;
-                prevHeight = motive.getHeight(); // stays the same on row end, changes when heights change
+                prevHeight = variant.getHeight(); // stays the same on row end, changes when heights change
 
             }
             try {
-                this.addRenderableWidget(new PaintingButton(posx, posy, motive.getWidth(), motive.getHeight(), new TextComponent(""), button -> {
-                    sendPacket(motive, entityID);
+                this.addRenderableWidget(new PaintingButton(posx, posy, variant.getWidth(), variant.getHeight(), Component.literal(""), button -> {
+                    sendPacket(variant, entityID);
                     this.removed();
                     this.onClose();
-                }, motive));
+                }, variant));
             } catch (NullPointerException e) {
                 subaraki.paintings.Paintings.LOGGER.warn("*******************");
                 subaraki.paintings.Paintings.LOGGER.warn(e.getMessage());
                 subaraki.paintings.Paintings.LOGGER.warn("*******************");
             }
-            posx += GAP + motive.getWidth();
+            posx += GAP + variant.getWidth();
 
             index++;
         }
@@ -170,11 +170,10 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
         for (Widget guiButton : getRenderablesWithCast()) {
             if (guiButton instanceof PaintingButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
-                    TextComponent text = new TextComponent(button.getWidth() / 16 + "x" + button.getHeight() / 16);
+                    MutableComponent text = Component.literal(button.getWidth() / 16 + "x" + button.getHeight() / 16);
                     HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
 
                     Style style = Style.EMPTY.withHoverEvent(hover);
-
                     this.renderComponentHoverEffect(mat, style, width / 2 - font.width(text.getContents()) - 4, height - START_Y / 4);
                 }
             }
@@ -232,7 +231,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public void sendPacket(Motive motive, int entityID) {
+    public void sendPacket(PaintingVariant motive, int entityID) {
 
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.decoration.Motive;
 import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -50,10 +51,10 @@ public class ProcessPlacementEvent {
                         painting.playPlacementSound();
                         level.addFreshEntity(painting);
 
-                        Motive originalArt = painting.motive;
+                        PaintingVariant originalArt = painting.getVariant().value();
 
-                        List<Motive> validArts = new ArrayList<>(); // list of paintings placeable at current location
-                        Registry.MOTIVE.stream().forEach(art -> {
+                        List<PaintingVariant> validArts = new ArrayList<>(); // list of paintings placeable at current location
+                        Registry.PAINTING_VARIANT.stream().forEach(art -> {
                             painting.motive = art;
 
                             // update the bounding box of the painting to make sure the simulation of
@@ -89,11 +90,11 @@ public class ProcessPlacementEvent {
                         // Motive[] validArtsArray = validArts.toArray(new Motive[0]);
                         // sort paintings from high to low, and from big to small
                         // Arrays.sort(validArtsArray, new ArtComparator());
-                        List<Motive> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
+                        List<PaintingVariant> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
 
                         ResourceLocation[] names = new ResourceLocation[validArtsArray.size()];
-                        for (Motive m : validArtsArray) {
-                            names[validArtsArray.indexOf(m)] = Registry.MOTIVE.getKey(m);
+                        for (PaintingVariant m : validArtsArray) {
+                            names[validArtsArray.indexOf(m)] = Registry.PAINTING_VARIANT.getKey(m);
                         }
                         send.send((ServerPlayer) player, painting, names);
                     }
