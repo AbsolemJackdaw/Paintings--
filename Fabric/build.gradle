@@ -49,6 +49,15 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+
+    filesMatching('*.mixins.json') {
+        expand "refmap_target": "${archivesBaseName}-"
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "paintings.mod.json"
+        expand "version": project.version
+    }
 }
 
 tasks.withType(JavaCompile) {

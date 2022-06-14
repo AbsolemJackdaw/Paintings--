@@ -28,6 +28,7 @@
     ]
   },
   "mixins": [
+    "paintings.fabric.mixins.json",
     "paintings.mixins.json"
   ],
   "depends": {
