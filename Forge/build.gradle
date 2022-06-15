@@ -83,6 +83,18 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     annotationProcessor 'org.spongepowered:mixin:0.8.4-SNAPSHOT:processor'
+    runtimeOnly fg.deobf("curse.maven:transparent-377582:3832091")
+
+}
+repositories { //all of these are for adding crates compat
+    mavenLocal()
+    maven {
+        name = 'Curse Maven'
+        url = 'https://cursemaven.com'
+        content {
+            includeGroup 'curse.maven'
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {
