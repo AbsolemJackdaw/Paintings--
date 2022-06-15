@@ -48,7 +48,7 @@ public class PaintingUtility {
     public void setArt(Painting painting, PaintingVariant type) {
         CompoundTag tag = new CompoundTag();
         painting.addAdditionalSaveData(tag);
-        tag.putString("Motive", Registry.PAINTING_VARIANT.getKey(type).toString());
+        tag.putString("variant", Registry.PAINTING_VARIANT.getKey(type).toString());
         painting.readAdditionalSaveData(tag);
     }
 
