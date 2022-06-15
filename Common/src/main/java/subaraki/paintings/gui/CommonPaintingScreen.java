@@ -7,10 +7,12 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.utils.CommonConfig;
 
@@ -64,7 +66,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
             }
             try {
                 this.addRenderableWidget(new PaintingButton(posx, posy, variant.getWidth(), variant.getHeight(), Component.literal(""), button -> {
-                    sendPacket(variant, entityID);
+                    sendPacket(Registry.PAINTING_VARIANT.getKey(variant), entityID);
                     this.removed();
                     this.onClose();
                 }, variant));
@@ -231,7 +233,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public void sendPacket(PaintingVariant motive, int entityID) {
+    public void sendPacket(ResourceLocation variantName, int entityID) {
 
     }
 }

@@ -2,6 +2,7 @@ package subaraki.paintings.gui;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Widget;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.server.SPacketPainting;
@@ -25,8 +26,8 @@ public class PaintingScreen extends CommonPaintingScreen {
     }
 
     @Override
-    public void sendPacket(PaintingVariant motive, int entityID) {
-        NetworkHandler.NETWORK.sendToServer(new SPacketPainting(motive, entityID));
+    public void sendPacket(ResourceLocation variantName, int entityID) {
+        NetworkHandler.NETWORK.sendToServer(new SPacketPainting(variantName, entityID));
 
     }
 

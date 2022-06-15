@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,8 +24,44 @@ import subaraki.paintings.utils.PaintingUtility;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ProcessPlacementEvent {
+
+    private static List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList();
+
+    static {
+        vanillaPaintings.add(PaintingVariants.KEBAB);
+        vanillaPaintings.add(PaintingVariants.AZTEC);
+        vanillaPaintings.add(PaintingVariants.ALBAN);
+        vanillaPaintings.add(PaintingVariants.AZTEC2);
+        vanillaPaintings.add(PaintingVariants.BOMB);
+        vanillaPaintings.add(PaintingVariants.PLANT);
+        vanillaPaintings.add(PaintingVariants.WASTELAND);
+        vanillaPaintings.add(PaintingVariants.POOL);
+        vanillaPaintings.add(PaintingVariants.COURBET);
+        vanillaPaintings.add(PaintingVariants.SEA);
+        vanillaPaintings.add(PaintingVariants.SUNSET);
+        vanillaPaintings.add(PaintingVariants.CREEBET);
+        vanillaPaintings.add(PaintingVariants.WANDERER);
+        vanillaPaintings.add(PaintingVariants.GRAHAM);
+        vanillaPaintings.add(PaintingVariants.MATCH);
+        vanillaPaintings.add(PaintingVariants.BUST);
+        vanillaPaintings.add(PaintingVariants.STAGE);
+        vanillaPaintings.add(PaintingVariants.VOID);
+        vanillaPaintings.add(PaintingVariants.SKULL_AND_ROSES);
+        vanillaPaintings.add(PaintingVariants.WITHER);
+        vanillaPaintings.add(PaintingVariants.FIGHTERS);
+        vanillaPaintings.add(PaintingVariants.POINTER);
+        vanillaPaintings.add(PaintingVariants.PIGSCENE);
+        vanillaPaintings.add(PaintingVariants.BURNING_SKULL);
+        vanillaPaintings.add(PaintingVariants.SKELETON);
+        vanillaPaintings.add(PaintingVariants.EARTH);
+        vanillaPaintings.add(PaintingVariants.WIND);
+        vanillaPaintings.add(PaintingVariants.FIRE);
+        vanillaPaintings.add(PaintingVariants.WATER);
+        vanillaPaintings.add(PaintingVariants.DONKEY_KONG);
+    }
 
     public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier send) {
         if (!CommonConfig.use_selection_gui)
@@ -39,12 +76,12 @@ public class ProcessPlacementEvent {
             if (flag && player.mayUseItemAt(actualPos, face, itemStack)) {
 
                 Optional<Painting> optPainting = Painting.create(level, actualPos, face);
-                optPainting.ifPresent(painting -> {
-                    painting.setYRot(face.toYRot());
+                optPainting.ifPresent(paintingEntity -> { //if painting can be placed
+                    paintingEntity.setYRot(face.toYRot());
                     // Set position updates bounding box
-                    painting.setPos(actualPos.getX(), blockPos.getY(), actualPos.getZ());
+                    paintingEntity.setPos(actualPos.getX(), blockPos.getY(), actualPos.getZ());
 
-                    if (painting.survives()) {
+                    if (paintingEntity.survives()) {
                         player.swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
 
                         if (!player.isCreative())
@@ -52,55 +89,38 @@ public class ProcessPlacementEvent {
 
                         if (!level.isClientSide()) {
 
-                            painting.playPlacementSound();
-                            level.addFreshEntity(painting);
+                            paintingEntity.playPlacementSound();
+                            level.addFreshEntity(paintingEntity);
 
-                            PaintingVariant originalArt = painting.getVariant().value();
+                            Holder<PaintingVariant> originalArt = paintingEntity.getVariant();
 
-                            List<PaintingVariant> validArts = new ArrayList<>(); // list of paintings placeable at current location
+                            List<ResourceKey<PaintingVariant>> validArts = new ArrayList<>(); // list of paintings placeable at current location
 
-                            Registry.PAINTING_VARIANT.stream().forEach(art -> {
-                                ((IPaintingAccessor) painting).callSetVariant(Holder.direct(art));
-
-                                // update the bounding box of the painting to make sure the simulation of
-                                // placing down a painting
-                                // happens correctly. Omitting this will result in overlapping paintings
-                                Paintings.UTILITY.updatePaintingBoundingBox(painting);
-
-                                // simulate placing down a painting. if possible, add it to a list of paintings
-                                // that are possible to place at this location
-                                if (painting.survives()) {
+                            for (ResourceKey<PaintingVariant> registryPaintingKey : Registry.PAINTING_VARIANT.registryKeySet()) {
+                                ((IPaintingAccessor) paintingEntity).callSetVariant(Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(registryPaintingKey));
+                                Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity);
+                                if (paintingEntity.survives()) {
                                     if (CommonConfig.use_vanilla_only) {
-                                        if (art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.KEBAB)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.AZTEC)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.ALBAN)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.AZTEC2))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BOMB)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.PLANT)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WASTELAND)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.POOL))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.COURBET)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SEA)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SUNSET)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.CREEBET))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WANDERER)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.GRAHAM)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.MATCH)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BUST))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.STAGE)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.VOID)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SKULL_AND_ROSES))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.WITHER)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.FIGHTERS)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.POINTER))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.PIGSCENE)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.BURNING_SKULL)) || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.SKELETON))
-                                                || art.equals(Registry.PAINTING_VARIANT.get(PaintingVariants.DONKEY_KONG))) {
-                                            validArts.add(art);
+                                        if (vanillaPaintings.contains(registryPaintingKey)) {
+                                            validArts.add(registryPaintingKey);
                                         }
-                                    } else
-                                        validArts.add(art);
+                                    } else {
+                                        validArts.add(registryPaintingKey);
+                                    }
                                 }
-
-                            });
-                            // reset the art of the painting to the one registered before
-                            ((IPaintingAccessor) painting).callSetVariant(Holder.direct(originalArt));
-
-                            Paintings.UTILITY.updatePaintingBoundingBox(painting); // reset bounding box
-
-                            // PaintingVariants[] validArtsArray = validArts.toArray(new PaintingVariants[0]);
-                            // sort paintings from high to low, and from big to small
-                            // Arrays.sort(validArtsArray, new ArtComparator());
-                            List<PaintingVariant> validArtsArray = validArts.stream().sorted(PaintingUtility.ART_COMPARATOR).toList();
-
-                            ResourceLocation[] names = new ResourceLocation[validArtsArray.size()];
-                            for (PaintingVariant m : validArtsArray) {
-                                names[validArtsArray.indexOf(m)] = Registry.PAINTING_VARIANT.getKey(m);
                             }
-                            send.send((ServerPlayer) player, painting, names);
+
+                            // reset the art of the painting to the one registered before
+                            ((IPaintingAccessor) paintingEntity).callSetVariant(originalArt);
+
+                            Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity); // reset bounding box
+
+                            // sort paintings from high to low, and from big to small
+                            List<PaintingVariant> sorted = (validArts.stream().map(Registry.PAINTING_VARIANT::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
+                            //map resource<variant> to the registered resourcelocation
+                            List<ResourceLocation> references = sorted.stream().map(Registry.PAINTING_VARIANT::getKey).collect(Collectors.toList());
+                            //Send packet to open gui
+                            send.send((ServerPlayer) player, paintingEntity, references.toArray(ResourceLocation[]::new));
                         }
                     }
                 });

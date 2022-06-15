@@ -3,10 +3,8 @@ package subaraki.paintings.network.server;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.network.IPacketBase;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.ProcessServerPacket;
@@ -16,16 +14,16 @@ import java.util.function.Supplier;
 
 public class SPacketPainting implements IPacketBase {
 
-    private PaintingVariant type;
+    private ResourceLocation variantName;
     private int entityID;
 
     public SPacketPainting() {
 
     }
 
-    public SPacketPainting(PaintingVariant type, int entityID) {
+    public SPacketPainting(ResourceLocation Name, int entityID) {
 
-        this.type = type;
+        this.variantName = Name;
         this.entityID = entityID;
     }
 
@@ -36,14 +34,13 @@ public class SPacketPainting implements IPacketBase {
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeUtf(ForgeRegistries.PAINTING_VARIANTS.getKey(type).toString());
+        buf.writeUtf(variantName.toString());
         buf.writeInt(entityID);
     }
 
     @Override
     public void decode(FriendlyByteBuf buf) {
-        String name = buf.readUtf(256);
-        this.type = ForgeRegistries.PAINTING_VARIANTS.getValue(new ResourceLocation(name));
+        this.variantName = new ResourceLocation(buf.readUtf(256));
         this.entityID = buf.readInt();
     }
 
@@ -53,10 +50,9 @@ public class SPacketPainting implements IPacketBase {
         context.get().enqueueWork(() -> {
             ServerPlayer serverPlayer = context.get().getSender();
             if (serverPlayer != null) {
-                ResourceLocation registryName = ForgeRegistries.PAINTING_VARIANTS.getKey(type);
-                ProcessServerPacket.handle(serverPlayer.level, serverPlayer, this.entityID, this.type,
+                ProcessServerPacket.handle(serverPlayer.level, serverPlayer, this.entityID, this.variantName,
                         (painting, player) -> NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> player)),
-                                new CPacketPainting(painting, new ResourceLocation[]{registryName})));
+                                new CPacketPainting(painting, new ResourceLocation[]{variantName})));
             }
         });
         context.get().setPacketHandled(true);
