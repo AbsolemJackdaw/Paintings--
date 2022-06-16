@@ -94,21 +94,17 @@ public class ProcessPlacementEvent {
 
                             Holder<PaintingVariant> originalArt = paintingEntity.getVariant();
 
-                            List<ResourceKey<PaintingVariant>> validArts = new ArrayList<>(); // list of paintings placeable at current location
-
-                            for (ResourceKey<PaintingVariant> registryPaintingKey : Registry.PAINTING_VARIANT.registryKeySet()) {
-                                ((IPaintingAccessor) paintingEntity).callSetVariant(Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(registryPaintingKey));
-                                Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity);
-                                if (paintingEntity.survives()) {
-                                    if (CommonConfig.use_vanilla_only) {
-                                        if (vanillaPaintings.contains(registryPaintingKey)) {
-                                            validArts.add(registryPaintingKey);
-                                        }
-                                    } else {
-                                        validArts.add(registryPaintingKey);
-                                    }
+                            // list of paintings placeable at current location
+                            //takes registry names
+                            List<ResourceLocation> validArts = Registry.PAINTING_VARIANT.keySet().stream().filter(resourceLocation -> {
+                                var variant = Registry.PAINTING_VARIANT.get(resourceLocation);
+                                var regEntry = Registry.PAINTING_VARIANT.getResourceKey(variant);
+                                if (regEntry.isPresent()) {
+                                    ((IPaintingAccessor) paintingEntity).callSetVariant(Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get()));
+                                    return paintingEntity.survives() || (paintingEntity.survives() && CommonConfig.use_vanilla_only && vanillaPaintings.contains(regEntry.get()));
                                 }
-                            }
+                                return false;
+                            }).collect(Collectors.toList());
 
                             // reset the art of the painting to the one registered before
                             ((IPaintingAccessor) paintingEntity).callSetVariant(originalArt);

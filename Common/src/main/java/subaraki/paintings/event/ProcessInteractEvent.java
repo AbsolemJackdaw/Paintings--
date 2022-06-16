@@ -2,7 +2,7 @@ package subaraki.paintings.event;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -40,23 +40,24 @@ public class ProcessInteractEvent {
 
                         // it is important to sort the paintings from big to small so all same size
                         // paintings will be next to one another
-                        List<ResourceKey<PaintingVariant>> validArtsArray = Registry.PAINTING_VARIANT.registryKeySet().stream().filter(paintingVariantResourceKey -> {
-                            return PaintingUtility.ART_COMPARATOR.compare(Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(paintingVariantResourceKey).value(), original.value()) == 0;
+                        List<ResourceLocation> validArtsArray = Registry.PAINTING_VARIANT.keySet().stream().filter(paintingRegistryName -> {
+                            return PaintingUtility.ART_COMPARATOR.compare(Registry.PAINTING_VARIANT.get(paintingRegistryName), original.value()) == 0;
                         }).collect(Collectors.toList());
 
                         boolean takeNext = false;
-                        for (ResourceKey<PaintingVariant> type : validArtsArray) {
+                        for (ResourceLocation registryName : validArtsArray) {
+                            var variant = Registry.PAINTING_VARIANT.get(registryName);
+                            var regEntry = Registry.PAINTING_VARIANT.getResourceKey(variant);
 
-                            if (equalSizes(original.value(), Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(type).value())) {
+                            if (equalSizes(original.value(), variant) && regEntry.isPresent()) {
                                 if (firstMatch == null) {
-                                    firstMatch = Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(type);
+                                    firstMatch = Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
                                 }
                                 if (takeNext) {
-                                    newArt = Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(type);
+                                    newArt = Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
                                     break;
                                 }
-
-                                if (equalNames(original.value(), Registry.PAINTING_VARIANT.getOrCreateHolderOrThrow(type).value())) {
+                                if (equalNames(original.value(), variant)) {
                                     takeNext = true;
                                 }
 
@@ -72,9 +73,11 @@ public class ProcessInteractEvent {
                         if (newArt == null && takeNext)
                             newArt = firstMatch;
 
-                        ((IPaintingAccessor) painting).callSetVariant(newArt);
+                        if (newArt != null) { //newart shouldn't be null here, but with the new painting system, we can never be too sure
+                            ((IPaintingAccessor) painting).callSetVariant(newArt);
+                            syncpacketSupplier.send(painting, serverPlayer);
+                        }
 
-                        syncpacketSupplier.send(painting, serverPlayer);
                     }
                 }
             }

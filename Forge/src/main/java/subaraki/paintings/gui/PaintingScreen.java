@@ -19,9 +19,11 @@ public class PaintingScreen extends CommonPaintingScreen {
 
     @Override
     public Optional<AbstractWidget> optionalAbstractWidget(int index) {
-        Widget w = renderables.get(index);
-        if (w instanceof AbstractWidget aw)
-            return Optional.of(aw);
+        if (index < renderables.size()) {//if index is within of bounds
+            Widget w = renderables.get(index);
+            if (w instanceof AbstractWidget aw)
+                return Optional.of(aw);
+        }
         return Optional.empty();
     }
 
