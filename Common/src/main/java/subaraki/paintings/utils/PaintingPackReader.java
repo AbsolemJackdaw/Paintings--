@@ -3,23 +3,23 @@ package subaraki.paintings.utils;
 import com.google.gson.*;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import static subaraki.paintings.Paintings.LOGGER;
 
 public class PaintingPackReader {
 
     public static final ArrayList<PaintingEntry> PAINTINGS = new ArrayList<>();
+    /**
+     * Called individually. Scanpacks is ran twice this way, but cached.
+     * scanpacks is intensive and shouldn't be called too many times
+     */
+    public static final Set<File> FORCE_LOAD = new TreeSet<>();
     private static final Gson gson = new GsonBuilder().create();
 
     /**
@@ -99,10 +99,13 @@ public class PaintingPackReader {
         }
     }
 
+
+    /**
+     * read out all resourcepacks, exclusively in zips, to look for any other pack and copy their json file over.
+     * since 1.19, also responsable for a list of the resourcepacks to force-load.
+     */
     private void scanPacks() {
-        // read out all resourcepacks, exclusively in zips,
-        // to look for any other pack
-        // and copy their json file over
+        FORCE_LOAD.clear();//clear forceloaders to refill
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get("./resourcepacks"))) {
             LOGGER.info("Reading out ResourcePacks to find painting related json files");
 
@@ -126,7 +129,9 @@ public class PaintingPackReader {
 
                                     if (json.has("paintings")) {
                                         copyOver = true;
-                                        LOGGER.info("Validated: {}", next.getFileName().toString());
+                                        FORCE_LOAD.add(resourcePackPath.toFile());
+                                        //FLRP stand for Force Loaded ResourcePack. abreviated to not scare end users with the words 'Force Loaded'
+                                        LOGGER.info("FLRP & Validated: {}", next.getFileName().toString());
                                     }
                                 } catch (Exception e) {
                                     LOGGER.warn("************************************");
