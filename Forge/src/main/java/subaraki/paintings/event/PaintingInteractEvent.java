@@ -15,7 +15,7 @@ public class PaintingInteractEvent {
 
     @SubscribeEvent
     public static void interact(PlayerInteractEvent.EntityInteract event) {
-        ProcessInteractEvent.processInteractPainting(event.getPlayer(), event.getTarget(), event.getHand(),
+        ProcessInteractEvent.processInteractPainting(event.getEntity(), event.getTarget(), event.getHand(),
                 (painting, player) -> NetworkHandler.NETWORK.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with((() -> player)),
                         new CPacketPainting(painting, new ResourceLocation[]{Registry.PAINTING_VARIANT.getKey(painting.getVariant().get())})));
     }
