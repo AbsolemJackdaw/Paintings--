@@ -1,17 +1,17 @@
-modLoader = "javafml" #mandatory
+modLoader = "javafml"
 license = "GNU V3"
-loaderVersion = "[43,)" #mandatory (37 is current forge version)
-issueTrackerURL = "https://github.com/ArtixAllMighty/Paintings--/issues" #optional
+loaderVersion = "[43,)"
+issueTrackerURL = "https://github.com/ArtixAllMighty/Paintings--/issues"
 
-logoFile = "banner.png" #optional
+logoFile = "banner.png"
 
-[[mods]] #mandatory
-modId = "paintings" #mandatory
-version = "${file.jarVersion}" #mandatory
-displayName = "Paintings ++" #mandatory
-displayURL = "https://www.curseforge.com/minecraft/mc-mods/paintings" #optional
-credits = "David Goldman : the original Painting Selection Gui. Gigaherz for advice on networking. Darkhax and Jared for Multiloader" #optional
-authors = "AbsolemJackdaw" #optional
+[[mods]]
+modId = "paintings"
+version = "${file.jarVersion}"
+displayName = "Paintings ++"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/paintings"
+credits = "David Goldman : the original Painting Selection Gui. Gigaherz for advice on networking. Darkhax and Jared for Multiloader"
+authors = "AbsolemJackdaw"
 description = '''
 Add more paintings to your game !! 
 Check out the wiki for more info !
@@ -20,21 +20,16 @@ https://github.com/ArtixAllMighty/Paintings--/wiki
 Enjoy picking which painting you want to place down with the integrated Painting Selection GUI !
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
-[[dependencies.paintings]] #optional
-# the modid of the dependency
-modId = "forge" #mandatory
-# Does this dependency have to exist - if not, ordering below must be specified
-mandatory = true #mandatory
-# The version range of the dependency
-versionRange = "[43,)" #mandatory
-# An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
-ordering = "NONE"
-# Side this dependency is applied on - BOTH, CLIENT or SERVER
+[[dependencies.paintings]]
+modId = "forge"
+mandatory = true
+versionRange = "[43,)"
+ordering = "AFTER"
 side = "BOTH"
 # Here's another dependency
 [[dependencies.paintings]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"
-ordering = "NONE"
+ordering = "AFTER"
 side = "BOTH"

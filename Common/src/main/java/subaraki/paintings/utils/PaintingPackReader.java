@@ -3,10 +3,12 @@ package subaraki.paintings.utils;
 import com.google.gson.*;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,7 +22,7 @@ public class PaintingPackReader {
      * Called individually. Scanpacks is ran twice this way, but cached.
      * scanpacks is intensive and shouldn't be called too many times
      */
-    public static final Set<File> FORCE_LOAD = new TreeSet<>();
+    public static final Set<Path> FORCE_LOAD = new TreeSet<>();
     private static final Gson gson = new GsonBuilder().create();
 
     /**
@@ -170,7 +172,7 @@ public class PaintingPackReader {
 
                         if (json.has("paintings")) {
                             copyOver = true;
-                            FORCE_LOAD.add(packToForceLoadpath.toFile());
+                            FORCE_LOAD.add(packToForceLoadpath);
                             //FLRP stand for Force Loaded ResourcePack. abreviated to not scare end users with the words 'Force Loaded'
                             LOGGER.info("FLRP & Validated: {}", next.getFileName().toString());
                         }
