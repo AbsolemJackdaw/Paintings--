@@ -24,12 +24,12 @@ Enjoy picking which painting you want to place down with the integrated Painting
 modId = "forge"
 mandatory = true
 versionRange = "[43,)"
-ordering = "AFTER"
+ordering = "BEFORE"
 side = "BOTH"
 # Here's another dependency
 [[dependencies.paintings]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,)"
-ordering = "AFTER"
+ordering = "BEFORE"
 side = "BOTH"
