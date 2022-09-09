@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
 
@@ -29,6 +30,7 @@ public class PaintingPackReader {
     public void init() {
         LOGGER.info("loading json file and contents for paintings.");
         duplicateBaseToFolder();
+        makeEntriesFromStream(getClass().getResourceAsStream("/assets/paintings/paintings.json"));
         scanPacks();
     }
 
@@ -62,7 +64,7 @@ public class PaintingPackReader {
 
             int sizeX = 0;
             int sizeY = 0;
-            int animY = 0;
+            int animY;
 
             if (jsonObject.has("x")) {
                 sizeX = jsonObject.get("x").getAsInt();
@@ -112,52 +114,22 @@ public class PaintingPackReader {
             for (Path resourcePackPath : directoryStream) {
                 LOGGER.info("Reading `{}`", resourcePackPath.getFileName().toString());
                 try {
-                    URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
+                    boolean isFolder = Files.isDirectory(resourcePackPath);
 
-                    try (FileSystem system = initFileSystem(jarUri)) {
-                        Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
-                        while (resourcePacks.hasNext()) {
-                            boolean copyOver = false;
-
-                            Path next = resourcePacks.next();
-                            if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
-                                try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
-
-                                    Gson gson = new GsonBuilder().create();
-                                    JsonElement je = gson.fromJson(reader, JsonElement.class);
-                                    JsonObject json = je.getAsJsonObject();
-
-                                    if (json.has("paintings")) {
-                                        copyOver = true;
-                                        FORCE_LOAD.add(resourcePackPath.toFile());
-                                        //FLRP stand for Force Loaded ResourcePack. abreviated to not scare end users with the words 'Force Loaded'
-                                        LOGGER.info("FLRP & Validated: {}", next.getFileName().toString());
-                                    }
-                                } catch (Exception e) {
-                                    LOGGER.warn("************************************");
-                                    LOGGER.error("`{}` Errored. Skipping.", next.getFileName().toString());
-                                    LOGGER.error(e.getMessage());
-                                    LOGGER.warn("************************************");
-                                }
-                            }
-                            if (copyOver) {
-                                try {
-                                    makeEntriesFromPath(next);
-                                } catch (IOException e) {
-                                    LOGGER.warn("************************************");
-                                    LOGGER.warn(String.format("json file %s could not parse.", next.getFileName()));
-                                    LOGGER.warn("************************************");
-                                    e.printStackTrace();
-                                }
-                            }
+                    if (isFolder) {
+                        walk(resourcePackPath);
+                    } else {
+                        URI uriToExplore = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
+                        try (FileSystem system = initFileSystem(uriToExplore)) {
+                            walk(system.getPath("/"), resourcePackPath);
+                        } catch (Exception e) {
+                            LOGGER.warn("************************************");
+                            LOGGER.error("Invalid ResourcePack  {}", resourcePackPath.getFileName().toString());
+                            LOGGER.error(e.getMessage());
+                            LOGGER.warn("************************************");
                         }
-                    } catch (Exception e) {
-                        LOGGER.warn("************************************");
-                        LOGGER.error("Invalid ResourcePack  {}", resourcePackPath.getFileName().toString());
-                        LOGGER.error(e.getMessage());
-                        LOGGER.warn("************************************");
-
                     }
+
                 } catch (URISyntaxException e) {
                     LOGGER.warn("************************************");
                     LOGGER.error("Error Detected in ResourcePack `{}` ", resourcePackPath.getFileName().toString());
@@ -177,6 +149,58 @@ public class PaintingPackReader {
         }
     }
 
+    private void walk(Path path) throws IOException {
+        walk(path, path);
+    }
+
+    private void walk(Path path, Path packToForceLoadpath) {
+        try (Stream<Path> walker = Files.walk(path)) {
+            Iterator<Path> unzipped = walker.iterator();
+
+            while (unzipped.hasNext()) {
+                boolean copyOver = false;
+
+                Path next = unzipped.next();
+                if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
+
+                        Gson gson = new GsonBuilder().create();
+                        JsonElement je = gson.fromJson(reader, JsonElement.class);
+                        JsonObject json = je.getAsJsonObject();
+
+                        if (json.has("paintings")) {
+                            copyOver = true;
+                            FORCE_LOAD.add(packToForceLoadpath.toFile());
+                            //FLRP stand for Force Loaded ResourcePack. abreviated to not scare end users with the words 'Force Loaded'
+                            LOGGER.info("FLRP & Validated: {}", next.getFileName().toString());
+                        }
+                    } catch (Exception e) {
+                        LOGGER.warn("************************************");
+                        LOGGER.error("`{}` Errored. Skipping.", next.getFileName().toString());
+                        LOGGER.error(e.getMessage());
+                        LOGGER.warn("************************************");
+                    }
+                }
+                if (copyOver) {
+                    try {
+                        makeEntriesFromPath(next);
+                    } catch (IOException e) {
+                        LOGGER.warn("************************************");
+                        LOGGER.warn(String.format("json file %s could not parse.", next.getFileName()));
+                        LOGGER.warn("************************************");
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.warn("************************************");
+            LOGGER.error("Couldn't walk `{}` ", path.getFileName().toString());
+            LOGGER.warn(e);
+            LOGGER.warn("************************************");
+        }
+    }
+
+
     private FileSystem initFileSystem(URI uri) throws IOException {
         try {
             return FileSystems.getFileSystem(uri);
@@ -189,200 +213,6 @@ public class PaintingPackReader {
 
     private void duplicateBaseToFolder() {
         // duplicate the base painting's template to our custom folder
-        try {
-            Path dir = Paths.get("./paintings");
-            if (!Files.exists(dir)) {
-                LOGGER.info("Copying Over Base Template to /paintings");
-                Files.createDirectory(dir);
-                Files.copy(getClass().getResourceAsStream("/assets/paintings/paintings.json"), dir.resolve("paintings.json"));
-            }
-
-            Path base = Path.of("./paintings/paintings.json");
-            if (Files.exists(base)) {
-                if (Files.isRegularFile(base) && base.toString().endsWith(".json")) {
-                    LOGGER.info("Adding base paintings");
-                    makeEntriesFromPath(base);
-                }
-            }
-
-        } catch (IOException | NullPointerException e) {
-            LOGGER.warn("************************************");
-            LOGGER.warn("!*!*!*!*!");
-            LOGGER.error("Copying Base Template Failed");
-            LOGGER.error(e.getMessage());
-            LOGGER.warn("!*!*!*!*!");
-            LOGGER.warn("************************************");
-        }
-
-    }
-
-    /**
-     * scans resourcepacks and copies json files over to a painting directory.
-     * Does nothing in 1.18.2 versions 9.1.2.0 and up
-     */
-    private void loadFromJson() {
-//        // duplicate the base painting's template to our custom folder
-//        try {
-//            LOGGER.info("Copying Over Base Template to /paintings");
-//        Path dir = Paths.get("./paintings");
-//
-//            if (!Files.exists(dir)) {
-//
-//                Files.createDirectory(dir);
-//        Files.copy(getClass().getResourceAsStream("/assets/paintings/paintings.json"), dir.resolve("paintings.json"));
-//                // copyJsonToFolder
-//            }
-//        } catch (IOException | NullPointerException e) {
-//            LOGGER.warn("************************************");
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.error("Copying Base Template Failed");
-//            LOGGER.error(e.getMessage());
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.warn("************************************");
-//        }
-//
-//        // read out all resourcepacks, exclusively in zips,
-//        // to look for any other pack
-//        // and copy their json file over
-//        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get("./resourcepacks"))) {
-//            LOGGER.info("Reading out ResourcePacks to find painting related json files");
-//
-//            for (Path resourcePackPath : directoryStream) {
-//                LOGGER.info("Reading `{}`", resourcePackPath.getFileName().toString());
-//                try {
-//                    URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
-//
-//                    try (FileSystem system = initFileSystem(jarUri)) {
-//                        Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
-//                        while (resourcePacks.hasNext()) {
-//                            boolean copyOver = false;
-//
-//                            Path next = resourcePacks.next();
-//                            if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
-//                                try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
-//
-//                                    Gson gson = new GsonBuilder().create();
-//                                    JsonElement je = gson.fromJson(reader, JsonElement.class);
-//                                    JsonObject json = je.getAsJsonObject();
-//
-//                                    if (json.has("paintings")) {
-//                                        copyOver = true;
-//                                        LOGGER.info("Validated: {}", next.getFileName().toString());
-//                                    }
-//                                } catch (Exception e) {
-//                                    LOGGER.warn("************************************");
-//                                    LOGGER.error("`{}` Errored. Skipping.", next.getFileName().toString());
-//                                    LOGGER.error(e.getMessage());
-//                                    LOGGER.warn("************************************");
-//                                }
-//                            }
-//
-//                            if (copyOver) {
-//                                Path fileToCopy = Path.of("./paintings").resolve(next.getFileName().toString());
-//                                if (Files.notExists(fileToCopy))
-//                                    Files.copy(next, fileToCopy);
-//                            }
-//
-//                        }
-//                    } catch (Exception e) {
-//                        LOGGER.warn("************************************");
-//                        LOGGER.error("Invalid ResourcePack  {}", resourcePackPath.getFileName().toString());
-//                        LOGGER.error(e.getMessage());
-//                        LOGGER.warn("************************************");
-//
-//                    }
-//                } catch (URISyntaxException e) {
-//                    LOGGER.warn("************************************");
-//                    LOGGER.error("Error Detected in ResourcePack `{}` ", resourcePackPath.getFileName().toString());
-//                    LOGGER.warn(e);
-//                    LOGGER.warn("************************************");
-//                }
-//            }
-//        } catch (IOException e) {
-//
-//            LOGGER.warn("************************************");
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.error("A fatal error occurred reading the resource pack directory");
-//            LOGGER.error("SKIPPING ENTIRE PROCESS");
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.warn("************************************");
-//            LOGGER.warn(e);
-//        }
-//
-//        // read out all json files in the painting directory
-//
-//        Path dir = Paths.get("./paintings");
-//
-//        try (DirectoryStream<Path> ds = Files.newDirectoryStream(dir)) {
-//            LOGGER.info("Started Reading all json files in /painting directory");
-//
-//            for (Path filesInDirPath : ds) {
-//                LOGGER.info(filesInDirPath);
-//                Iterator<Path> jsonFiles = Files.walk(filesInDirPath).iterator();
-//
-//                while (jsonFiles.hasNext()) {
-//                    Path nextJson = jsonFiles.next();
-//
-//                    if (Files.isRegularFile(nextJson) && nextJson.toString().endsWith(".json")) {
-//                        InputStream stream = Files.newInputStream(nextJson);
-//                        Gson gson = new GsonBuilder().create();
-//
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-//                        JsonElement je = gson.fromJson(reader, JsonElement.class);
-//                        JsonObject json = je.getAsJsonObject();
-//
-//                        JsonArray array = json.getAsJsonArray("paintings");
-//
-//                        for (int index = 0; index < array.size(); index++) {
-//
-//                            JsonObject jsonObject = array.get(index).getAsJsonObject();
-//
-//                            String textureName = jsonObject.get("name").getAsString();
-//
-//                            int sizeX = 0;
-//                            int sizeY = 0;
-//
-//                            if (jsonObject.has("x")) {
-//                                sizeX = jsonObject.get("x").getAsInt();
-//                            }
-//
-//                            if (jsonObject.has("y")) {
-//                                sizeY = jsonObject.get("y").getAsInt();
-//                            }
-//
-//                            if (jsonObject.has("square")) {
-//                                sizeX = sizeY = jsonObject.get("square").getAsInt();
-//                            }
-//
-//                            if (sizeX == 0 || sizeY == 0) {
-//                                LOGGER.error("Tried loading a painting where one of the sides was 0 ! ");
-//                                LOGGER.error("Painting name is : " + textureName);
-//                                LOGGER.error("Skipping...");
-//                                continue;
-//                            } else if (sizeX % 16 != 0 || sizeY % 16 != 0) {
-//                                LOGGER.error("Tried loading a painting with a size that is not a multiple of 16 !! ");
-//                                LOGGER.error("Painting name is : " + textureName);
-//                                LOGGER.error("Skipping...");
-//                                continue;
-//                            }
-//
-//                            PaintingEntry entry = new PaintingEntry(textureName, sizeX, sizeY);
-//                            LOGGER.info(String.format("Loaded json painting %s , %d x %d", entry.getRefName(), entry.getSizeX(), entry.getSizeY()));
-//                            addedPaintings.add(entry);
-//                        }
-//                    }
-//                }
-//            }
-//        } catch (IOException e) {
-//            LOGGER.warn("************************************");
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.warn("No Painting Packs Detected. You will not be able to use ");
-//            LOGGER.warn("the Paintings ++ Mod correctly.");
-//            LOGGER.warn("Make sure to select or set some in the resourcepack folder and/or ingame gui !");
-//            LOGGER.warn("!*!*!*!*!");
-//            LOGGER.warn("************************************");
-//
-//            e.printStackTrace();
-//        }
+        LOGGER.info("**Paintings++ no longer copies the base file outside if the mod. **");
     }
 }
