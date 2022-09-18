@@ -1,0 +1,8 @@
+
+{
+  "select.a.painting": "选幅画吧",
+  "text.autoconfig.paintings.option.use_vanilla_only": "若为true，则仅使用原版画作，并跳过加载任何其他画作",
+  "text.autoconfig.paintings.option.use_selection_gui": "若为true，则在放置画时弹出选择画作的GUI",
+  "text.autoconfig.paintings.option.cycle_paintings": "若为true，则在右击画时进行画作循环切换",
+  "text.autoconfig.paintings.option.show_painting_size": "若为true，则在选择画作的GUI中显示画作的大小"
+}
