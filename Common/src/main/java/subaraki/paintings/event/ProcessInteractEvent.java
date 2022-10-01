@@ -42,7 +42,7 @@ public class ProcessInteractEvent {
                         // paintings will be next to one another
                         List<ResourceLocation> validArtsArray = Registry.PAINTING_VARIANT.keySet().stream().filter(paintingRegistryName -> {
                             return PaintingUtility.ART_COMPARATOR.compare(Registry.PAINTING_VARIANT.get(paintingRegistryName), original.value()) == 0;
-                        }).collect(Collectors.toList());
+                        }).toList();
 
                         boolean takeNext = false;
                         for (ResourceLocation registryName : validArtsArray) {

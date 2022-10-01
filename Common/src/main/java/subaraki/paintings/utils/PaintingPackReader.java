@@ -9,12 +9,13 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
 
 public class PaintingPackReader {
 
-    public static final ArrayList<PaintingEntry> PAINTINGS = new ArrayList<>();
+    public static final List<PaintingEntry> PAINTINGS = new ArrayList<>();
     /**
      * Called individually. Scanpacks is ran twice this way, but cached.
      * scanpacks is intensive and shouldn't be called too many times
@@ -114,8 +115,8 @@ public class PaintingPackReader {
                 try {
                     URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
 
-                    try (FileSystem system = initFileSystem(jarUri)) {
-                        Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
+                    try (FileSystem system = initFileSystem(jarUri); Stream<Path> fileStream = Files.walk(system.getPath("/"))) {
+                        Iterator<Path> resourcePacks = fileStream.iterator();
                         while (resourcePacks.hasNext()) {
                             boolean copyOver = false;
 
@@ -123,7 +124,6 @@ public class PaintingPackReader {
                             if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
                                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
 
-                                    Gson gson = new GsonBuilder().create();
                                     JsonElement je = gson.fromJson(reader, JsonElement.class);
                                     JsonObject json = je.getAsJsonObject();
 

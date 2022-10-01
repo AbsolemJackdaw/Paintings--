@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 @Mod.EventBusSubscriber(modid = Paintings.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PackForcer implements RepositorySource {
 
-    private static final FileFilter RESOURCEPACK_FILTER = (pack) -> {
+    private static final FileFilter RESOURCEPACK_FILTER = pack -> {
         return pack.isFile() && PaintingPackReader.FORCE_LOAD.contains(pack);// pack.isDirectory() && (new File(pack, "pack.mcmeta")).isFile() && (new File(pack, String.format("assets/%s/fashionpack.json", Fashion.MODID))).exists();
     };
 

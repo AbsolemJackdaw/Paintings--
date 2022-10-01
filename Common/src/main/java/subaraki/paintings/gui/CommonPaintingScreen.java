@@ -138,7 +138,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
             int paintingContainerSize = paintingCanvasBotY - paintingCanvasTopY; //total height span of all shown paintings. gaps accounted for
             int viewport = height - (START_Y); //height of cutout rect in which paintings are shown
-            float portToCanvasScale = (((float) viewport / (float) paintingContainerSize)); // scale from viewport to total span
+            float portToCanvasScale = ((float) viewport / (float) paintingContainerSize); // scale from viewport to total span
             float barsize = ((float) viewport * portToCanvasScale); //size of the scrollbar
             float scaledViewport = viewport - barsize; //scale of viewport - bar height. top of the scrollbar can only scroll between this 'bar'
             float usableSpaceScale = ((float) paintingContainerSize / scaledViewport);
@@ -229,7 +229,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
     @Override
     public List<Widget> getRenderablesWithCast() {
-        throw new RuntimeException("painting gui common code crash override. please override paintingscreen");
+        throw new IllegalStateException("painting gui common code crash override. please override paintingscreen");
     }
 
     @Override
