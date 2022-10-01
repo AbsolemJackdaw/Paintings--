@@ -104,7 +104,7 @@ public class ProcessPlacementEvent {
                                     return paintingEntity.survives() || (paintingEntity.survives() && CommonConfig.use_vanilla_only && vanillaPaintings.contains(regEntry.get()));
                                 }
                                 return false;
-                            }).collect(Collectors.toList());
+                            }).toList();
 
                             // reset the art of the painting to the one registered before
                             ((IPaintingAccessor) paintingEntity).callSetVariant(originalArt);
@@ -114,7 +114,7 @@ public class ProcessPlacementEvent {
                             // sort paintings from high to low, and from big to small
                             List<PaintingVariant> sorted = (validArts.stream().map(Registry.PAINTING_VARIANT::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
                             //map resource<variant> to the registered resourcelocation
-                            List<ResourceLocation> references = sorted.stream().map(Registry.PAINTING_VARIANT::getKey).collect(Collectors.toList());
+                            List<ResourceLocation> references = sorted.stream().map(Registry.PAINTING_VARIANT::getKey).toList();
                             //Send packet to open gui
                             send.send((ServerPlayer) player, paintingEntity, references.toArray(ResourceLocation[]::new));
                         }
