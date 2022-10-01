@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 
 public class ProcessPlacementEvent {
 
-    private static List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList();
+    private static List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList<>();
 
     static {
         vanillaPaintings.add(PaintingVariants.KEBAB);
