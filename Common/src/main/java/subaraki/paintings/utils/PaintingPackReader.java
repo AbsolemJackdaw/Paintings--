@@ -15,7 +15,7 @@ import static subaraki.paintings.Paintings.LOGGER;
 
 public class PaintingPackReader {
 
-    public static final ArrayList<PaintingEntry> PAINTINGS = new ArrayList<>();
+    public static final List<PaintingEntry> PAINTINGS = new ArrayList<>();
     /**
      * Called individually. Scanpacks is ran twice this way, but cached.
      * scanpacks is intensive and shouldn't be called too many times
