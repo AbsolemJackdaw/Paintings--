@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
 
@@ -114,8 +115,8 @@ public class PaintingPackReader {
                 try {
                     URI jarUri = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
 
-                    try (FileSystem system = initFileSystem(jarUri)) {
-                        Iterator<Path> resourcePacks = Files.walk(system.getPath("/")).iterator();
+                    try (FileSystem system = initFileSystem(jarUri); Stream<Path> fileStream = Files.walk(system.getPath("/"))) {
+                        Iterator<Path> resourcePacks = fileStream.iterator();
                         while (resourcePacks.hasNext()) {
                             boolean copyOver = false;
 
