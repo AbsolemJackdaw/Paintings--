@@ -123,7 +123,6 @@ public class PaintingPackReader {
                             if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
                                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
 
-                                    Gson gson = new GsonBuilder().create();
                                     JsonElement je = gson.fromJson(reader, JsonElement.class);
                                     JsonObject json = je.getAsJsonObject();
 
