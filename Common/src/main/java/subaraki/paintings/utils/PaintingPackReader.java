@@ -3,12 +3,10 @@ package subaraki.paintings.utils;
 import com.google.gson.*;
 import net.minecraft.resources.ResourceLocation;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,7 +15,7 @@ import static subaraki.paintings.Paintings.LOGGER;
 
 public class PaintingPackReader {
 
-    public static final ArrayList<PaintingEntry> PAINTINGS = new ArrayList<>();
+    public static final List<PaintingEntry> PAINTINGS = new ArrayList<>();
     /**
      * Called individually. Scanpacks is ran twice this way, but cached.
      * scanpacks is intensive and shouldn't be called too many times
