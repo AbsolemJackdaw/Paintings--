@@ -229,7 +229,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
     @Override
     public List<Widget> getRenderablesWithCast() {
-        throw new RuntimeException("painting gui common code crash override. please override paintingscreen");
+        throw new IllegalStateException("painting gui common code crash override. please override paintingscreen");
     }
 
     @Override
