@@ -1,0 +1,7 @@
+{
+  "select.a.painting": "ஒரு ஓவியத்தைத் தேர்ந்தெடுக்கவும்",
+  "text.autoconfig.paintings.option.use_vanilla_only": "Vanilla ஓவியங்களை மட்டுமே பயன்படுத்துவதற்கு உண்மையாக அமைக்கவும் மற்றும் வேறு எந்த ஓவியங்களையும் ஏற்றுவதைத் தவிர்க்கவும்",
+  "text.autoconfig.paintings.option.use_selection_gui": "பெயிண்டிங் செலக்ஷன் குய்யை பாப்-அப் செய்ய, பெயிண்டிங்கை வைக்கும் போது, 'சரி' என்பதை அமைக்கவும்",
+  "text.autoconfig.paintings.option.cycle_paintings": "பெயிண்டிங் உருப்படியைக் கொண்டு வலது கிளிக் செய்வதன் மூலம் பெயிண்டிங் சைக்கிள் ஓட்டுதலை இயக்க 'சரி' என அமைக்கவும்",
+  "text.autoconfig.paintings.option.show_painting_size": "பெயிண்டிங் குய்யில் உள்ள ஓவியங்களின் அளவைக் காட்ட 'சரி' என்பதை அமைக்கவும்"
+}
