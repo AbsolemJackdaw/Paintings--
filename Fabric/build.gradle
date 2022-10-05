@@ -99,17 +99,17 @@ publishing {
     }
 }
 
-task publishCurseForge(type: TaskPublishCurseForge) {
-
-    apiToken = "${api_token_paintings}"
-
-    // The main file to upload
-    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.releaseType = 'beta'
-    mainFile.changelog = "${changelog}"
-    mainFile.changelogType = 'markdown'
-    mainFile.addRequirement('transparent')
-    mainFile.addRequirement('cloth-config')
-    mainFile.addRequirement('fabric-api')
-
-}
+//task publishCurseForge(type: TaskPublishCurseForge) {
+//
+//    apiToken = "${api_token_paintings}"
+//
+//    // The main file to upload
+//    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+//    mainFile.releaseType = 'beta'
+//    mainFile.changelog = "${changelog}"
+//    mainFile.changelogType = 'markdown'
+//    mainFile.addRequirement('transparent')
+//    mainFile.addRequirement('cloth-config')
+//    mainFile.addRequirement('fabric-api')
+//
+//}
