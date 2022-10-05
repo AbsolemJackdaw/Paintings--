@@ -135,14 +135,14 @@ publishing {
     }
 }
 
-//task publishCurseForge(type: TaskPublishCurseForge) {
-//
-//    apiToken = "${api_token_paintings}"
-//
-//    // The main file to upload
-//    def mainFile = upload(252042, jar)
-//    mainFile.releaseType = 'beta'
-//    mainFile.changelog = "${changelog}"
-//    mainFile.changelogType = 'markdown'
-//    mainFile.addRequirement('transparent')
-//}
+task publishCurseForge(type: TaskPublishCurseForge) {
+
+    apiToken = "${api_token_paintings}"
+
+    // The main file to upload
+    def mainFile = upload(252042, jar)
+    mainFile.releaseType = 'beta'
+    mainFile.changelog = "${changelog}"
+    mainFile.changelogType = 'markdown'
+    mainFile.addRequirement('transparent')
+}

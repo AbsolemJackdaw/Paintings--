@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.ibm.icu.impl.Pair;
 import net.minecraft.resources.ResourceLocation;
+import subaraki.paintings.compat_layer.IPackRepoDiscoveryService;
 
 import java.io.*;
 import java.net.URI;
@@ -11,6 +12,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
@@ -101,15 +103,20 @@ public class PaintingPackReader {
     private void scanPacks() {
         FORCE_LOAD.clear();//clear forceloaders to refill
 
-        Set<Path> packDirectories = Set.of(Paths.get("." , "resourcepacks"));
-        String relativePath = "./paintings++.json";
+        Set<Path> packDirectories = new HashSet();
+        packDirectories.add(Paths.get("." , "resourcepacks"));
+
+        List<IPackRepoDiscoveryService> packRepos = ServiceLoader.load(IPackRepoDiscoveryService.class).stream().map(prov -> prov.get()).collect(Collectors.toList());
+        packDirectories.addAll(packRepos.stream().flatMap(repoService -> repoService.getPackRepos().stream()).map(Path::of).collect(Collectors.toSet()));
 
         packDirectories.parallelStream()
-              .filter(folder -> Files.exists(folder) && Files.isDirectory(folder))
+              .filter(folder -> Files.exists(folder) && Files.isDirectory(folder))//Benefits of NIO here are tiny enough that we can avoid it's overhead
               .flatMap(folder -> Arrays.stream(folder.toFile().listFiles((dir, file) -> file.endsWith(".zip"))))
               .map(packFile -> {
                   try(FileSystem zipFs = FileSystems.newFileSystem(packFile.toPath())){
-                      Path json = zipFs.getPath(relativePath);
+                      Path json = zipFs.getPath("./paintings++.json");
+                      if(!Files.exists(json)) json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
+
                       if(Files.exists(json)){
                           try(JsonReader reader = new JsonReader(Files.newBufferedReader(json))){ //Closing of stream is redundant here, but we'll do it anyways :shrug:
                               return Pair.of(packFile.toPath(), JsonParser.parseReader(reader).getAsJsonObject());
