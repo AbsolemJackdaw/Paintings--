@@ -23,8 +23,6 @@ minecraft {
 
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-
-    compileOnly group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
 }
 
 processResources {
