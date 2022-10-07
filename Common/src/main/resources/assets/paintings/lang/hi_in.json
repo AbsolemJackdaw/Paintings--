@@ -1,0 +1,7 @@
+{
+  "select.a.painting": "एक पेंटिंग चुनें",
+  "text.autoconfig.paintings.option.use_vanilla_only": "केवल vanilla चित्रकारी का उपयोग करने के लिए सही चुनें और किसी अन्य चित्रकारी को लोड करना छोड़ें",
+  "text.autoconfig.paintings.option.use_selection_gui": "चित्रकारी करते समय चित्रकारी चयन गुई tot को सक्षम करने के लिए सही चुनें",
+  "text.autoconfig.paintings.option.cycle_paintings": "चित्रकारी आइटम के साथ राइट क्लिक पर चित्रकारी साइकलिंग को सक्षम करने के लिए ट्रू चुनें",
+  "text.autoconfig.paintings.option.show_painting_size": "चित्रकारी में चित्रों का आकार दिखाने के लिए सही चुनें"
+}
