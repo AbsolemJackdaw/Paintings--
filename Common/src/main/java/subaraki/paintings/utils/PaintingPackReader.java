@@ -1,7 +1,10 @@
 package subaraki.paintings.utils;
 
 import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+import com.ibm.icu.impl.Pair;
 import net.minecraft.resources.ResourceLocation;
+import subaraki.paintings.compat_layer.IPackRepoDiscoveryService;
 
 import java.io.*;
 import java.net.URI;
@@ -9,6 +12,7 @@ import java.net.URISyntaxException;
 import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
@@ -21,7 +25,6 @@ public class PaintingPackReader {
      * scanpacks is intensive and shouldn't be called too many times
      */
     public static final Set<Path> FORCE_LOAD = new TreeSet<>();
-    private static final Gson gson = new GsonBuilder().create();
 
     /**
      * called once on mod class initialization. the loadFromJson called in here reads
@@ -34,22 +37,13 @@ public class PaintingPackReader {
         scanPacks();
     }
 
-    private void makeEntriesFromPath(Path jsonPaintingFile) throws IOException {
-
-        LOGGER.info(String.format("resolving %s ...", jsonPaintingFile.getFileName().toString()));
-
-        if (Files.isRegularFile(jsonPaintingFile) && jsonPaintingFile.toString().endsWith(".json")) {
-            InputStream stream = Files.newInputStream(jsonPaintingFile);
-            makeEntriesFromStream(stream);
-        }
+    private void makeEntriesFromStream(InputStream stream) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+        JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
+        parsePaintingsFromJson(json);
     }
 
-    private void makeEntriesFromStream(InputStream stream) {
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        JsonElement je = gson.fromJson(reader, JsonElement.class);
-        JsonObject json = je.getAsJsonObject();
-
+    private void parsePaintingsFromJson(JsonObject json) {
         JsonArray array = json.getAsJsonArray("paintings");
 
         for (int index = 0; index < array.size(); index++) {
@@ -108,107 +102,51 @@ public class PaintingPackReader {
      */
     private void scanPacks() {
         FORCE_LOAD.clear();//clear forceloaders to refill
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get("./resourcepacks"))) {
-            LOGGER.info("Reading out ResourcePacks to find painting related json files");
 
-            for (Path resourcePackPath : directoryStream) {
-                LOGGER.info("Reading `{}`", resourcePackPath.getFileName().toString());
-                try {
-                    boolean isFolder = Files.isDirectory(resourcePackPath);
+        Set<Path> packDirectories = new HashSet();
+        packDirectories.add(Paths.get("." , "resourcepacks"));
 
-                    if (isFolder) {
-                        walk(resourcePackPath);
-                    } else {
-                        URI uriToExplore = new URI("jar:%s".formatted(resourcePackPath.toUri().getScheme()), resourcePackPath.toUri().getPath(), null);
-                        try (FileSystem system = initFileSystem(uriToExplore)) {
-                            walk(system.getPath("/"), resourcePackPath);
-                        } catch (Exception e) {
-                            LOGGER.warn("************************************");
-                            LOGGER.error("Invalid ResourcePack  {}", resourcePackPath.getFileName().toString());
-                            LOGGER.error(e.getMessage());
-                            LOGGER.warn("************************************");
-                        }
-                    }
+        List<IPackRepoDiscoveryService> packRepos = ServiceLoader.load(IPackRepoDiscoveryService.class).stream().map(prov -> prov.get()).collect(Collectors.toList());
+        packDirectories.addAll(packRepos.stream().flatMap(repoService -> repoService.getPackRepos().stream()).map(Path::of).collect(Collectors.toSet()));
 
-                } catch (URISyntaxException e) {
-                    LOGGER.warn("************************************");
-                    LOGGER.error("Error Detected in ResourcePack `{}` ", resourcePackPath.getFileName().toString());
-                    LOGGER.warn(e);
-                    LOGGER.warn("************************************");
-                }
-            }
-        } catch (IOException e) {
+        packDirectories.parallelStream()
+              .filter(folder -> Files.exists(folder) && Files.isDirectory(folder))//Benefits of NIO here are tiny enough that we can avoid it's overhead
+              .flatMap(folder -> Arrays.stream(folder.toFile().listFiles((dir, file) -> file.endsWith(".zip"))))
+              .map(packFile -> {
+                  try(FileSystem zipFs = FileSystems.newFileSystem(packFile.toPath())){
+                      Path json = zipFs.getPath("./paintings++.json");
+                      if(!Files.exists(json)) json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
 
-            LOGGER.warn("************************************");
-            LOGGER.warn("!*!*!*!*!");
-            LOGGER.error("A fatal error occurred reading the resource pack directory");
-            LOGGER.error("SKIPPING ENTIRE PROCESS");
-            LOGGER.warn("!*!*!*!*!");
-            LOGGER.warn("************************************");
-            LOGGER.warn(e);
-        }
-    }
-
-    private void walk(Path path) throws IOException {
-        walk(path, path);
-    }
-
-    private void walk(Path path, Path packToForceLoadpath) {
-        try (Stream<Path> walker = Files.walk(path)) {
-            Iterator<Path> unzipped = walker.iterator();
-
-            while (unzipped.hasNext()) {
-                boolean copyOver = false;
-
-                Path next = unzipped.next();
-                if (Files.isRegularFile(next) && next.toString().endsWith("json")) {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(next)))) {
-
-                        Gson gson = new GsonBuilder().create();
-                        JsonElement je = gson.fromJson(reader, JsonElement.class);
-                        JsonObject json = je.getAsJsonObject();
-
-                        if (json.has("paintings")) {
-                            copyOver = true;
-                            FORCE_LOAD.add(packToForceLoadpath);
-                            //FLRP stand for Force Loaded ResourcePack. abreviated to not scare end users with the words 'Force Loaded'
-                            LOGGER.info("FLRP & Validated: {}", next.getFileName().toString());
-                        }
-                    } catch (Exception e) {
-                        LOGGER.warn("************************************");
-                        LOGGER.error("`{}` Errored. Skipping.", next.getFileName().toString());
-                        LOGGER.error(e.getMessage());
-                        LOGGER.warn("************************************");
-                    }
-                }
-                if (copyOver) {
-                    try {
-                        makeEntriesFromPath(next);
-                    } catch (IOException e) {
-                        LOGGER.warn("************************************");
-                        LOGGER.warn(String.format("json file %s could not parse.", next.getFileName()));
-                        LOGGER.warn("************************************");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.warn("************************************");
-            LOGGER.error("Couldn't walk `{}` ", path.getFileName().toString());
-            LOGGER.warn(e);
-            LOGGER.warn("************************************");
-        }
-    }
-
-
-    private FileSystem initFileSystem(URI uri) throws IOException {
-        try {
-            return FileSystems.getFileSystem(uri);
-        } catch (FileSystemNotFoundException e) {
-            Map<String, String> env = new HashMap<>();
-            env.put("create", "true");
-            return FileSystems.newFileSystem(uri, env);
-        }
+                      if(Files.exists(json)){
+                          try(JsonReader reader = new JsonReader(Files.newBufferedReader(json))){ //Closing of stream is redundant here, but we'll do it anyways :shrug:
+                              return Pair.of(packFile.toPath(), JsonParser.parseReader(reader).getAsJsonObject());
+                          } catch (IOException e) {
+                              LOGGER.warn("************************************");
+                              LOGGER.error("`{}` Errored. Skipping.", json.getFileName().toString());
+                              LOGGER.error(e.getMessage());
+                              LOGGER.warn("************************************");
+                          } catch(JsonParseException e){
+                              LOGGER.warn("************************************");
+                              LOGGER.warn("json file `{}` could not parse.", json.getFileName().toString());
+                              LOGGER.warn("************************************");
+                              e.printStackTrace();
+                          }
+                      }
+                  } catch (IOException e) {
+                      LOGGER.warn("************************************");
+                      LOGGER.error("Invalid ResourcePack  {}", packFile.getName());
+                      LOGGER.error(e.getMessage());
+                      LOGGER.warn("************************************");
+                  }
+                  return null;
+              })
+              .filter(pair -> pair != null)
+              .filter(pair -> pair.second.has("paintings"))
+              .forEach(pair -> {
+                  FORCE_LOAD.add(pair.first);
+                  LOGGER.info("FLRP & Validated: {}", pair.first.getFileName().toString());
+                  parsePaintingsFromJson(pair.second);
+              });
     }
 
     private void duplicateBaseToFolder() {
