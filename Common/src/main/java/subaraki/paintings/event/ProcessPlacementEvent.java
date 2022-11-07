@@ -18,13 +18,12 @@ import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.mixin.IPaintingAccessor;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;
-import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
+import subaraki.paintings.utils.Services;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class ProcessPlacementEvent {
 
@@ -64,7 +63,7 @@ public class ProcessPlacementEvent {
     }
 
     public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier send) {
-        if (!CommonConfig.use_selection_gui)
+        if (!Services.CONFIG.useSelectionGUI())
             return false;
 
         if (itemStack.getItem() == Items.PAINTING) {
@@ -101,7 +100,7 @@ public class ProcessPlacementEvent {
                                 var regEntry = Registry.PAINTING_VARIANT.getResourceKey(variant);
                                 if (regEntry.isPresent()) {
                                     ((IPaintingAccessor) paintingEntity).callSetVariant(Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get()));
-                                    return paintingEntity.survives() || (paintingEntity.survives() && CommonConfig.use_vanilla_only && vanillaPaintings.contains(regEntry.get()));
+                                    return paintingEntity.survives() && (!Services.CONFIG.useVanillaOnly() || vanillaPaintings.contains(regEntry.get()));
                                 }
                                 return false;
                             }).toList();

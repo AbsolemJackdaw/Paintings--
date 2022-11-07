@@ -14,7 +14,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
-import subaraki.paintings.utils.CommonConfig;
+import subaraki.paintings.utils.Services;
 
 import java.util.List;
 import java.util.Optional;
@@ -158,16 +158,14 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
         int onScreenBottomLimit = height - (onScreenTopLimit); //relative screen position, last painting can only scroll up until here
 
         if ((scrollAmount > 0 && paintingCanvasTopY < onScreenTopLimit) || (scrollAmount < 0 && paintingCanvasBotY >= onScreenBottomLimit)) {
-            getRenderablesWithCast().forEach(widget -> {
-                ((AbstractWidget) widget).y += scrollAmount;
-            });
+            getRenderablesWithCast().forEach(widget -> ((AbstractWidget) widget).y += scrollAmount);
             scrollBarScroll -= scrollAmount;
         }
     }
 
 
     private void drawToolTips(PoseStack mat, int mouseX, int mouseY) {
-        if (!CommonConfig.show_painting_size)
+        if (!Services.CONFIG.showPaintingSize())
             return;
         for (Widget guiButton : getRenderablesWithCast()) {
             if (guiButton instanceof PaintingButton button) {
@@ -205,8 +203,8 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
                 // left to right
                 // and fillgradient from right to fucking left ???
 
-                // draw a black background background
-                this.fillGradient(mat, width - START_X, START_Y, width, START_Y + (int) containerSize, 0x80000000, 0x80222222);
+                // draw a black background
+                this.fillGradient(mat, width - START_X, START_Y, width, START_Y + containerSize, 0x80000000, 0x80222222);
                 // Draw scrollbar
                 this.fillGradient(mat, width - START_X, START_Y + relativeScroll, width, START_Y + relativeScroll + sizeBar, 0x80ffffff, 0x80222222);
 

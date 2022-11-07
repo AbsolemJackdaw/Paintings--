@@ -8,7 +8,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.RegisterEvent;
@@ -30,8 +29,6 @@ public class Paintings {
     public Paintings() {
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::modConfig);
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);
@@ -53,13 +50,5 @@ public class Paintings {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         new NetworkHandler();
-    }
-
-    public void modConfig(ModConfigEvent event) {
-        ModConfig config = event.getConfig();
-        if (config.getSpec() == ConfigData.CLIENT_SPEC)
-            ConfigData.refreshClient();
-        else if (config.getSpec() == ConfigData.SERVER_SPEC)
-            ConfigData.refreshServer();
     }
 }
