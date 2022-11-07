@@ -12,11 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import subaraki.paintings.mixin.IPaintingAccessor;
 import subaraki.paintings.network.supplier.SyncpacketSupplier;
-import subaraki.paintings.utils.CommonConfig;
 import subaraki.paintings.utils.PaintingUtility;
+import subaraki.paintings.utils.Services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProcessInteractEvent {
 
@@ -30,7 +29,7 @@ public class ProcessInteractEvent {
     }
 
     public static void processInteractPainting(Player player, Entity target, InteractionHand hand, SyncpacketSupplier syncpacketSupplier) {
-        if (CommonConfig.cycle_paintings)
+        if (Services.CONFIG.getCyclePaintings())
             if (target instanceof Painting painting) {
                 if (hand.equals(InteractionHand.MAIN_HAND)) {
                     if (player instanceof ServerPlayer serverPlayer && serverPlayer.getItemInHand(hand).getItem().equals(Items.PAINTING)) {

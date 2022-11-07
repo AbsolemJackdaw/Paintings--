@@ -2,7 +2,6 @@ package subaraki.paintings.mod;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
-import subaraki.paintings.utils.CommonConfig;
 
 public class ConfigData {
 
@@ -21,20 +20,6 @@ public class ConfigData {
         final Pair<ClientConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(ClientConfig::new);
         CLIENT_SPEC = specPair.getRight();
         CLIENT = specPair.getLeft();
-    }
-
-    public static void refreshClient() {
-
-        CommonConfig.show_painting_size = CLIENT.show_painting_size.get();
-
-    }
-
-    public static void refreshServer() {
-
-        CommonConfig.use_vanilla_only = SERVER.use_vanilla_only.get();
-        CommonConfig.use_selection_gui = SERVER.use_selection_gui.get();
-        CommonConfig.cycle_paintings = SERVER.cycle_paintings.get();
-
     }
 
     public static class ServerConfig {
