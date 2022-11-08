@@ -1,0 +1,7 @@
+{
+    "select.a.painting": "Selecione uma pintura",
+    "text.autoconfig.paintings.option.use_vanilla_only": "Escolha true para usar apenas as pinturas de baunilha e pule o carregamento de outras pinturas",
+    "text.autoconfig.paintings.option.use_selection_gui": "Escolha true para ativar o pop-up do GUI de seleção de pintura ao colocar uma pintura",
+    "text.autoconfig.paintings.option.cycle_paintings": "Escolha True para habilitar o ciclo de pintura ao clicar com o botão direito do mouse em um item de pintura",
+    "text.autoconfig.paintings.option.show_painting_size": "Escolha True para mostrar o tamanho das pinturas no gui de pintura"
+  }
