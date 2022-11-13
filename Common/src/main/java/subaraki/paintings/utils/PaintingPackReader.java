@@ -2,18 +2,14 @@ package subaraki.paintings.utils;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import com.ibm.icu.impl.Pair;
 import net.minecraft.resources.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 import subaraki.paintings.compat_layer.IPackRepoDiscoveryService;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.FileSystem;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static subaraki.paintings.Paintings.LOGGER;
 
@@ -21,7 +17,7 @@ public class PaintingPackReader {
 
     public static final List<PaintingEntry> PAINTINGS = new ArrayList<>();
     /**
-     * Called individually. Scanpacks is ran twice this way, but cached.
+     * Called individually. Scanpacks is run twice this way, but cached.
      * scanpacks is intensive and shouldn't be called too many times
      */
     public static final Set<Path> FORCE_LOAD = new TreeSet<>();
@@ -97,56 +93,56 @@ public class PaintingPackReader {
 
 
     /**
-     * read out all resourcepacks, exclusively in zips, to look for any other pack and copy their json file over.
-     * since 1.19, also responsable for a list of the resourcepacks to force-load.
+     * read out all resource packs, exclusively in zips, to look for any other pack and copy their json file over.
+     * since 1.19, also responsible for a list of the resource packs to force-load.
      */
     private void scanPacks() {
-        FORCE_LOAD.clear();//clear forceloaders to refill
+        FORCE_LOAD.clear();//clear force-loaders to refill
 
-        Set<Path> packDirectories = new HashSet();
-        packDirectories.add(Paths.get("." , "resourcepacks"));
+        Set<Path> packDirectories = new HashSet<>();
+        packDirectories.add(Paths.get(".", "resourcepacks"));
 
-        List<IPackRepoDiscoveryService> packRepos = ServiceLoader.load(IPackRepoDiscoveryService.class).stream().map(prov -> prov.get()).collect(Collectors.toList());
+        List<IPackRepoDiscoveryService> packRepos = ServiceLoader.load(IPackRepoDiscoveryService.class).stream().map(prov -> prov.get()).toList();
         packDirectories.addAll(packRepos.stream().flatMap(repoService -> repoService.getPackRepos().stream()).map(Path::of).collect(Collectors.toSet()));
 
         packDirectories.parallelStream()
-              .filter(folder -> Files.exists(folder) && Files.isDirectory(folder))//Benefits of NIO here are tiny enough that we can avoid it's overhead
-              .flatMap(folder -> Arrays.stream(folder.toFile().listFiles((dir, file) -> file.endsWith(".zip"))))
-              .map(packFile -> {
-                  try(FileSystem zipFs = FileSystems.newFileSystem(packFile.toPath())){
-                      Path json = zipFs.getPath("./paintings++.json");
-                      if(!Files.exists(json)) json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
+                .filter(folder -> Files.exists(folder) && Files.isDirectory(folder))//Benefits of NIO here are tiny enough that we can avoid it's overhead
+                .flatMap(folder -> Arrays.stream(folder.toFile().listFiles((dir, file) -> file.endsWith(".zip"))))
+                .map(packFile -> {
+                    try (FileSystem zipFs = FileSystems.newFileSystem(packFile.toPath())) {
+                        Path json = zipFs.getPath("./paintings++.json");
+                        if (!Files.exists(json)) json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
 
-                      if(Files.exists(json)){
-                          try(JsonReader reader = new JsonReader(Files.newBufferedReader(json))){ //Closing of stream is redundant here, but we'll do it anyways :shrug:
-                              return Pair.of(packFile.toPath(), JsonParser.parseReader(reader).getAsJsonObject());
-                          } catch (IOException e) {
-                              LOGGER.warn("************************************");
-                              LOGGER.error("`{}` Errored. Skipping.", json.getFileName().toString());
-                              LOGGER.error(e.getMessage());
-                              LOGGER.warn("************************************");
-                          } catch(JsonParseException e){
-                              LOGGER.warn("************************************");
-                              LOGGER.warn("json file `{}` could not parse.", json.getFileName().toString());
-                              LOGGER.warn("************************************");
-                              e.printStackTrace();
-                          }
-                      }
-                  } catch (IOException e) {
-                      LOGGER.warn("************************************");
-                      LOGGER.error("Invalid ResourcePack  {}", packFile.getName());
-                      LOGGER.error(e.getMessage());
-                      LOGGER.warn("************************************");
-                  }
-                  return null;
-              })
-              .filter(pair -> pair != null)
-              .filter(pair -> pair.second.has("paintings"))
-              .forEach(pair -> {
-                  FORCE_LOAD.add(pair.first);
-                  LOGGER.info("FLRP & Validated: {}", pair.first.getFileName().toString());
-                  parsePaintingsFromJson(pair.second);
-              });
+                        if (Files.exists(json)) {
+                            try (JsonReader reader = new JsonReader(Files.newBufferedReader(json))) { //Closing of stream is redundant here, but we'll do it anyways :shrug:
+                                return Pair.of(packFile.toPath(), JsonParser.parseReader(reader).getAsJsonObject());
+                            } catch (IOException e) {
+                                LOGGER.warn("************************************");
+                                LOGGER.error("`{}` Errored. Skipping.", json.getFileName().toString());
+                                LOGGER.error(e.getMessage());
+                                LOGGER.warn("************************************");
+                            } catch (JsonParseException e) {
+                                LOGGER.warn("************************************");
+                                LOGGER.warn("json file `{}` could not parse.", json.getFileName().toString());
+                                LOGGER.warn("************************************");
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (IOException e) {
+                        LOGGER.warn("************************************");
+                        LOGGER.error("Invalid ResourcePack  {}", packFile.getName());
+                        LOGGER.error(e.getMessage());
+                        LOGGER.warn("************************************");
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .filter(pair -> pair.getRight().has("paintings"))
+                .forEach(pair -> {
+                    FORCE_LOAD.add(pair.getLeft());
+                    LOGGER.info("FLRP & Validated: {}", pair.getLeft().getFileName().toString());
+                    parsePaintingsFromJson(pair.getRight());
+                });
     }
 
     private void duplicateBaseToFolder() {
