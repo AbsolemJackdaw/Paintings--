@@ -1,7 +1,7 @@
 package subaraki.paintings.event;
 
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -25,7 +25,7 @@ public class ProcessInteractEvent {
     }
 
     private static boolean equalNames(PaintingVariant a, PaintingVariant b) {
-        return Registry.PAINTING_VARIANT.getKey(a).equals(Registry.PAINTING_VARIANT.getKey(b));
+        return BuiltInRegistries.PAINTING_VARIANT.getKey(a).equals(BuiltInRegistries.PAINTING_VARIANT.getKey(b));
     }
 
     public static void processInteractPainting(Player player, Entity target, InteractionHand hand, SyncpacketSupplier syncpacketSupplier) {
@@ -39,21 +39,21 @@ public class ProcessInteractEvent {
 
                         // it is important to sort the paintings from big to small so all same size
                         // paintings will be next to one another
-                        List<ResourceLocation> validArtsArray = Registry.PAINTING_VARIANT.keySet().stream().filter(paintingRegistryName -> {
-                            return PaintingUtility.ART_COMPARATOR.compare(Registry.PAINTING_VARIANT.get(paintingRegistryName), original.value()) == 0;
+                        List<ResourceLocation> validArtsArray = BuiltInRegistries.PAINTING_VARIANT.keySet().stream().filter(paintingRegistryName -> {
+                            return PaintingUtility.ART_COMPARATOR.compare(BuiltInRegistries.PAINTING_VARIANT.get(paintingRegistryName), original.value()) == 0;
                         }).toList();
 
                         boolean takeNext = false;
                         for (ResourceLocation registryName : validArtsArray) {
-                            var variant = Registry.PAINTING_VARIANT.get(registryName);
-                            var regEntry = Registry.PAINTING_VARIANT.getResourceKey(variant);
+                            var variant = BuiltInRegistries.PAINTING_VARIANT.get(registryName);
+                            var regEntry = BuiltInRegistries.PAINTING_VARIANT.getResourceKey(variant);
 
                             if (equalSizes(original.value(), variant) && regEntry.isPresent()) {
                                 if (firstMatch == null) {
-                                    firstMatch = Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
+                                    firstMatch = BuiltInRegistries.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
                                 }
                                 if (takeNext) {
-                                    newArt = Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
+                                    newArt = BuiltInRegistries.PAINTING_VARIANT.getHolderOrThrow(regEntry.get());
                                     break;
                                 }
                                 if (equalNames(original.value(), variant)) {

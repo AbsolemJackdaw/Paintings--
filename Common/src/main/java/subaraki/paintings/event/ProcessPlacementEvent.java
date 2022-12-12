@@ -3,7 +3,7 @@ package subaraki.paintings.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +27,7 @@ import java.util.Optional;
 
 public class ProcessPlacementEvent {
 
-    private static List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList<>();
+    private static final List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList<>();
 
     static {
         vanillaPaintings.add(PaintingVariants.KEBAB);
@@ -55,11 +55,11 @@ public class ProcessPlacementEvent {
         vanillaPaintings.add(PaintingVariants.PIGSCENE);
         vanillaPaintings.add(PaintingVariants.BURNING_SKULL);
         vanillaPaintings.add(PaintingVariants.SKELETON);
+        vanillaPaintings.add(PaintingVariants.DONKEY_KONG);
         vanillaPaintings.add(PaintingVariants.EARTH);
         vanillaPaintings.add(PaintingVariants.WIND);
         vanillaPaintings.add(PaintingVariants.FIRE);
         vanillaPaintings.add(PaintingVariants.WATER);
-        vanillaPaintings.add(PaintingVariants.DONKEY_KONG);
     }
 
     public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier send) {
@@ -95,11 +95,11 @@ public class ProcessPlacementEvent {
 
                             // list of paintings placeable at current location
                             //takes registry names
-                            List<ResourceLocation> validArts = Registry.PAINTING_VARIANT.keySet().stream().filter(resourceLocation -> {
-                                var variant = Registry.PAINTING_VARIANT.get(resourceLocation);
-                                var regEntry = Registry.PAINTING_VARIANT.getResourceKey(variant);
+                            List<ResourceLocation> validArts = BuiltInRegistries.PAINTING_VARIANT.keySet().stream().filter(resourceLocation -> {
+                                var variant = BuiltInRegistries.PAINTING_VARIANT.get(resourceLocation);
+                                var regEntry = BuiltInRegistries.PAINTING_VARIANT.getResourceKey(variant);
                                 if (regEntry.isPresent()) {
-                                    ((IPaintingAccessor) paintingEntity).callSetVariant(Registry.PAINTING_VARIANT.getHolderOrThrow(regEntry.get()));
+                                    ((IPaintingAccessor) paintingEntity).callSetVariant(BuiltInRegistries.PAINTING_VARIANT.getHolderOrThrow(regEntry.get()));
                                     return paintingEntity.survives() && (!Services.CONFIG.useVanillaOnly() || vanillaPaintings.contains(regEntry.get()));
                                 }
                                 return false;
@@ -111,9 +111,9 @@ public class ProcessPlacementEvent {
                             Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity); // reset bounding box
 
                             // sort paintings from high to low, and from big to small
-                            List<PaintingVariant> sorted = (validArts.stream().map(Registry.PAINTING_VARIANT::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
+                            List<PaintingVariant> sorted = (validArts.stream().map(BuiltInRegistries.PAINTING_VARIANT::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
                             //map resource<variant> to the registered resourcelocation
-                            List<ResourceLocation> references = sorted.stream().map(Registry.PAINTING_VARIANT::getKey).toList();
+                            List<ResourceLocation> references = sorted.stream().map(BuiltInRegistries.PAINTING_VARIANT::getKey).toList();
                             //Send packet to open gui
                             send.send((ServerPlayer) player, paintingEntity, references.toArray(ResourceLocation[]::new));
                         }

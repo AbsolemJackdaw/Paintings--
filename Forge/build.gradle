@@ -90,7 +90,7 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     annotationProcessor 'org.spongepowered:mixin:0.8.4-SNAPSHOT:processor'
-    runtimeOnly fg.deobf("${compat_mod}${compat_forge}")
+//    runtimeOnly fg.deobf("${compat_mod}${compat_forge}")
 
 }
 repositories { //all of these are for adding crates compat

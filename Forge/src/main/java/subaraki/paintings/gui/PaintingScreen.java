@@ -1,7 +1,7 @@
 package subaraki.paintings.gui;
 
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.network.NetworkHandler;
@@ -20,7 +20,7 @@ public class PaintingScreen extends CommonPaintingScreen {
     @Override
     public Optional<AbstractWidget> optionalAbstractWidget(int index) {
         if (index < renderables.size()) {//if index is within of bounds
-            Widget w = renderables.get(index);
+            Renderable w = renderables.get(index);
             if (w instanceof AbstractWidget aw)
                 return Optional.of(aw);
         }
@@ -34,7 +34,7 @@ public class PaintingScreen extends CommonPaintingScreen {
     }
 
     @Override
-    public List<Widget> getRenderablesWithCast() {
+    public List<Renderable> getRenderablesWithCast() {
         return renderables;
     }
 }

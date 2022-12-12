@@ -32,7 +32,7 @@ dependencies {
     }
     modImplementation "com.terraformersmc:modmenu:${mod_menu_version}"
     implementation project(":Common")
-    modImplementation "${compat_mod}${compat_fabric}"
+//    modImplementation "${compat_mod}${compat_fabric}"
 
     modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
 }

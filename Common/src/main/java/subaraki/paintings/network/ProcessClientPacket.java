@@ -1,6 +1,6 @@
 package subaraki.paintings.network;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.Painting;
@@ -18,14 +18,14 @@ public class ProcessClientPacket {
         {
             Entity entity = ClientReferences.getClientPlayer().level.getEntity(entityID);
             if (entity instanceof Painting painting) {
-                PaintingVariant type = Registry.PAINTING_VARIANT.get(new ResourceLocation(possibleVariantNames[0]));
+                PaintingVariant type = BuiltInRegistries.PAINTING_VARIANT.get(new ResourceLocation(possibleVariantNames[0]));
                 subaraki.paintings.Paintings.UTILITY.setArt(painting, type);
                 Paintings.UTILITY.updatePaintingBoundingBox(painting);
 
             }
         } else // we need to open the painting gui to select a painting
         {
-            PaintingVariant[] types = Arrays.stream(possibleVariantNames).map(path -> Registry.PAINTING_VARIANT.get(new ResourceLocation(path))).toArray(PaintingVariant[]::new);
+            PaintingVariant[] types = Arrays.stream(possibleVariantNames).map(path -> BuiltInRegistries.PAINTING_VARIANT.get(new ResourceLocation(path))).toArray(PaintingVariant[]::new);
             ClientReferences.openPaintingScreen(screen.make(types, entityID));
         }
     }

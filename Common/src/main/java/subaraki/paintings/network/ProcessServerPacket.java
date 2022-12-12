@@ -1,6 +1,6 @@
 package subaraki.paintings.network;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -14,7 +14,7 @@ public class ProcessServerPacket {
     public static void handle(Level level, ServerPlayer player, int entityId, ResourceLocation paintingName, SyncpacketSupplier packet) {
         Entity entity = level.getEntity(entityId);
         if (entity instanceof Painting painting) {
-            PaintingVariant variant = Registry.PAINTING_VARIANT.get(paintingName);
+            PaintingVariant variant = BuiltInRegistries.PAINTING_VARIANT.get(paintingName);
             subaraki.paintings.Paintings.UTILITY.setArt(painting, variant);
             Paintings.UTILITY.updatePaintingBoundingBox(painting);
             packet.send(painting, player);
