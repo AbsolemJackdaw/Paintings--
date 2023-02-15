@@ -1,0 +1,7 @@
+{
+  "select.a.painting": "Seleziona un dipinto",
+  "text.autoconfig.paintings.option.use_vanilla_only": "Seleziona "true" per usare solo i dipinti vanilla e saltare il caricamento degli altri quadri",
+  "text.autoconfig.paintings.option.use_selection_gui": "Seleziona "true" per attivare il pop-up della GUI “Selezione dipinto“ quando posizioni un dipinto",
+  "text.autoconfig.paintings.option.cycle_paintings": "Seleziona "true" per attivare il ciclo dei dipinti quando clicchi con il tasto destro del mouse con un dipinto",
+  "text.autoconfig.paintings.option.show_painting_size": "Seleziona "true" per mostrare le dimensioni dei dipinti nella GUI dipinto"
+}
