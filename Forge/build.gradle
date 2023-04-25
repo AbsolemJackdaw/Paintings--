@@ -90,9 +90,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":Common")
     annotationProcessor 'org.spongepowered:mixin:0.8.4-SNAPSHOT:processor'
-//    runtimeOnly fg.deobf("${compat_mod}${compat_forge}")
-
+    runtimeOnly fg.deobf("${transparent_mod}${transparent_forge}")
+    runtimeOnly fg.deobf("${ash_mod}${ash_forge}")
 }
+
 repositories { //all of these are for adding crates compat
     mavenLocal()
     maven {
@@ -136,13 +137,14 @@ publishing {
 }
 
 task publishCurseForge(type: TaskPublishCurseForge) {
+    if (project.hasProperty('api_token_paintings')) {
+        apiToken = "${api_token_paintings}"
 
-    apiToken = "${api_token_paintings}"
-
-    // The main file to upload
-    def mainFile = upload(252042, jar)
-    mainFile.releaseType = 'beta'
-    mainFile.changelog = "${changelog}"
-    mainFile.changelogType = 'markdown'
-    mainFile.addRequirement('transparent')
+        // The main file to upload
+        def mainFile = upload(252042, jar)
+        mainFile.releaseType = 'beta'
+        mainFile.changelog = "${changelog}"
+        mainFile.changelogType = 'markdown'
+        mainFile.addRequirement('transparent')
+    }
 }
