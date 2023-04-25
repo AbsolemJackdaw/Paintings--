@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -67,6 +68,19 @@ public class ProcessPlacementEvent {
             return false;
 
         if (itemStack.getItem() == Items.PAINTING) {
+            // Check if the item has a painting variant in its nbt.
+            // If it does, don't perform painting++ behavior and default to vanilla painting placing behavior.
+            CompoundTag tag = itemStack.getTag();
+            if (tag != null && tag.contains("EntityTag", 10)) {
+                CompoundTag entityTag = tag.getCompound("EntityTag");
+                Optional<ResourceKey<PaintingVariant>> paintingVariantResourceKey = Painting.loadVariant(entityTag).flatMap(Holder::unwrapKey);
+                if (paintingVariantResourceKey.isPresent()) {
+                    PaintingVariant paintingVariant = BuiltInRegistries.PAINTING_VARIANT.get(paintingVariantResourceKey.get());
+                    if (paintingVariant != null) {
+                        return false;
+                    }
+                }
+            }
 
             BlockPos actualPos = blockPos.relative(face);
 
