@@ -29,7 +29,7 @@ public class PaintingButton extends Button {
     }
 
     @Override
-    public void renderButton(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void renderWidget(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, resLoc);
@@ -43,7 +43,6 @@ public class PaintingButton extends Button {
             fill(stack, getX() - BORDER, getY(), getX(), getY() + height, YELLOW); // middle rectangle to the left
             fill(stack, getX() + width, getY(), getX() + width + BORDER, getY() + height, YELLOW); // middle rectangle to the right
         }
-
     }
 
     public void shiftY(int dy) {
