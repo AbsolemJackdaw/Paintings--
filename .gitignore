@@ -21,3 +21,4 @@ build
 eclipse
 run
 /resourcepackcache/
+.DS_Store
