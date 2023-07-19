@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -25,14 +25,14 @@ public class Events {
     }
 
     private static boolean equalNames(PaintingVariant a, PaintingVariant b) {
-        return Registry.PAINTING_VARIANT.getKey(a).equals(Registry.PAINTING_VARIANT.getKey(b));
+        return BuiltInRegistries.PAINTING_VARIANT.getKey(a).equals(BuiltInRegistries.PAINTING_VARIANT.getKey(b));
     }
 
     public static void events() {
         UseEntityCallback.EVENT.register((player, world, hand, target, hitResult) -> {
 
             SyncpacketSupplier packetSupplier = (painting, serverPlayer) -> {
-                FriendlyByteBuf byteBuf = ClientNetwork.cPacket(painting.getId(), new String[]{Registry.PAINTING_VARIANT.getKey(painting.getVariant().value()).toString()});
+                FriendlyByteBuf byteBuf = ClientNetwork.cPacket(painting.getId(), new String[]{BuiltInRegistries.PAINTING_VARIANT.getKey(painting.getVariant().value()).toString()});
                 for (ServerPlayer tracking : PlayerLookup.tracking(serverPlayer)) {
                     ServerPlayNetworking.send(tracking, PacketId.CHANNEL, byteBuf);
                 }

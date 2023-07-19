@@ -2,7 +2,7 @@ package subaraki.paintings.mod;
 
 
 import net.minecraft.ResourceLocationException;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -36,7 +36,7 @@ public class Paintings {
 
     @SubscribeEvent
     public static void registerPaintigns(RegisterEvent event) {
-        event.register(Registry.PAINTING_VARIANT_REGISTRY, registry -> {
+        event.register(Registries.PAINTING_VARIANT, registry -> {
             for (PaintingEntry entry : PaintingPackReader.PAINTINGS) {
                 try {
                     registry.register(entry.getResLoc(), new PaintingVariant(entry.getSizeX(), entry.getSizeY()));

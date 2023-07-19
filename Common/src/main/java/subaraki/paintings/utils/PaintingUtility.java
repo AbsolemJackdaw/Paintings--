@@ -1,7 +1,7 @@
 package subaraki.paintings.utils;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.decoration.Painting;
@@ -46,7 +46,7 @@ public class PaintingUtility {
     public void setArt(Painting painting, PaintingVariant type) {
         CompoundTag tag = new CompoundTag();
         painting.addAdditionalSaveData(tag);
-        String name = Registry.PAINTING_VARIANT.getKey(type).toString();
+        String name = BuiltInRegistries.PAINTING_VARIANT.getKey(type).toString();
         tag.putString("variant", name);
         painting.readAdditionalSaveData(tag);
     }

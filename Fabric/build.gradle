@@ -32,7 +32,8 @@ dependencies {
     }
     modImplementation "com.terraformersmc:modmenu:${mod_menu_version}"
     implementation project(":Common")
-    modImplementation "${compat_mod}${compat_fabric}"
+    modRuntimeOnly "${transparent_mod}${transparent_fabric}"
+    modRuntimeOnly "${ash_mod}${ash_fabric}"
 
     modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
 }
@@ -101,16 +102,16 @@ publishing {
 }
 
 task publishCurseForge(type: TaskPublishCurseForge) {
+    if (project.hasProperty('api_token_paintings')) {
+        apiToken = "${api_token_paintings}"
 
-    apiToken = "${api_token_paintings}"
-
-    // The main file to upload
-    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.releaseType = 'beta'
-    mainFile.changelog = "${changelog}"
-    mainFile.changelogType = 'markdown'
-    mainFile.addRequirement('transparent')
-    mainFile.addRequirement('cloth-config')
-    mainFile.addRequirement('fabric-api')
-
+        // The main file to upload
+        def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+        mainFile.releaseType = 'beta'
+        mainFile.changelog = "${changelog}"
+        mainFile.changelogType = 'markdown'
+        mainFile.addRequirement('transparent')
+        mainFile.addRequirement('cloth-config')
+        mainFile.addRequirement('fabric-api')
+    }
 }

@@ -4,10 +4,9 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Widget;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,8 +24,6 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     public static final int START_Y = 30;
     public static final int GAP = 5;
     private final int entityID;
-    private final Button defaultButton = new Button(0, 0, 0, 0, Component.literal("default"), button -> {
-    });
     private final PaintingVariant[] types;
     private int scrollBarScroll = 0;
 
@@ -66,7 +63,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
             }
             try {
                 this.addRenderableWidget(new PaintingButton(posx, posy, variant.getWidth(), variant.getHeight(), Component.literal(""), button -> {
-                    sendPacket(Registry.PAINTING_VARIANT.getKey(variant), entityID);
+                    sendPacket(BuiltInRegistries.PAINTING_VARIANT.getKey(variant), entityID);
                     this.removed();
                     this.onClose();
                 }, variant));
@@ -87,8 +84,8 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     private void centerRow(int start, int end) {
 
         if (optionalAbstractWidget(start).isPresent() && optionalAbstractWidget(end).isPresent()) {
-            int left = this.optionalAbstractWidget(start).get().x;
-            int right = optionalAbstractWidget(end).get().x + optionalAbstractWidget(end).get().getWidth();
+            int left = this.optionalAbstractWidget(start).get().getX();
+            int right = optionalAbstractWidget(end).get().getX() + optionalAbstractWidget(end).get().getWidth();
 
             // We're 10 pixels away from each edge
             int correction = (width - 20 - (right - left)) / 2;
@@ -133,8 +130,8 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
             float move = (float) amountY * -1.0f;
 
-            int paintingCanvasTopY = (optionalFirstWidget().get().y);
-            int paintingCanvasBotY = (optionalLastWidget().get().y + optionalLastWidget().get().getHeight());
+            int paintingCanvasTopY = (optionalFirstWidget().get().getY());
+            int paintingCanvasBotY = (optionalLastWidget().get().getY() + optionalLastWidget().get().getHeight());
 
             int paintingContainerSize = paintingCanvasBotY - paintingCanvasTopY; //total height span of all shown paintings. gaps accounted for
             int viewport = height - (START_Y); //height of cutout rect in which paintings are shown
@@ -152,13 +149,13 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
     private void movePaintinWidgets(int scrollAmount) {
 
-        int paintingCanvasTopY = (optionalFirstWidget().get().y);
+        int paintingCanvasTopY = (optionalFirstWidget().get().getY());
         int onScreenTopLimit = GAP + START_Y; //relative screen position, first painting can only scroll up until here
-        int paintingCanvasBotY = (optionalLastWidget().get().y + optionalLastWidget().get().getHeight());
+        int paintingCanvasBotY = (optionalLastWidget().get().getY() + optionalLastWidget().get().getHeight());
         int onScreenBottomLimit = height - (onScreenTopLimit); //relative screen position, last painting can only scroll up until here
 
         if ((scrollAmount > 0 && paintingCanvasTopY < onScreenTopLimit) || (scrollAmount < 0 && paintingCanvasBotY >= onScreenBottomLimit)) {
-            getRenderablesWithCast().forEach(widget -> ((AbstractWidget) widget).y += scrollAmount);
+            getRenderablesWithCast().forEach(widget -> ((AbstractWidget) widget).setY(((AbstractWidget) widget).getY() + scrollAmount));
             scrollBarScroll -= scrollAmount;
         }
     }
@@ -167,7 +164,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     private void drawToolTips(PoseStack mat, int mouseX, int mouseY) {
         if (!Services.CONFIG.showPaintingSize())
             return;
-        for (Widget guiButton : getRenderablesWithCast()) {
+        for (Renderable guiButton : getRenderablesWithCast()) {
             if (guiButton instanceof PaintingButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
                     MutableComponent text = Component.literal(button.getWidth() / 16 + "x" + button.getHeight() / 16);
@@ -184,8 +181,8 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
         if (getRenderablesWithCast().isEmpty())
             return;
         if (optionalFirstWidget().isPresent() && optionalLastWidget().isPresent()) {
-            int top = optionalFirstWidget().get().y;
-            int bot = optionalLastWidget().get().y + optionalLastWidget().get().getHeight();
+            int top = optionalFirstWidget().get().getY();
+            int bot = optionalLastWidget().get().getY() + optionalLastWidget().get().getHeight();
             // get total size for buttons drawn
             int totalSize = (bot - top);
             int containerSize = (height - (START_Y * 2));
@@ -226,7 +223,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public List<Widget> getRenderablesWithCast() {
+    public List<Renderable> getRenderablesWithCast() {
         throw new IllegalStateException("painting gui common code crash override. please override paintingscreen");
     }
 
