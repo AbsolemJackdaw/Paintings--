@@ -30,8 +30,7 @@ public class Events {
                 ServerPlayNetworking.send(serverPlayer, PacketId.CHANNEL, byteBuf);
             };
 
-            ProcessInteractEvent.processInteractPainting(player, target, hand, packetSupplier);
-            return InteractionResult.SUCCESS;
+            return ProcessInteractEvent.processInteractPainting(player, target, hand, packetSupplier) ? InteractionResult.SUCCESS : InteractionResult.PASS;
         });
 
 

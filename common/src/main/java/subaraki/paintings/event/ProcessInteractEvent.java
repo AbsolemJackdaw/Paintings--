@@ -28,7 +28,7 @@ public class ProcessInteractEvent {
         return BuiltInRegistries.PAINTING_VARIANT.getKey(a).equals(BuiltInRegistries.PAINTING_VARIANT.getKey(b));
     }
 
-    public static void processInteractPainting(Player player, Entity target, InteractionHand hand, SyncpacketSupplier syncpacketSupplier) {
+    public static boolean processInteractPainting(Player player, Entity target, InteractionHand hand, SyncpacketSupplier syncpacketSupplier) {
         if (Services.CONFIG.getCyclePaintings())
             if (target instanceof Painting painting) {
                 if (hand.equals(InteractionHand.MAIN_HAND)) {
@@ -75,10 +75,12 @@ public class ProcessInteractEvent {
                         if (newArt != null) { //newart shouldn't be null here, but with the new painting system, we can never be too sure
                             ((IPaintingAccessor) painting).callSetVariant(newArt);
                             syncpacketSupplier.send(painting, serverPlayer);
+                            return true;
                         }
 
                     }
                 }
             }
+        return false;
     }
 }
