@@ -23,7 +23,7 @@ public class Events {
         UseEntityCallback.EVENT.register((player, world, hand, target, hitResult) -> {
 
             SyncpacketSupplier packetSupplier = (painting, serverPlayer) -> {
-                FriendlyByteBuf byteBuf = ClientNetwork.cPacket(painting.getId(), new String[]{BuiltInRegistries.PAINTING_VARIANT.getKey(painting.getVariant().value()).toString()});
+                FriendlyByteBuf byteBuf = ClientNetwork.cPacketUpdate(painting.getId(), BuiltInRegistries.PAINTING_VARIANT.getKey(painting.getVariant().value()).toString());
                 for (ServerPlayer tracking : PlayerLookup.tracking(serverPlayer)) {
                     ServerPlayNetworking.send(tracking, PacketId.CHANNEL, byteBuf);
                 }
@@ -46,7 +46,7 @@ public class Events {
                 String[] simpleNames = new String[names.length];
                 for (int i = 0; i < names.length; i++)
                     simpleNames[i] = names[i].toString();
-                ServerPlayNetworking.send(serverPlayer, PacketId.CHANNEL, ClientNetwork.cPacket(painting.getId(), simpleNames));
+                ServerPlayNetworking.send(serverPlayer, PacketId.CHANNEL, ClientNetwork.cPacketScreen(hitResult.getBlockPos(), hitResult.getDirection(), simpleNames));
             };
             return ProcessPlacementEvent.processPlacementEvent(player.getItemInHand(hand), player, hitResult.getDirection(), hitResult.getBlockPos(), world, SENDER) ?
                     InteractionResult.SUCCESS : InteractionResult.PASS;

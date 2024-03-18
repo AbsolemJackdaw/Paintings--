@@ -2,6 +2,8 @@ package subaraki.paintings.gui;
 
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.network.NetworkHandler;
@@ -13,8 +15,8 @@ import java.util.Optional;
 public class PaintingScreen extends CommonPaintingScreen {
 
 
-    public PaintingScreen(PaintingVariant[] types, int entityID) {
-        super(types, entityID);
+    public PaintingScreen(PaintingVariant[] types, BlockPos pos, Direction face) {
+        super(types, pos, face);
     }
 
     @Override
@@ -28,8 +30,8 @@ public class PaintingScreen extends CommonPaintingScreen {
     }
 
     @Override
-    public void sendPacket(ResourceLocation variantName, int entityID) {
-        NetworkHandler.NETWORK.sendToServer(new SPacketPainting(variantName, entityID));
+    public void sendPacket(ResourceLocation variantName, BlockPos pos, Direction face) {
+        NetworkHandler.NETWORK.sendToServer(new SPacketPainting(variantName, pos, face));
 
     }
 

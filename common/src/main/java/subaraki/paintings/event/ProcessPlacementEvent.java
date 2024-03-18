@@ -103,7 +103,7 @@ public class ProcessPlacementEvent {
                         if (!level.isClientSide()) {
 
                             paintingEntity.playPlacementSound();
-                            level.addFreshEntity(paintingEntity);
+                            //level.addFreshEntity(paintingEntity);
 
                             Holder<PaintingVariant> originalArt = paintingEntity.getVariant();
 

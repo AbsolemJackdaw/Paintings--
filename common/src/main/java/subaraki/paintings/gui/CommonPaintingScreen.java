@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -23,14 +25,16 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     public static final int START_X = 10;
     public static final int START_Y = 30;
     public static final int GAP = 5;
-    private final int entityID;
+    private final BlockPos pos;
+    private final Direction face;
     private final PaintingVariant[] types;
     private int scrollBarScroll = 0;
 
-    public CommonPaintingScreen(PaintingVariant[] types, int entityID) {
+    public CommonPaintingScreen(PaintingVariant[] types, BlockPos pos, Direction face) {
         super(Component.translatable("select.a.painting"));
         this.types = types;
-        this.entityID = entityID;
+        this.pos = pos;
+        this.face = face;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
             }
             try {
                 this.addRenderableWidget(new PaintingButton(posx, posy, variant.getWidth(), variant.getHeight(), Component.literal(""), button -> {
-                    sendPacket(BuiltInRegistries.PAINTING_VARIANT.getKey(variant), entityID);
+                    sendPacket(BuiltInRegistries.PAINTING_VARIANT.getKey(variant), pos, face);
                     this.removed();
                     this.onClose();
                 }, variant));
@@ -219,7 +223,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public void sendPacket(ResourceLocation variantName, int entityID) {
+    public void sendPacket(ResourceLocation variantName, BlockPos pos, Direction face) {
 
     }
 }
