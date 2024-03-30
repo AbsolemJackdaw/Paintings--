@@ -2,6 +2,7 @@ package subaraki.paintings.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import commonnetwork.api.Network;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -15,12 +16,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
+import subaraki.paintings.mixin.ScreenAccessor;
+import subaraki.paintings.network.server.SPacketPainting;
 import subaraki.paintings.utils.Services;
 
 import java.util.List;
 import java.util.Optional;
 
-public class CommonPaintingScreen extends Screen implements IPaintingGUI {
+public class PaintingScreen extends Screen implements IPaintingGUI {
 
     public static final int START_X = 10;
     public static final int START_Y = 30;
@@ -30,7 +33,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     private final PaintingVariant[] types;
     private int scrollBarScroll = 0;
 
-    public CommonPaintingScreen(PaintingVariant[] types, BlockPos pos, Direction face) {
+    public PaintingScreen(PaintingVariant[] types, BlockPos pos, Direction face) {
         super(Component.translatable("select.a.painting"));
         this.types = types;
         this.pos = pos;
@@ -104,7 +107,7 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
-        this.renderBackground(guiGraphics);
+        this.renderBackground(guiGraphics, mouseX, mouseY, f);
         guiGraphics.fill(START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
         Window window = minecraft.getWindow();
         int scale = (int) window.getGuiScale();
@@ -119,13 +122,13 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double mouseScroll) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalScroll, double verticalScroll) {
         if (optionalFirstWidget().isPresent() && optionalLastWidget().isPresent()) {
 
-            int move = (mouseScroll < 0 ? -1 : mouseScroll > 0 ? 1 : 0) * 16;
+            int move = (verticalScroll < 0 ? -1 : verticalScroll > 0 ? 1 : 0) * 16;
             movePaintingWidgets(move);
         }
-        return super.mouseScrolled(mouseX, mouseY, mouseScroll);
+        return super.mouseScrolled(mouseX, mouseY, horizontalScroll, verticalScroll);
     }
 
     @Override
@@ -214,16 +217,18 @@ public class CommonPaintingScreen extends Screen implements IPaintingGUI {
 
     @Override
     public Optional<AbstractWidget> optionalAbstractWidget(int index) {
+        Renderable renderable = getRenderablesWithCast().get(index);
+        if (renderable instanceof AbstractWidget aw) return Optional.of(aw);
         return Optional.empty();
     }
 
     @Override
     public List<Renderable> getRenderablesWithCast() {
-        throw new IllegalStateException("painting gui common code crash override. please override paintingscreen");
+        return ((ScreenAccessor) this).getRenderables();
     }
 
     @Override
     public void sendPacket(ResourceLocation variantName, BlockPos pos, Direction face) {
-
+        Network.getNetworkHandler().sendToServer(new SPacketPainting(variantName, pos, face));
     }
 }

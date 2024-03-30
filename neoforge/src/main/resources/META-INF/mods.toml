@@ -1,0 +1,35 @@
+modLoader = "javafml"
+license = "GNU V3"
+loaderVersion = "[43,)"
+issueTrackerURL = "https://github.com/ArtixAllMighty/Paintings--/issues"
+
+logoFile = "banner.png"
+
+[[mods]]
+modId = "paintings"
+version = "${version}"
+displayName = "Paintings ++"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/paintings"
+credits = "David Goldman : the original Painting Selection Gui. Gigaherz for advice on networking. Darkhax and Jared for Multiloader"
+authors = "AbsolemJackdaw"
+description = '''
+Add more paintings to your game !! 
+Check out the wiki for more info !
+https://github.com/ArtixAllMighty/Paintings--/wiki
+
+Enjoy picking which painting you want to place down with the integrated Painting Selection GUI !
+'''
+# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[dependencies.paintings]]
+modId = "neoforge"
+type="required"
+versionRange = "${neoforge_loader_version_range}"
+ordering = "BEFORE"
+side = "BOTH"
+# Here's another dependency
+[[dependencies.paintings]]
+modId = "minecraft"
+type="required"
+versionRange = "${minecraft_version_range}"
+ordering = "BEFORE"
+side = "BOTH"

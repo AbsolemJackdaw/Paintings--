@@ -8,7 +8,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.events.Events;
-import subaraki.paintings.network.ServerNetwork;
+import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.util.ModConfig;
 import subaraki.paintings.utils.PaintingEntry;
 import subaraki.paintings.utils.PaintingPackReader;
@@ -36,7 +36,8 @@ public class Paintings implements ModInitializer {
         }
         AutoConfig.register(ModConfig.class, Toml4jConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        ServerNetwork.registerServerPackets();
+        NetworkHandler.registerServerPackets();
+        NetworkHandler.registerClientPackets();
         Events.events();
     }
 }

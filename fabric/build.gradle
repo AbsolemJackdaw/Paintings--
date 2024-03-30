@@ -4,7 +4,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'maven-publish'
-    id 'fabric-loom'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 
@@ -39,6 +39,9 @@ dependencies {
     modRuntimeOnly "${ash_mod}${ash_fabric}"
 
     modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
+
+    //networking aid
+    modImplementation 'mysticdrew:common-networking-fabric:1.0.6-1.20.4'
 }
 
 loom {

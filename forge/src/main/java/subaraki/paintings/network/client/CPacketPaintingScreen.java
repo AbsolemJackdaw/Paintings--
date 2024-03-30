@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkContext;
 import subaraki.paintings.gui.PaintingScreen;
 import subaraki.paintings.network.IPacketBase;
 import subaraki.paintings.network.NetworkHandler;
@@ -49,7 +49,7 @@ public class CPacketPaintingScreen implements IPacketBase {
     }
 
     @Override
-    public void handle(Supplier<NetworkEvent.Context> context) {
+    public void handle(Supplier<NetworkContext> context) {
         context.get().enqueueWork(() -> {
             ProcessClientPacket.openScreen(pos, face, resLocNames, PaintingScreen::new);
         });

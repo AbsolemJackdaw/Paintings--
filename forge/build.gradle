@@ -1,132 +1,132 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
-plugins {
-    id 'idea'
-    id 'maven-publish'
-    id 'net.minecraftforge.gradle'
-    id 'org.spongepowered.mixin'
-    id 'net.darkhax.curseforgegradle' version '1.0.11'
-}
-
-base {
-    archivesName = "${mod_name}-forge-${minecraft_version}"
-}
-
-mixin {
-    add(sourceSets.main, "${mod_id}.refmap.json")
-    config("${mod_id}.mixins.json")
-    config("${mod_id}.forge.mixins.json")
-}
-
-minecraft {
-    mappings channel: 'official', version: minecraft_version
-    if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
-        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-    }
-    runs {
-        client {
-            workingDirectory project.file('run')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Client'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                modClientRun {
-                    source sourceSets.main
-                    source project(":common").sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            taskName 'Server'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                modServerRun {
-                    source sourceSets.main
-                    source project(":common").sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-            ideaModule "${rootProject.name}.${project.name}.main"
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-            taskName 'Data'
-            property 'mixin.env.remapRefMap', 'true'
-            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
-            mods {
-                modDataRun {
-                    source sourceSets.main
-                    source project(":common").sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets.main.resources.srcDir 'src/generated/resources'
-
-dependencies {
-    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
-    compileOnly project(":common")
-    annotationProcessor 'org.spongepowered:mixin:0.8.4-SNAPSHOT:processor'
-    runtimeOnly fg.deobf("${transparent_mod}${transparent_forge}")
-    runtimeOnly fg.deobf("${ash_mod}${ash_forge}")
-}
-
-repositories { //all of these are for adding crates compat
-    mavenLocal()
-    maven {
-        name = 'Curse Maven'
-        url = 'https://cursemaven.com'
-        content {
-            includeGroup 'curse.maven'
-        }
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    source(project(":common").sourceSets.main.allSource)
-}
-tasks.withType(Javadoc).configureEach {
-    source(project(":common").sourceSets.main.allJava)
-}
-
-processResources {
-    from project(":common").sourceSets.main.resources
-}
-
-jar.finalizedBy('reobfJar')
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
-            fg.component(it)
-        }
-    }
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
-    }
-}
-
-tasks.register('publishCurseForge', TaskPublishCurseForge) {
-    if (project.hasProperty('api_token_paintings')) {
-        apiToken = "${api_token_paintings}"
-
-        // The main file to upload
-        def mainFile = upload(252042, jar)
-        mainFile.releaseType = 'beta'
-        mainFile.changelog = "${changelog}"
-        mainFile.changelogType = 'markdown'
-        mainFile.addRequirement('transparent')
-    }
-}
+//import net.darkhax.curseforgegradle.TaskPublishCurseForge
+//
+//plugins {
+//    id 'idea'
+//    id 'maven-publish'
+//    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+//    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+//    id 'net.darkhax.curseforgegradle' version "1.1.18"
+//}
+//
+//base {
+//    archivesName = "${mod_name}-forge-${minecraft_version}"
+//}
+//
+//mixin {
+//    add(sourceSets.main, "${mod_id}.refmap.json")
+//    config("${mod_id}.mixins.json")
+//    config("${mod_id}.forge.mixins.json")
+//}
+//
+//minecraft {
+//    mappings channel: 'official', version: minecraft_version
+//    if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
+//        accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+//    }
+//    runs {
+//        client {
+//            workingDirectory project.file('run')
+//            ideaModule "${rootProject.name}.${project.name}.main"
+//            taskName 'Client'
+//            property 'mixin.env.remapRefMap', 'true'
+//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+//            mods {
+//                modClientRun {
+//                    source sourceSets.main
+//                    source project(":common").sourceSets.main
+//                }
+//            }
+//        }
+//
+//        server {
+//            workingDirectory project.file('run')
+//            ideaModule "${rootProject.name}.${project.name}.main"
+//            taskName 'Server'
+//            property 'mixin.env.remapRefMap', 'true'
+//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+//            mods {
+//                modServerRun {
+//                    source sourceSets.main
+//                    source project(":common").sourceSets.main
+//                }
+//            }
+//        }
+//
+//        data {
+//            workingDirectory project.file('run')
+//            ideaModule "${rootProject.name}.${project.name}.main"
+//            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+//            taskName 'Data'
+//            property 'mixin.env.remapRefMap', 'true'
+//            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+//            mods {
+//                modDataRun {
+//                    source sourceSets.main
+//                    source project(":common").sourceSets.main
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//sourceSets.main.resources.srcDir 'src/generated/resources'
+//
+//dependencies {
+//    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+//    compileOnly project(":common")
+//    annotationProcessor 'org.spongepowered:mixin:0.8.5-SNAPSHOT:processor'
+//    runtimeOnly fg.deobf("${transparent_mod}${transparent_forge}")
+//    runtimeOnly fg.deobf("${ash_mod}${ash_forge}")
+//}
+//
+//repositories { //all of these are for adding crates compat
+//    mavenLocal()
+//    maven {
+//        name = 'Curse Maven'
+//        url = 'https://cursemaven.com'
+//        content {
+//            includeGroup 'curse.maven'
+//        }
+//    }
+//}
+//
+//tasks.withType(JavaCompile).configureEach {
+//    source(project(":common").sourceSets.main.allSource)
+//}
+//tasks.withType(Javadoc).configureEach {
+//    source(project(":common").sourceSets.main.allJava)
+//}
+//
+//processResources {
+//    from project(":common").sourceSets.main.resources
+//}
+//
+//jar.finalizedBy('reobfJar')
+//
+//publishing {
+//    publications {
+//        mavenJava(MavenPublication) {
+//            artifactId base.archivesName.get()
+//            from components.java
+//            fg.component(it)
+//        }
+//    }
+//    repositories {
+//        maven {
+//            url "file://" + System.getenv("local_maven")
+//        }
+//    }
+//}
+//
+//tasks.register('publishCurseForge', TaskPublishCurseForge) {
+//    if (project.hasProperty('api_token_paintings')) {
+//        apiToken = "${api_token_paintings}"
+//
+//        // The main file to upload
+//        def mainFile = upload(252042, jar)
+//        mainFile.releaseType = 'beta'
+//        mainFile.changelog = "${changelog}"
+//        mainFile.changelogType = 'markdown'
+//        mainFile.addRequirement('transparent')
+//    }
+//}

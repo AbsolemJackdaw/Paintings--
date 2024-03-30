@@ -1,0 +1,7 @@
+/fill 3 173 -4
+/fill 3 173 -4 27 10 8 air
+/fill 3 173 -4 27 40 8 air
+/fill 3 173 -4 27 70 8 air
+/fill 3 173 -4 27 80 8 air
+/fill 3 173 -4 27 10 8 air
+/fill 3 80 -4 27 10 8 air

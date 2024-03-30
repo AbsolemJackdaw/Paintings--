@@ -1,4 +1,4 @@
-package subaraki.paintings.mixins;
+package subaraki.paintings.mixin;
 
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
