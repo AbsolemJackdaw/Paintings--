@@ -9,11 +9,11 @@ import subaraki.paintings.network.server.SPacketPainting;
 public class NetworkHandler {
 
     public static void registerClientPackets() {
-        new CPacketPaintingUpdate().encrypt(new ResourceLocation(Paintings.MODID, "client_update"));
-        new CPacketPaintingScreen().encrypt(new ResourceLocation(Paintings.MODID, "client_screen"));
+        new CPacketPaintingUpdate().register(new ResourceLocation(Paintings.MODID, "client_update"));
+        new CPacketPaintingScreen().register(new ResourceLocation(Paintings.MODID, "client_screen"));
     }
 
     public static void registerServerPackets() {
-        new SPacketPainting().encrypt(new ResourceLocation(Paintings.MODID, "server_update"));
+        new SPacketPainting().register(new ResourceLocation(Paintings.MODID, "server_update"));
     }
 }

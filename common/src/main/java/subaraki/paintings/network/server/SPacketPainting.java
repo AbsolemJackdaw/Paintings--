@@ -57,7 +57,7 @@ public class SPacketPainting implements IPacketBase<SPacketPainting> {
     }
 
     @Override
-    public void encrypt(ResourceLocation resLoc) {
+    public void register(ResourceLocation resLoc) {
         Network.registerPacket(resLoc, SPacketPainting.class, (clazz, buf) -> encode(buf), SPacketPainting::new, this::handle);
     }
 }

@@ -53,7 +53,7 @@ public class CPacketPaintingScreen implements IPacketBase<CPacketPaintingScreen>
     }
 
     @Override
-    public void encrypt(ResourceLocation resLoc) {
+    public void register(ResourceLocation resLoc) {
         Network.registerPacket(resLoc, CPacketPaintingScreen.class, (clazz, buf) -> encode(buf), CPacketPaintingScreen::new, this::handle);
     }
 }
