@@ -50,14 +50,15 @@ public class SPacketPainting implements IPacketBase<SPacketPainting> {
 
     @Override
     public void handle(PacketContext<SPacketPainting> context) {
+        var msg = context.message();
         if (context.sender() instanceof ServerPlayer serverPlayer) {
-            ProcessServerPacket.handle(serverPlayer.level(), serverPlayer, this.pos, this.face, this.variantName,
-                    (painting, player) -> Dispatcher.sendToClientsInRange(new CPacketPaintingUpdate(painting, variantName), (ServerLevel) serverPlayer.level(), this.pos, 128.0D));
+            ProcessServerPacket.handle(serverPlayer.level(), serverPlayer, msg.pos, msg.face, msg.variantName,
+                    (painting, player) -> Dispatcher.sendToClientsInRange(new CPacketPaintingUpdate(painting, msg.variantName), (ServerLevel) serverPlayer.level(), msg.pos, 128.0D));
         }
     }
 
     @Override
     public void register(ResourceLocation resLoc) {
-        Network.registerPacket(resLoc, SPacketPainting.class, (clazz, buf) -> encode(buf), SPacketPainting::new, this::handle);
+        Network.registerPacket(resLoc, SPacketPainting.class, SPacketPainting::encode, SPacketPainting::new, this::handle);
     }
 }

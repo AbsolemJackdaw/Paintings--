@@ -44,11 +44,12 @@ public class CPacketPaintingUpdate implements IPacketBase<CPacketPaintingUpdate>
 
     @Override
     public void handle(PacketContext<CPacketPaintingUpdate> context) {
-        ProcessClientPacket.updatePainting(this.entityID, resLocName);
+        var msg = context.message();
+        ProcessClientPacket.updatePainting(msg.entityID, msg.resLocName);
     }
 
     @Override
     public void register(ResourceLocation resLoc) {
-        Network.registerPacket(resLoc, CPacketPaintingUpdate.class, (clazz, buf) -> encode(buf), CPacketPaintingUpdate::new, this::handle);
+        Network.registerPacket(resLoc, CPacketPaintingUpdate.class, CPacketPaintingUpdate::encode, CPacketPaintingUpdate::new, this::handle);
     }
 }
