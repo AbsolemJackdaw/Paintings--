@@ -8,7 +8,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.utils.PaintingEntry;
@@ -26,6 +25,9 @@ public class Paintings {
     }
 
     public Paintings() {
+        NetworkHandler.registerServerPackets();
+        NetworkHandler.registerClientPackets();
+
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);
@@ -43,11 +45,5 @@ public class Paintings {
                 }
             }
         });
-    }
-
-    @SubscribeEvent
-    public static void commonSetup(final FMLCommonSetupEvent event) {
-        NetworkHandler.registerClientPackets();
-        NetworkHandler.registerServerPackets();
     }
 }

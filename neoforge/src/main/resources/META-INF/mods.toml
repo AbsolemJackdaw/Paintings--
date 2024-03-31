@@ -22,14 +22,19 @@ Enjoy picking which painting you want to place down with the integrated Painting
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.paintings]]
 modId = "neoforge"
-type="required"
+type = "required"
 versionRange = "${neoforge_loader_version_range}"
 ordering = "BEFORE"
 side = "BOTH"
 # Here's another dependency
 [[dependencies.paintings]]
 modId = "minecraft"
-type="required"
+type = "required"
 versionRange = "${minecraft_version_range}"
 ordering = "BEFORE"
 side = "BOTH"
+
+[[mixins]]
+config = "${mod_id}.mixins.json"
+[[mixins]]
+config = "${mod_id}.neoforge.mixins.json"
