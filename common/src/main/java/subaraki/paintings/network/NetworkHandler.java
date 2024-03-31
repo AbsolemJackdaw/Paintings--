@@ -8,12 +8,9 @@ import subaraki.paintings.network.server.SPacketPainting;
 
 public class NetworkHandler {
 
-    public static void registerClientPackets() {
+    public static void registerPackets() {
         new CPacketPaintingUpdate().register(new ResourceLocation(Paintings.MODID, "client_update"));
         new CPacketPaintingScreen().register(new ResourceLocation(Paintings.MODID, "client_screen"));
-    }
-
-    public static void registerServerPackets() {
         new SPacketPainting().register(new ResourceLocation(Paintings.MODID, "server_update"));
     }
 }

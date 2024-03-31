@@ -7,8 +7,7 @@ import subaraki.paintings.network.NetworkHandler;
 public class PaintingsClient implements net.fabricmc.api.ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        NetworkHandler.registerServerPackets();
-        NetworkHandler.registerClientPackets();
+        NetworkHandler.registerPackets();
         ClientEvents.fixBoundingBoxEvent();
     }
 }
