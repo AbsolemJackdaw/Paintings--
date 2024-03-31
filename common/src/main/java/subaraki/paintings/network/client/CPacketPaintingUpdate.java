@@ -48,7 +48,7 @@ public class CPacketPaintingUpdate implements IPacketBase<CPacketPaintingUpdate>
     }
 
     @Override
-    public void encrypt(ResourceLocation resLoc) {
+    public void register(ResourceLocation resLoc) {
         Network.registerPacket(resLoc, CPacketPaintingUpdate.class, (clazz, buf) -> encode(buf), CPacketPaintingUpdate::new, this::handle);
     }
 }

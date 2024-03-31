@@ -12,6 +12,6 @@ public interface IPacketBase<T> {
 
     void handle(PacketContext<T> context);
 
-    void encrypt(ResourceLocation res);
+    void register(ResourceLocation res);
 
 }

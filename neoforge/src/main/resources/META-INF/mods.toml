@@ -1,6 +1,6 @@
 modLoader = "javafml"
 license = "GNU V3"
-loaderVersion = "[43,)"
+loaderVersion = "[1,)"
 issueTrackerURL = "https://github.com/ArtixAllMighty/Paintings--/issues"
 
 logoFile = "banner.png"
