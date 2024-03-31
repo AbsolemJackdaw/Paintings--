@@ -49,11 +49,12 @@ public class CPacketPaintingScreen implements IPacketBase<CPacketPaintingScreen>
 
     @Override
     public void handle(PacketContext<CPacketPaintingScreen> context) {
-        ProcessClientPacket.openScreen(pos, face, resLocNames, PaintingScreen::new);
+        var packet = context.message();
+        ProcessClientPacket.openScreen(packet.pos, packet.face, packet.resLocNames, PaintingScreen::new);
     }
 
     @Override
     public void encrypt(ResourceLocation resLoc) {
-        Network.registerPacket(resLoc, CPacketPaintingScreen.class, (clazz, buf) -> encode(buf), CPacketPaintingScreen::new, this::handle);
+        Network.registerPacket(resLoc, CPacketPaintingScreen.class, CPacketPaintingScreen::encode, CPacketPaintingScreen::new, this::handle);
     }
 }
