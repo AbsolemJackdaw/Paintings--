@@ -16,12 +16,12 @@ public class OpenLoaderCompat implements IPackRepoDiscoveryService{
 
 	@Override
 	public Collection<String> getPackRepos() {
-		Set<String> staticFolders = new HashSet();
+		Set<String> staticFolders = new HashSet<>();
 		boolean isOpenLoaderLoaded = false;
 		try{
 			Class.forName("net.darkhax.openloader.Constants");
 			isOpenLoaderLoaded = true;
-		} catch (ClassNotFoundException e) {}
+		} catch (ClassNotFoundException ignored) {}
 
 
 		if(isOpenLoaderLoaded) {

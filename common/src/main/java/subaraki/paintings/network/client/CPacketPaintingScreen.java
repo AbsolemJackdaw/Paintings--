@@ -1,6 +1,6 @@
 package subaraki.paintings.network.client;
 
-import commonnetwork.api.Network;
+import commonnetwork.CommonNetworkMod;
 import commonnetwork.networking.data.PacketContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,6 +55,6 @@ public class CPacketPaintingScreen implements IPacketBase<CPacketPaintingScreen>
 
     @Override
     public void register(ResourceLocation resLoc) {
-        Network.registerPacket(resLoc, CPacketPaintingScreen.class, CPacketPaintingScreen::encode, CPacketPaintingScreen::new, this::handle);
+        CommonNetworkMod.registerPacket(resLoc, CPacketPaintingScreen.class, CPacketPaintingScreen::encode, CPacketPaintingScreen::new, this::handle);
     }
 }

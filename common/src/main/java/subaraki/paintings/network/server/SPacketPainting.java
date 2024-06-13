@@ -8,7 +8,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import subaraki.paintings.network.IPacketBase;
 import subaraki.paintings.network.ProcessServerPacket;
 import subaraki.paintings.network.client.CPacketPaintingUpdate;
@@ -51,10 +50,9 @@ public class SPacketPainting implements IPacketBase<SPacketPainting> {
     @Override
     public void handle(PacketContext<SPacketPainting> context) {
         var msg = context.message();
-        if (context.sender() instanceof ServerPlayer serverPlayer) {
-            ProcessServerPacket.handle(serverPlayer.level(), serverPlayer, msg.pos, msg.face, msg.variantName,
-                    (painting, player) -> Dispatcher.sendToClientsInRange(new CPacketPaintingUpdate(painting, msg.variantName), (ServerLevel) serverPlayer.level(), msg.pos, 128.0D));
-        }
+        var serverPlayer = context.sender();
+        ProcessServerPacket.handle(context.sender().level(), serverPlayer, msg.pos, msg.face, msg.variantName,
+                (painting, player) -> Dispatcher.sendToClientsInRange(new CPacketPaintingUpdate(painting, msg.variantName), (ServerLevel) player.level(), msg.pos, 128.0D));
     }
 
     @Override

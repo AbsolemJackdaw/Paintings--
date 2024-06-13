@@ -42,7 +42,7 @@ dependencies {
     compileOnly project(":common")
 
     //networking aid
-    implementation 'mysticdrew:common-networking-neoforge:1.0.6-1.20.4'
+    implementation "mysticdrew:common-networking-neoforge:${common_network}"
 
 }
 

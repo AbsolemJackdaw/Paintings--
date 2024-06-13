@@ -21,7 +21,7 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
     //network aid
-    implementation 'mysticdrew:common-networking-common:1.0.6-1.20.4'
+    implementation "mysticdrew:common-networking-common:${common_network}"
 }
 
 publishing {

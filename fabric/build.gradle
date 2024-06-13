@@ -41,7 +41,7 @@ dependencies {
     modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
 
     //networking aid
-    modImplementation 'mysticdrew:common-networking-fabric:1.0.6-1.20.4'
+    modImplementation "mysticdrew:common-networking-fabric:${common_network}"
 }
 
 loom {
