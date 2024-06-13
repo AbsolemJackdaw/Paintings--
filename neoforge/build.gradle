@@ -89,5 +89,7 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
         mainFile.changelogType = 'markdown'
         mainFile.addRequirement('transparent')
         mainFile.addRequirement('common-network')
+        mainFile.addGameVersion("${minecraft_version}")
+        mainFile.addGameVersion("neoforge")
     }
 }

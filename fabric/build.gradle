@@ -104,5 +104,8 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
         mainFile.addRequirement('cloth-config')
         mainFile.addRequirement('fabric-api')
         mainFile.addRequirement('common-network')
+        mainFile.addGameVersion("${minecraft_version}")
+        mainFile.addGameVersion("fabric")
+        mainFile.addGameVersion("quilt")
     }
 }
