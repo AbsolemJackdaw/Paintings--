@@ -25,9 +25,7 @@ public class Paintings {
     }
 
     public Paintings() {
-        NetworkHandler.registerServerPackets();
-        NetworkHandler.registerClientPackets();
-
+        NetworkHandler.registerPackets();
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.SERVER, ConfigData.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigData.CLIENT_SPEC);

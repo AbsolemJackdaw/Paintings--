@@ -36,8 +36,7 @@ public class Paintings implements ModInitializer {
         }
         AutoConfig.register(ModConfig.class, Toml4jConfigSerializer::new);
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
-        NetworkHandler.registerServerPackets();
-        NetworkHandler.registerClientPackets();
+        NetworkHandler.registerPackets();
         Events.events();
     }
 }

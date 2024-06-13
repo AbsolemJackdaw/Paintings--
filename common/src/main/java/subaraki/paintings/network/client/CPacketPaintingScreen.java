@@ -2,6 +2,7 @@ package subaraki.paintings.network.client;
 
 import commonnetwork.CommonNetworkMod;
 import commonnetwork.networking.data.PacketContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -49,8 +50,10 @@ public class CPacketPaintingScreen implements IPacketBase<CPacketPaintingScreen>
 
     @Override
     public void handle(PacketContext<CPacketPaintingScreen> context) {
-        var msg = context.message();
-        ProcessClientPacket.openScreen(msg.pos, msg.face, msg.resLocNames, PaintingScreen::new);
+        Minecraft.getInstance().execute(() -> {
+            var msg = context.message();
+            ProcessClientPacket.openScreen(msg.pos, msg.face, msg.resLocNames, PaintingScreen::new);
+        });
     }
 
     @Override

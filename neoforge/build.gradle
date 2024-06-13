@@ -1,8 +1,11 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.81'
     id 'java-library'
+    id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 base {
     archivesName = "${mod_name}-neoforge-${minecraft_version}"
@@ -72,5 +75,18 @@ publishing {
         maven {
             url "file://" + System.getenv("local_maven")
         }
+    }
+}
+
+tasks.register('publishCurseForge', TaskPublishCurseForge) {
+    if (project.hasProperty('api_token_paintings')) {
+        apiToken = "${api_token_paintings}"
+
+        // The main file to upload
+        def mainFile = upload(252042, jar)
+        mainFile.releaseType = 'beta'
+        mainFile.changelog = "${changelog}"
+        mainFile.changelogType = 'markdown'
+        mainFile.addRequirement('transparent')
     }
 }

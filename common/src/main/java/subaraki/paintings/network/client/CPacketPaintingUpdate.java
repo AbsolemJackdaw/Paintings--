@@ -2,6 +2,7 @@ package subaraki.paintings.network.client;
 
 import commonnetwork.api.Network;
 import commonnetwork.networking.data.PacketContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.Painting;
@@ -44,8 +45,10 @@ public class CPacketPaintingUpdate implements IPacketBase<CPacketPaintingUpdate>
 
     @Override
     public void handle(PacketContext<CPacketPaintingUpdate> context) {
-        var msg = context.message();
-        ProcessClientPacket.updatePainting(msg.entityID, msg.resLocName);
+        Minecraft.getInstance().execute(() -> {
+            var msg = context.message();
+            ProcessClientPacket.updatePainting(msg.entityID, msg.resLocName);
+        });
     }
 
     @Override
