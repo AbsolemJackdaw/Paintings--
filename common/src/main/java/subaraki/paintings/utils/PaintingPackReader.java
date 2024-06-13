@@ -9,10 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
 import subaraki.paintings.compat_layer.IPackRepoDiscoveryService;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,15 +31,7 @@ public class PaintingPackReader {
      */
     public void init() {
         LOGGER.info("loading json file and contents for paintings.");
-        duplicateBaseToFolder();
-        makeEntriesFromStream(getClass().getResourceAsStream("/assets/paintings/paintings.json"));
         scanPacks();
-    }
-
-    private void makeEntriesFromStream(InputStream stream) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-        parsePaintingsFromJson(json);
     }
 
     private void parsePaintingsFromJson(JsonObject json) {
@@ -97,7 +86,6 @@ public class PaintingPackReader {
         }
     }
 
-
     /**
      * read out all resource packs, exclusively in zips, to look for any other pack and copy their json file over.
      * since 1.19, also responsible for a list of the resource packs to force-load.
@@ -117,7 +105,8 @@ public class PaintingPackReader {
                 .map(packFile -> {
                     try (FileSystem zipFs = FileSystems.newFileSystem(packFile.toPath())) {
                         Path json = zipFs.getPath("./paintings++.json");
-                        if (!Files.exists(json)) json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
+                        if (!Files.exists(json))
+                            json = zipFs.getPath("./paintings.json");//Fallback for backwards compat
 
                         if (Files.exists(json)) {
                             try (JsonReader reader = new JsonReader(Files.newBufferedReader(json))) { //Closing of stream is redundant here, but we'll do it anyways :shrug:
@@ -149,10 +138,5 @@ public class PaintingPackReader {
                     LOGGER.info("FLRP & Validated: {}", pair.getLeft().getFileName().toString());
                     parsePaintingsFromJson(pair.getRight());
                 });
-    }
-
-    private void duplicateBaseToFolder() {
-        // duplicate the base painting's template to our custom folder
-        LOGGER.info("**Paintings++ no longer copies the base file outside if the mod. **");
     }
 }
