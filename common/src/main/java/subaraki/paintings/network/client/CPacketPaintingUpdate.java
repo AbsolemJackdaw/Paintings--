@@ -1,6 +1,6 @@
 package subaraki.paintings.network.client;
 
-import commonnetwork.api.Network;
+import commonnetwork.CommonNetworkMod;
 import commonnetwork.networking.data.PacketContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -53,6 +53,6 @@ public class CPacketPaintingUpdate implements IPacketBase<CPacketPaintingUpdate>
 
     @Override
     public void register(ResourceLocation resLoc) {
-        Network.registerPacket(resLoc, CPacketPaintingUpdate.class, CPacketPaintingUpdate::encode, CPacketPaintingUpdate::new, this::handle);
+        CommonNetworkMod.registerPacket(resLoc, CPacketPaintingUpdate.class, CPacketPaintingUpdate::encode, CPacketPaintingUpdate::new, this::handle);
     }
 }
