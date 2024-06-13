@@ -84,9 +84,10 @@ tasks.register('publishCurseForge', TaskPublishCurseForge) {
 
         // The main file to upload
         def mainFile = upload(252042, jar)
-        mainFile.releaseType = 'beta'
+        mainFile.releaseType = "${releasetype}"
         mainFile.changelog = "${changelog}"
         mainFile.changelogType = 'markdown'
         mainFile.addRequirement('transparent')
+        mainFile.addRequirement('common-network')
     }
 }

@@ -34,6 +34,13 @@ versionRange = "${minecraft_version_range}"
 ordering = "BEFORE"
 side = "BOTH"
 
+[[dependencies.paintings]]
+modId = "commonnetworking"
+type = "required"
+versionRange = "[1.0.10,)"
+ordering = "BEFORE"
+side = "BOTH"
+
 [[mixins]]
 config = "${mod_id}.mixins.json"
 [[mixins]]
