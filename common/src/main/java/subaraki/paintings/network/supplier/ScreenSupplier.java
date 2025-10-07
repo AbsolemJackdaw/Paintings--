@@ -5,7 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.gui.PaintingScreen;
 
+import java.util.List;
+
 @FunctionalInterface
 public interface ScreenSupplier {
-    PaintingScreen make(PaintingVariant[] motive, BlockPos pos, Direction face);
+    PaintingScreen make(List<PaintingVariant> paintings, BlockPos pos, Direction face);
 }

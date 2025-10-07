@@ -1,8 +1,7 @@
 package subaraki.paintings.utils;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
@@ -17,8 +16,8 @@ public class PaintingUtility {
         double hangX = (double) painting.getPos().getX() + 0.5D;
         double hangY = (double) painting.getPos().getY() + 0.5D;
         double hangZ = (double) painting.getPos().getZ() + 0.5D;
-        double offsetWidth = painting.getWidth() % 32 == 0 ? 0.5D : 0.0D;
-        double offsetHeight = painting.getHeight() % 32 == 0 ? 0.5D : 0.0D;
+        double offsetWidth = painting.getBbWidth() % 32 == 0 ? 0.5D : 0.0D;
+        double offsetHeight = painting.getBbHeight() % 32 == 0 ? 0.5D : 0.0D;
         hangX = hangX - (double) painting.getDirection().getStepX() * 0.46875D;
         hangZ = hangZ - (double) painting.getDirection().getStepZ() * 0.46875D;
         hangY = hangY + offsetHeight;
@@ -27,9 +26,9 @@ public class PaintingUtility {
         hangZ = hangZ + offsetWidth * (double) enumfacing.getStepZ();
 
         painting.setPosRaw(hangX, hangY, hangZ);
-        double widthX = painting.getWidth();
-        double height = painting.getHeight();
-        double widthZ = painting.getWidth();
+        double widthX = painting.getBbWidth();
+        double height = painting.getBbHeight();
+        double widthZ = painting.getBbWidth();
 
         if (painting.getDirection().getAxis() == Direction.Axis.Z) {
             widthZ = 1.0D;
@@ -43,12 +42,11 @@ public class PaintingUtility {
         painting.setBoundingBox(new AABB(hangX - widthX, hangY - height, hangZ - widthZ, hangX + widthX, hangY + height, hangZ + widthZ));
     }
 
-    public void setArt(Painting painting, PaintingVariant type) {
-        CompoundTag tag = new CompoundTag();
-        painting.addAdditionalSaveData(tag);
-        String name = BuiltInRegistries.PAINTING_VARIANT.getKey(type).toString();
-        tag.putString("variant", name);
-        painting.readAdditionalSaveData(tag);
+    public void setArt(Painting painting, PaintingVariant variant) {
+        painting.level().registryAccess().registry(Registries.PAINTING_VARIANT).ifPresent(registry -> {
+            var key = registry.getKey(variant);
+            if (key != null)
+                registry.getHolder(key).ifPresent(painting::setVariant);
+        });
     }
-
 }

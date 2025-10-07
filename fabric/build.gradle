@@ -1,10 +1,6 @@
-import net.darkhax.curseforgegradle.TaskPublishCurseForge
-
 plugins {
-    id 'java'
-    id 'idea'
-    id 'maven-publish'
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'multiloader-loader'
+    id 'fabric-loom'
     id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 
@@ -13,40 +9,33 @@ base {
 }
 
 repositories {
+    mavenCentral()
     maven { url "https://maven.shedaniel.me/" }
     maven { url "https://maven.terraformersmc.com/releases/" }
-    maven {
-        name = 'Curse Maven'
-        url = 'https://cursemaven.com'
-        content {
-            includeGroup 'curse.maven'
-        }
-    }
+    maven { url "https://jm.gserv.me/repository/maven-public/" }
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.officialMojangMappings()
+    mappings loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
+    }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
+
     modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
     modImplementation "com.terraformersmc:modmenu:${mod_menu_version}"
-    implementation project(":common")
-    modRuntimeOnly "${transparent_mod}${transparent_fabric}"
-    modRuntimeOnly "${ash_mod}${ash_fabric}"
-
-    modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'//Used for Global Packs compat, Global Packs ships this
-
-    //networking aid
-    modImplementation "mysticdrew:common-networking-fabric:${common_network}"
+    modApi group: 'com.electronwill.night-config', name: 'core', version: '3.6.5'
 }
 
 loom {
-    if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
-        accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+    def aw = project(':common').file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
     }
     mixin {
         defaultRefmapName.set("${mod_id}.refmap.json")
@@ -54,57 +43,32 @@ loom {
     runs {
         client {
             client()
-            setConfigName("Fabric Client")
+            setConfigName('Fabric Client')
             ideConfigGenerated(true)
-            runDir("run")
+            runDir('runs/client')
         }
         server {
             server()
-            setConfigName("Fabric Server")
+            setConfigName('Fabric Server')
             ideConfigGenerated(true)
-            runDir("run")
+            runDir('runs/server')
         }
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    source(project(":common").sourceSets.main.allSource)
-}
-tasks.withType(Javadoc).configureEach {
-    source(project(":common").sourceSets.main.allJava)
-}
-
-processResources {
-    from project(":common").sourceSets.main.resources
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
-    }
-}
-
-tasks.register('publishCurseForge', TaskPublishCurseForge) {
-        apiToken = findProperty('cf_api_token')
-        // The main file to upload
-        def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-        mainFile.releaseType = "${releasetype}"
-        mainFile.changelog = "${changelog}"
-        mainFile.changelogType = 'markdown'
-        mainFile.addRequirement('transparent')
-        mainFile.addRequirement('cloth-config')
-        mainFile.addRequirement('fabric-api')
-        mainFile.addRequirement('common-network')
-        mainFile.addGameVersion("${minecraft_version}")
-        mainFile.addGameVersion("fabric")
-        mainFile.addGameVersion("quilt")
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    apiToken = findProperty('cf_api_token')
+    // The main file to upload
+    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "Paintings++-fabric-${minecraft_version}-${version}"
+    mainFile.releaseType = "${releasetype}"
+    mainFile.changelog = "${changelog}"
+    mainFile.changelogType = 'markdown'
+    mainFile.addRequirement('cloth-config')
+    mainFile.addRequirement('fabric-api')
+    mainFile.addRequirement('transparent')
+    mainFile.addGameVersion("${minecraft_version}")
+    mainFile.addGameVersion("fabric")
+    mainFile.addGameVersion("quilt")
 
 }

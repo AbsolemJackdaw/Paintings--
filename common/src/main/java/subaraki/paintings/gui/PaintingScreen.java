@@ -2,21 +2,19 @@ package subaraki.paintings.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
-import commonnetwork.api.Network;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.mixin.ScreenAccessor;
+import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.server.SPacketPainting;
 import subaraki.paintings.utils.Services;
 
@@ -30,10 +28,10 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
     public static final int GAP = 5;
     private final BlockPos pos;
     private final Direction face;
-    private final PaintingVariant[] types;
+    private final List<PaintingVariant> types;
     private int scrollBarScroll = 0;
 
-    public PaintingScreen(PaintingVariant[] types, BlockPos pos, Direction face) {
+    public PaintingScreen(List<PaintingVariant> types, BlockPos pos, Direction face) {
         super(Component.translatable("select.a.painting"));
         this.types = types;
         this.pos = pos;
@@ -49,7 +47,7 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
 
     private void addButtons() {
         final int END_X = width - 30;
-        int prevHeight = types[0].getHeight(); // paintings are sorted from biggest to smallest at this point
+        int prevHeight = types.getFirst().height() * 16; // paintings are sorted from biggest to smallest at this point
 
         int posx = START_X;
         int posy = GAP + START_Y;
@@ -58,19 +56,21 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
         int rowstart = 0;
 
         for (PaintingVariant variant : types) {
+            int width = variant.width() * 16;
+            int height = variant.height() * 16;
             // if the painting size is different, or we're at the end of the row, jump down
             // and start at the beginning of the row again
-            if (posx + variant.getWidth() > END_X || prevHeight > variant.getHeight()) {
+            if (posx + width > END_X || prevHeight > height) {
                 centerRow(rowstart, index - 1);
                 rowstart = index;
                 posx = START_X;
                 posy += prevHeight + GAP;
-                prevHeight = variant.getHeight(); // stays the same on row end, changes when heights change
+                prevHeight = height; // stays the same on row end, changes when heights change
 
             }
             try {
-                this.addRenderableWidget(new PaintingButton(posx, posy, variant.getWidth(), variant.getHeight(), Component.literal(""), button -> {
-                    sendPacket(BuiltInRegistries.PAINTING_VARIANT.getKey(variant), pos, face);
+                this.addRenderableWidget(new PaintingButton(posx, posy, width, height, Component.literal(""), button -> {
+                    sendPacket(variant, pos, face);
                     this.removed();
                     this.onClose();
                 }, variant));
@@ -79,7 +79,7 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
                 subaraki.paintings.Paintings.LOGGER.warn(e.getMessage());
                 subaraki.paintings.Paintings.LOGGER.warn("*******************");
             }
-            posx += GAP + variant.getWidth();
+            posx += GAP + width;
 
             index++;
         }
@@ -228,7 +228,7 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public void sendPacket(ResourceLocation variantName, BlockPos pos, Direction face) {
-        Network.getNetworkHandler().sendToServer(new SPacketPainting(variantName, pos, face));
+    public void sendPacket(PaintingVariant variant, BlockPos pos, Direction face) {
+        NetworkHandler.sendServerpacket.accept(new SPacketPainting(variant, pos, face));
     }
 }

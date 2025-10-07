@@ -3,8 +3,8 @@ package subaraki.paintings.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +15,7 @@ import net.minecraft.world.entity.decoration.PaintingVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.mixin.IPaintingAccessor;
@@ -63,23 +64,19 @@ public class ProcessPlacementEvent {
         vanillaPaintings.add(PaintingVariants.WATER);
     }
 
-    public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier send) {
-        if (!Services.CONFIG.useSelectionGUI())
+    public static boolean processPlacementEvent(ItemStack itemStack, Player player, Direction face, BlockPos blockPos, Level level, PlacementPacketSupplier packetSupplier) {
+        var registry = level.registryAccess().registry(Registries.PAINTING_VARIANT);
+        if (!Services.CONFIG.useSelectionGUI() || registry.isEmpty())
             return false;
+
+        var paintingRegistry = registry.get();
 
         if (itemStack.getItem() == Items.PAINTING) {
             // Check if the item has a painting variant in its nbt.
             // If it does, don't perform painting++ behavior and default to vanilla painting placing behavior.
-            CompoundTag tag = itemStack.getTag();
-            if (tag != null && tag.contains("EntityTag", 10)) {
-                CompoundTag entityTag = tag.getCompound("EntityTag");
-                Optional<ResourceKey<PaintingVariant>> paintingVariantResourceKey = Painting.loadVariant(entityTag).flatMap(Holder::unwrapKey);
-                if (paintingVariantResourceKey.isPresent()) {
-                    PaintingVariant paintingVariant = BuiltInRegistries.PAINTING_VARIANT.get(paintingVariantResourceKey.get());
-                    if (paintingVariant != null) {
-                        return false;
-                    }
-                }
+            CustomData customData = itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
+            if (!customData.isEmpty()) {
+                return false;
             }
 
             BlockPos actualPos = blockPos.relative(face);
@@ -97,9 +94,6 @@ public class ProcessPlacementEvent {
                     if (paintingEntity.survives()) {
                         player.swing(InteractionHand.MAIN_HAND); // recreate the animation of placing down an item
 
-                        if (!player.isCreative())
-                            itemStack.shrink(1);
-
                         if (!level.isClientSide()) {
 
                             paintingEntity.playPlacementSound();
@@ -109,12 +103,12 @@ public class ProcessPlacementEvent {
 
                             // list of paintings placeable at current location
                             //takes registry names
-                            List<ResourceLocation> validArts = BuiltInRegistries.PAINTING_VARIANT.keySet().stream().filter(resourceLocation -> {
-                                var variant = BuiltInRegistries.PAINTING_VARIANT.get(resourceLocation);
-                                var regEntry = BuiltInRegistries.PAINTING_VARIANT.getResourceKey(variant);
-                                if (regEntry.isPresent()) {
-                                    ((IPaintingAccessor) paintingEntity).callSetVariant(BuiltInRegistries.PAINTING_VARIANT.getHolderOrThrow(regEntry.get()));
-                                    return paintingEntity.survives() && (!Services.CONFIG.useVanillaOnly() || vanillaPaintings.contains(regEntry.get()));
+                            List<ResourceLocation> validArts = paintingRegistry.keySet().stream().filter(resourceLocation -> {
+                                var variant = paintingRegistry.get(resourceLocation);
+                                var optionalResourceKey = paintingRegistry.getResourceKey(variant);
+                                if (optionalResourceKey.isPresent()) {
+                                    ((IPaintingAccessor) paintingEntity).callSetVariant(paintingRegistry.getHolderOrThrow(optionalResourceKey.get()));
+                                    return paintingEntity.survives() && (!Services.CONFIG.useVanillaOnly() || vanillaPaintings.contains(optionalResourceKey.get()));
                                 }
                                 return false;
                             }).toList();
@@ -125,19 +119,16 @@ public class ProcessPlacementEvent {
                             Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity); // reset bounding box
 
                             // sort paintings from high to low, and from big to small
-                            List<PaintingVariant> sorted = (validArts.stream().map(BuiltInRegistries.PAINTING_VARIANT::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
+                            List<PaintingVariant> sorted = (validArts.stream().map(paintingRegistry::get).sorted(PaintingUtility.ART_COMPARATOR)).toList();
                             //map resource<variant> to the registered resourcelocation
-                            List<ResourceLocation> references = sorted.stream().map(BuiltInRegistries.PAINTING_VARIANT::getKey).toList();
                             //Send packet to open gui
-                            send.send((ServerPlayer) player, paintingEntity, references.toArray(ResourceLocation[]::new));
+                            packetSupplier.send((ServerPlayer) player, paintingEntity, sorted);
                         }
                     }
                 });
-
                 return true;
             }
         }
         return false;
     }
-
 }
