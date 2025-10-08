@@ -13,7 +13,7 @@ import subaraki.paintings.Paintings;
 import subaraki.paintings.utils.PaintingEntry;
 import subaraki.paintings.utils.PaintingPackReader;
 
-@Mod.EventBusSubscriber(modid = Paintings.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = Paintings.MODID)
 public class Generator {
 
     // Apologise if this doesn't work. I've never used Forge's data generators before, but it compiles.

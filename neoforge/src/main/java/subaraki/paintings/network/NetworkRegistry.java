@@ -13,7 +13,7 @@ import subaraki.paintings.network.client.CPacketPaintingScreen;
 import subaraki.paintings.network.client.CPacketPaintingUpdate;
 import subaraki.paintings.network.server.SPacketPainting;
 
-@EventBusSubscriber(modid = Paintings.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Paintings.MODID)
 public class NetworkRegistry {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
@@ -38,7 +38,7 @@ public class NetworkRegistry {
         }
 
         private static void handleCPacketSync(final CPacketPaintingUpdate packet, IPayloadContext context) {
-            context.enqueueWork(() -> ProcessClientPacket.updatePainting(packet.entityId(), packet.painting()));
+            //context.enqueueWork(() -> ProcessClientPacket.updatePainting(packet.entityId(), packet.painting()));
         }
     }
 }

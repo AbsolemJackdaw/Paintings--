@@ -11,7 +11,7 @@ public class ClientNetwork {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(NetworkHandler.CPACKETSYNC_TYPE, (packet, context) -> {
-            context.client().execute(() -> ProcessClientPacket.updatePainting(packet.entityId(), packet.painting()));
+            //context.client().execute(() -> ProcessClientPacket.updatePainting(packet.entityId(), packet.painting()));
         });
     }
 }

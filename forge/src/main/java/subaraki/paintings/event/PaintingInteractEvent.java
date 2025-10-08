@@ -9,7 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.client.CPacketPaintingUpdate;
 
-@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID)
 public class PaintingInteractEvent {
 
     @SubscribeEvent

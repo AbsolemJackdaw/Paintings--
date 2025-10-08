@@ -1,7 +1,6 @@
 package subaraki.paintings.gui;
 
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -107,13 +106,14 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, f);
+        //this.renderBackground(guiGraphics, mouseX, mouseY, f);
         guiGraphics.fill(START_X, START_Y, width - START_X, height - START_Y, 0x44444444);
         Window window = minecraft.getWindow();
         int scale = (int) window.getGuiScale();
-        RenderSystem.enableScissor(START_X * scale, START_Y * scale, width * scale, (height - (START_Y * 2)) * scale);
+
+        guiGraphics.enableScissor(START_X, START_Y, width, height - START_Y);
         super.render(guiGraphics, mouseX, mouseY, f);
-        RenderSystem.disableScissor();
+        guiGraphics.disableScissor();
         if (!getRenderablesWithCast().isEmpty()) {
             drawFakeScrollBar(guiGraphics);
         }
@@ -173,7 +173,7 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
             if (guiButton instanceof PaintingButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
                     MutableComponent text = Component.literal(button.getWidth() / 16 + "x" + button.getHeight() / 16);
-                    HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
+                    HoverEvent hover = new HoverEvent.ShowText(text);
 
                     Style style = Style.EMPTY.withHoverEvent(hover);
                     guiGraphics.renderComponentHoverEffect(this.font, style, width / 2 - font.width(text) - 4, height - START_Y / 4);

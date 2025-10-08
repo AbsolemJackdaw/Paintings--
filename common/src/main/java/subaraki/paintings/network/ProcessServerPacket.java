@@ -15,8 +15,8 @@ public class ProcessServerPacket {
     public static void handle(Level level, ServerPlayer player, BlockPos pos, Direction direction, PaintingVariant painting, SyncpacketSupplier packet) {
         BlockPos actualPos = pos.relative(direction);
 
-        level.registryAccess().registry(Registries.PAINTING_VARIANT).ifPresent(registry -> {
-            registry.getHolder(ResourceKey.create(Registries.PAINTING_VARIANT, painting.assetId())).ifPresent(holder -> {
+        level.registryAccess().lookup(Registries.PAINTING_VARIANT).ifPresent(registry -> {
+            registry.get(ResourceKey.create(Registries.PAINTING_VARIANT, painting.assetId())).ifPresent(holder -> {
                 var entity = new Painting(level, actualPos, direction, holder);
                 entity.setYRot(direction.toYRot());
                 entity.setPos(actualPos.getX(), pos.getY(), actualPos.getZ());

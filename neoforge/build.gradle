@@ -16,8 +16,8 @@ repositories {
     }
 }
 dependencies {
-    runtimeOnly("curse.maven:transparent-377582:${transparent}")
-    runtimeOnly("curse.maven:ash-api-838498:${ash_api}")
+//    runtimeOnly("curse.maven:transparent-377582:${transparent}")
+//    runtimeOnly("curse.maven:ash-api-838498:${ash_api}")
 }
 
 neoForge {
@@ -40,7 +40,7 @@ neoForge {
             client()
         }
         data {
-            data()
+            clientData()
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
 
         }

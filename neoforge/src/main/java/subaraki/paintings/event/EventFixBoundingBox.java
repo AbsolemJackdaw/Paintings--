@@ -6,7 +6,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import subaraki.paintings.Paintings;
 
-@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID)
 public class EventFixBoundingBox {
 
     // quick hook to fix paintings not having the correct bounding box when reloading

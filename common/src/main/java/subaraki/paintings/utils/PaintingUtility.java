@@ -1,10 +1,7 @@
 package subaraki.paintings.utils;
 
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.decoration.HangingEntity;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.phys.AABB;
 
 public class PaintingUtility {
@@ -42,11 +39,11 @@ public class PaintingUtility {
         painting.setBoundingBox(new AABB(hangX - widthX, hangY - height, hangZ - widthZ, hangX + widthX, hangY + height, hangZ + widthZ));
     }
 
-    public void setArt(Painting painting, PaintingVariant variant) {
-        painting.level().registryAccess().registry(Registries.PAINTING_VARIANT).ifPresent(registry -> {
-            var key = registry.getKey(variant);
-            if (key != null)
-                registry.getHolder(key).ifPresent(painting::setVariant);
-        });
-    }
+//    public void setArt(Painting painting, PaintingVariant variant) {
+//        painting.level().registryAccess().lookup(Registries.PAINTING_VARIANT).ifPresent(registry -> {
+//            var key = registry.getKey(variant);
+//            if (key != null)
+//                registry.get(key).ifPresent(painting::setVariant);
+//        });
+//    }
 }

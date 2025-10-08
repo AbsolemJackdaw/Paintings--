@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import subaraki.paintings.Paintings;
 
-@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID, bus = Bus.FORGE)
+@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID)
 public class EventFixBoundingBox {
 
     // quick hook to fix paintings not having the correct bounding box when reloading
