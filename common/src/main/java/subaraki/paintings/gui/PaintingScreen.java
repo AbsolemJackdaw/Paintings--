@@ -5,8 +5,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -178,11 +176,12 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
                         var author = variant.author().orElseGet(Component::empty);
                         var title = variant.title().orElseGet(Component::empty);
                         MutableComponent size = Component.translatable(title + " " + variant.width() + "x" + variant.height() + " " + author);
-                        List<ClientTooltipComponent> list = new ArrayList<>();
-                        list.add(ClientTooltipComponent.create(title.getVisualOrderText()));
-                        list.add(ClientTooltipComponent.create(Component.literal(variant.width() + "x" + variant.height()).getVisualOrderText()));
-                        list.add(ClientTooltipComponent.create(author.getVisualOrderText()));
-                        guiGraphics.renderTooltip(this.font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+                        List<Component> list = new ArrayList<>();
+                        list.add(title);
+                        list.add(Component.literal(variant.width() + "x" + variant.height()));
+                        list.add(author);
+                        guiGraphics.renderTooltip(this.font, list, Optional.empty(), mouseX, mouseY, null);
+//                        guiGraphics.renderTooltip(this.font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
                     }
                 }
             }

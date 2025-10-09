@@ -8,7 +8,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import subaraki.paintings.network.client.CPacketPaintingScreen;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;
 
-@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID)
+@EventBusSubscriber(modid = subaraki.paintings.Paintings.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class PlacePaintingEventHandler {
 
     @SubscribeEvent

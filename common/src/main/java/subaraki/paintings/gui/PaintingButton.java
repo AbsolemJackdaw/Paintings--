@@ -3,7 +3,7 @@ package subaraki.paintings.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.PaintingTextureManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,7 +26,7 @@ public class PaintingButton extends Button {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         PaintingTextureManager paintingtexturemanager = Minecraft.getInstance().getPaintingTextures();
-        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, paintingtexturemanager.get(painting), this.getX(), this.getY(), width, height);
+        guiGraphics.blitSprite(RenderType::guiTextured, paintingtexturemanager.get(painting), this.getX(), this.getY(), width, height);
         if (isHovered) {
             guiGraphics.fill(getX() - BORDER, getY() - BORDER, getX() + width + BORDER, getY(), YELLOW); // upper left to upper right
             guiGraphics.fill(getX() - BORDER, getY() + height, getX() + width + BORDER, getY() + height + BORDER, YELLOW); // lower left to lower right

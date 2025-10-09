@@ -13,7 +13,7 @@ import subaraki.paintings.network.client.CPacketPaintingScreen;
 import subaraki.paintings.network.client.CPacketPaintingUpdate;
 import subaraki.paintings.network.server.SPacketPainting;
 
-@EventBusSubscriber(modid = Paintings.MODID)
+@EventBusSubscriber(modid = Paintings.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class NetworkRegistry {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
