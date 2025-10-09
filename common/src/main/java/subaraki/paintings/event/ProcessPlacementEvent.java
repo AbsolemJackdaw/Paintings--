@@ -3,7 +3,6 @@ package subaraki.paintings.event;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +14,6 @@ import net.minecraft.world.entity.decoration.PaintingVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.mixin.IPaintingAccessor;
@@ -74,8 +72,10 @@ public class ProcessPlacementEvent {
         if (itemStack.getItem() == Items.PAINTING) {
             // Check if the item has a painting variant in its nbt.
             // If it does, don't perform painting++ behavior and default to vanilla painting placing behavior.
-            CustomData customData = itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
-            if (!customData.isEmpty()) {
+            //CustomData customData = itemStack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
+            //if (!customData.isEmpty()) {
+            var dataflag = itemStack.getComponentsPatch().isEmpty();
+            if (!dataflag) {
                 return false;
             }
 

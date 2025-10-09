@@ -15,7 +15,7 @@ public class PaintingButton extends Button {
     private static final int YELLOW = -256;
     private int animationY;
     private final ResourceLocation resLoc;
-    private final PaintingVariant painting;
+    public final PaintingVariant painting;
 
     public PaintingButton(int x, int y, int w, int h, Component text, OnPress onPress, PaintingVariant painting) {
         super(x, y, w, h, text, onPress, Button.DEFAULT_NARRATION);

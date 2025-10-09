@@ -5,18 +5,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.mixin.ScreenAccessor;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.server.SPacketPainting;
 import subaraki.paintings.utils.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -172,11 +173,17 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
         for (Renderable guiButton : getRenderablesWithCast()) {
             if (guiButton instanceof PaintingButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
-                    MutableComponent text = Component.literal(button.getWidth() / 16 + "x" + button.getHeight() / 16);
-                    HoverEvent hover = new HoverEvent.ShowText(text);
-
-                    Style style = Style.EMPTY.withHoverEvent(hover);
-                    guiGraphics.renderComponentHoverEffect(this.font, style, width / 2 - font.width(text) - 4, height - START_Y / 4);
+                    var variant = button.painting;
+                    if (variant != null) {
+                        var author = variant.author().orElseGet(Component::empty);
+                        var title = variant.title().orElseGet(Component::empty);
+                        MutableComponent size = Component.translatable(title + " " + variant.width() + "x" + variant.height() + " " + author);
+                        List<ClientTooltipComponent> list = new ArrayList<>();
+                        list.add(ClientTooltipComponent.create(title.getVisualOrderText()));
+                        list.add(ClientTooltipComponent.create(Component.literal(variant.width() + "x" + variant.height()).getVisualOrderText()));
+                        list.add(ClientTooltipComponent.create(author.getVisualOrderText()));
+                        guiGraphics.renderTooltip(this.font, list, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+                    }
                 }
             }
         }
