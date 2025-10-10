@@ -2,6 +2,7 @@ package subaraki.paintings.gui;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Renderable;
@@ -9,8 +10,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.mixin.ScreenAccessor;
@@ -18,6 +17,7 @@ import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.server.SPacketPainting;
 import subaraki.paintings.utils.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -172,11 +172,20 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
         for (Renderable guiButton : getRenderablesWithCast()) {
             if (guiButton instanceof PaintingButton button) {
                 if (button.isMouseOver(mouseX, mouseY)) {
-                    MutableComponent text = Component.literal(button.getWidth() / 16 + "x" + button.getHeight() / 16);
-                    HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT, text);
+                    var variant = button.painting;
+                    if (variant != null) {
+                        var base = "painting." + variant.assetId().toString().replace(":", ".");
+                        var author = Component.translatable(base.concat(".author"));
+                        var title = Component.translatable(base.concat(".title"));
+                        title.setStyle(Style.EMPTY.applyFormat(ChatFormatting.YELLOW));
+                        author.setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY));
+                        List<Component> list = new ArrayList<>();
+                        list.add(title);
+                        list.add(author);
+                        list.add(Component.literal(variant.width() + "x" + variant.height()));
 
-                    Style style = Style.EMPTY.withHoverEvent(hover);
-                    guiGraphics.renderComponentHoverEffect(this.font, style, width / 2 - font.width(text) - 4, height - START_Y / 4);
+                        guiGraphics.renderTooltip(this.font, list, Optional.empty(), mouseX, mouseY);
+                    }
                 }
             }
         }
