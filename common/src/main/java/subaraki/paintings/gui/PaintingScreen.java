@@ -7,10 +7,10 @@ import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import subaraki.paintings.mixin.ScreenAccessor;
 import subaraki.paintings.network.NetworkHandler;
@@ -133,10 +133,10 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int buttonID, double amountX, double amountY) {
+    public boolean mouseDragged(MouseButtonEvent event, double mouseX, double mouseY) {
         if (optionalFirstWidget().isPresent() && optionalLastWidget().isPresent()) {
 
-            float move = (float) amountY * -1.0f;
+            float move = (float) event.y() * -1.0f;
 
             int paintingCanvasTopY = (optionalFirstWidget().get().getY());
             int paintingCanvasBotY = (optionalLastWidget().get().getY() + optionalLastWidget().get().getHeight());
@@ -151,7 +151,7 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
             float scaledDrageMove = (move * usableSpaceScale);
             movePaintingWidgets((int) scaledDrageMove);
         }
-        return super.mouseDragged(mouseX, mouseY, buttonID, amountX, amountY);
+        return super.mouseDragged(event, mouseX, mouseY);
     }
 
     private void movePaintingWidgets(int scrollAmount) {
@@ -177,7 +177,6 @@ public class PaintingScreen extends Screen implements IPaintingGUI {
                     if (variant != null) {
                         var author = variant.author().orElseGet(Component::empty);
                         var title = variant.title().orElseGet(Component::empty);
-                        MutableComponent size = Component.translatable(title + " " + variant.width() + "x" + variant.height() + " " + author);
                         List<ClientTooltipComponent> list = new ArrayList<>();
                         list.add(ClientTooltipComponent.create(title.getVisualOrderText()));
                         list.add(ClientTooltipComponent.create(Component.literal(variant.width() + "x" + variant.height()).getVisualOrderText()));
