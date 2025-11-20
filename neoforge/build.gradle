@@ -1,7 +1,8 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    id 'net.darkhax.curseforgegradle' version '1.0.11'
+    id 'net.darkhax.curseforgegradle'
+    id 'com.modrinth.minotaur'
 }
 
 repositories {
@@ -69,5 +70,18 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addRequirement('transparent')
     mainFile.addGameVersion("${minecraft_version}")
     mainFile.addGameVersion("neoforge")
+}
 
+modrinth {
+    token.set(project.findProperty('modrinth_api_token'))
+    projectId.set(modrinth_project)
+    changelog = "${changelog}"
+    versionName.set("${mod_name}-NeoForge-${minecraft_version}-$version")
+    versionType.set("${releasetype}")
+    uploadFile.set(tasks.jar)
+    loaders = ["neoforge"]
+    gameVersions = ["${minecraft_version}"]
+    dependencies {
+        required.project("transparent")
+    }
 }

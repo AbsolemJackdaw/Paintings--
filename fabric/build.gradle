@@ -1,7 +1,8 @@
 plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
-    id 'net.darkhax.curseforgegradle' version '1.0.11'
+    id 'net.darkhax.curseforgegradle'
+    id 'com.modrinth.minotaur'
 }
 
 base {
@@ -70,5 +71,18 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addGameVersion("${minecraft_version}")
     mainFile.addGameVersion("fabric")
     mainFile.addGameVersion("quilt")
+}
 
+modrinth {
+    token.set(project.findProperty('modrinth_api_token'))
+    projectId.set(modrinth_project)
+    changelog = "${changelog}"
+    versionName.set("${mod_name}-Fabric-${minecraft_version}-$version")
+    versionType.set("${releasetype}")
+    uploadFile.set(tasks.remapJar)
+    dependencies {
+        required.project("fabric-api")
+        required.project("cloth-config")
+        required.project("transparent")
+    }
 }
