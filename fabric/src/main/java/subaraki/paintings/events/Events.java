@@ -34,7 +34,6 @@ public class Events {
 
 
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            System.out.println(world.isClientSide());
             if (!world.isClientSide()) {
                 PlacementPacketSupplier preparePacket = (serverPlayer, painting, paintings) -> {
                     ServerPlayNetworking.send(serverPlayer, new CPacketPaintingScreen(paintings, hitResult.getBlockPos(), hitResult.getDirection()));
