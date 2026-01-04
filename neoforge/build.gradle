@@ -2,6 +2,7 @@ plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
     id 'net.darkhax.curseforgegradle' version '1.0.11'
+    id 'com.modrinth.minotaur'
 }
 
 repositories {
@@ -61,13 +62,28 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     apiToken = findProperty('cf_api_token')
 
     // The main file to upload
-    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.displayName = "Paintings++-neo-${minecraft_version}-${version}"
+    def mainFile = upload(cf_project, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "${mod_name}-neo-${minecraft_version}-${version}"
     mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
     mainFile.addRequirement('transparent')
     mainFile.addGameVersion("${minecraft_version}")
     mainFile.addGameVersion("neoforge")
-
 }
+
+modrinth {
+    token.set(project.findProperty('modrinth_api_token'))
+    projectId.set(modrinth_project)
+    changelog = "${changelog}"
+    versionName.set("${mod_name}-NeoForge-${minecraft_version}-$version")
+    versionType.set("${releasetype}")
+    uploadFile.set(tasks.jar)
+    dependencies {
+        required.project("cloth-config")
+        required.project("transparent")
+    }
+    loaders = ["neoforge"]
+    gameVersions = ["${minecraft_version}"]
+}
+

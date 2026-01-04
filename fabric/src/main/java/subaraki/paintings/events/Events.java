@@ -4,7 +4,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.painting.Painting;
 import subaraki.paintings.event.ProcessPlacementEvent;
 import subaraki.paintings.network.client.CPacketPaintingScreen;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;

@@ -1,6 +1,7 @@
 package subaraki.paintings.utils;
 
-import net.minecraft.world.entity.decoration.PaintingVariant;
+
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 
 import java.util.Comparator;
 

@@ -6,8 +6,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import subaraki.paintings.Paintings;
 import subaraki.paintings.network.client.CPacketPaintingScreen;
 import subaraki.paintings.network.client.CPacketPaintingUpdate;
@@ -19,7 +19,7 @@ public class NetworkHandler {
 
     public static Consumer<SPacketPainting> sendServerpacket;
 
-    private static final ResourceLocation SPACKETPAINTING = ResourceLocation.fromNamespaceAndPath(Paintings.MODID, "s_painting");
+    private static final Identifier SPACKETPAINTING = Identifier.fromNamespaceAndPath(Paintings.MODID, "s_painting");
     public static final CustomPacketPayload.Type<SPacketPainting> SPACKETPAINTING_TYPE = new CustomPacketPayload.Type<>(SPACKETPAINTING);
     public static StreamCodec<RegistryFriendlyByteBuf, SPacketPainting> SPACKETPAINTING_CODEC = StreamCodec.composite(
             PaintingVariant.DIRECT_STREAM_CODEC,
@@ -30,7 +30,7 @@ public class NetworkHandler {
             SPacketPainting::direction,
             SPacketPainting::new);
 
-    private static final ResourceLocation CPACKETSCREEN = ResourceLocation.fromNamespaceAndPath(Paintings.MODID, "c_screen");
+    private static final Identifier CPACKETSCREEN = Identifier.fromNamespaceAndPath(Paintings.MODID, "c_screen");
     public static final CustomPacketPayload.Type<CPacketPaintingScreen> CPACKETSCREEN_TYPE = new CustomPacketPayload.Type<>(CPACKETSCREEN);
     public static StreamCodec<RegistryFriendlyByteBuf, CPacketPaintingScreen> CPACKETSCREEN_CODEC = StreamCodec.composite(
             PaintingVariant.DIRECT_STREAM_CODEC.apply(ByteBufCodecs.list()),
@@ -41,7 +41,7 @@ public class NetworkHandler {
             CPacketPaintingScreen::direction,
             CPacketPaintingScreen::new);
 
-    private static final ResourceLocation CPACKETSYNC = ResourceLocation.fromNamespaceAndPath(Paintings.MODID, "c_sync");
+    private static final Identifier CPACKETSYNC = Identifier.fromNamespaceAndPath(Paintings.MODID, "c_sync");
     public static final CustomPacketPayload.Type<CPacketPaintingUpdate> CPACKETSYNC_TYPE = new CustomPacketPayload.Type<>(CPACKETSYNC);
     public static StreamCodec<RegistryFriendlyByteBuf, CPacketPaintingUpdate> CPACKETSYNC_CODEC = StreamCodec.composite(
             PaintingVariant.DIRECT_STREAM_CODEC,

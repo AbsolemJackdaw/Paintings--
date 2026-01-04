@@ -3,7 +3,7 @@ package subaraki.paintings.network.client;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import subaraki.paintings.network.NetworkHandler;
 
 import java.util.List;

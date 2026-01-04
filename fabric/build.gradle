@@ -2,6 +2,7 @@ plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
     id 'net.darkhax.curseforgegradle' version '1.0.11'
+    id 'com.modrinth.minotaur'
 }
 
 base {
@@ -59,8 +60,8 @@ loom {
 tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = findProperty('cf_api_token')
     // The main file to upload
-    def mainFile = upload(252042, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
-    mainFile.displayName = "Paintings++-fabric-${minecraft_version}-${version}"
+    def mainFile = upload(cf_project, file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar"))
+    mainFile.displayName = "${mod_name}-fabric-${minecraft_version}-${version}"
     mainFile.releaseType = "${releasetype}"
     mainFile.changelog = "${changelog}"
     mainFile.changelogType = 'markdown'
@@ -70,5 +71,21 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addGameVersion("${minecraft_version}")
     mainFile.addGameVersion("fabric")
     mainFile.addGameVersion("quilt")
+}
 
+modrinth {
+
+    token.set(project.findProperty('modrinth_api_token'))
+    projectId.set(modrinth_project)
+    changelog = "${changelog}"
+    versionName.set("${mod_name}-Fabric-${minecraft_version}-$version")
+    versionType.set("${releasetype}")
+    uploadFile.set(tasks.remapJar)
+    dependencies {
+        required.project("fabric-api")
+        required.project("cloth-config")
+        required.project("transparent")
+    }
+    loaders = ["fabric"]
+    gameVersions = ["${minecraft_version}"]
 }

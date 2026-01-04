@@ -1,8 +1,8 @@
 package subaraki.paintings.network.supplier;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.Painting;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 
 import java.util.List;
 

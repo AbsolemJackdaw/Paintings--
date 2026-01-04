@@ -4,13 +4,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.decoration.Painting;
-import net.minecraft.world.entity.decoration.PaintingVariant;
-import net.minecraft.world.entity.decoration.PaintingVariants;
+import net.minecraft.world.entity.decoration.painting.Painting;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.PaintingVariants;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -103,8 +103,8 @@ public class ProcessPlacementEvent {
 
                             // list of paintings placeable at current location
                             //takes registry names
-                            List<ResourceLocation> validArts = paintingRegistry.keySet().stream().filter(resourceLocation -> {
-                                var variant = paintingRegistry.getValue(resourceLocation);
+                            List<Identifier> validArts = paintingRegistry.keySet().stream().filter(Identifier -> {
+                                var variant = paintingRegistry.getValue(Identifier);
                                 var optionalResourceKey = paintingRegistry.getResourceKey(variant);
                                 if (optionalResourceKey.isPresent()) {
                                     ((IPaintingAccessor) paintingEntity).callSetVariant(paintingRegistry.wrapAsHolder(variant));
@@ -120,7 +120,7 @@ public class ProcessPlacementEvent {
 
                             // sort paintings from high to low, and from big to small
                             List<PaintingVariant> sorted = (validArts.stream().map(paintingRegistry::getValue).sorted(PaintingUtility.ART_COMPARATOR)).toList();
-                            //map resource<variant> to the registered resourcelocation
+                            //map resource<variant> to the registered Identifier
                             //Send packet to open gui
                             packetSupplier.send((ServerPlayer) player, paintingEntity, sorted);
                         }

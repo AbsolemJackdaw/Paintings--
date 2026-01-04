@@ -1,7 +1,7 @@
 package subaraki.paintings.events;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
-import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.decoration.painting.Painting;
 import subaraki.paintings.Paintings;
 
 public class ClientEvents {

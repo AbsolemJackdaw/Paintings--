@@ -2,7 +2,7 @@ package subaraki.paintings.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import subaraki.paintings.network.supplier.ScreenSupplier;
 import subaraki.paintings.utils.ClientReferences;
 

@@ -11,7 +11,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.decoration.PaintingVariant;
+import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import subaraki.paintings.mixin.ScreenAccessor;
 import subaraki.paintings.network.NetworkHandler;
 import subaraki.paintings.network.server.SPacketPainting;
