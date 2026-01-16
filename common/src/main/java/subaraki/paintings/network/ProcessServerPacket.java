@@ -8,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.decoration.painting.Painting;
 import net.minecraft.world.entity.decoration.painting.PaintingVariant;
 import net.minecraft.world.level.Level;
-import subaraki.paintings.Paintings;
 import subaraki.paintings.network.supplier.SyncpacketSupplier;
 
 public class ProcessServerPacket {
@@ -20,7 +19,6 @@ public class ProcessServerPacket {
                 var entity = new Painting(level, actualPos, direction, holder);
                 entity.setYRot(direction.toYRot());
                 entity.setPos(actualPos.getX(), pos.getY(), actualPos.getZ());
-                Paintings.UTILITY.updatePaintingBoundingBox(entity);
                 level.addFreshEntity(entity);
                 if (!player.isCreative())
                     player.getItemInHand(player.getUsedItemHand()).shrink(1);

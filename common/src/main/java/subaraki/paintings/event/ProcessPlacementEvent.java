@@ -15,10 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import subaraki.paintings.Paintings;
 import subaraki.paintings.mixin.IPaintingAccessor;
 import subaraki.paintings.network.supplier.PlacementPacketSupplier;
-import subaraki.paintings.utils.PaintingUtility;
+import subaraki.paintings.utils.ArtComparator;
 import subaraki.paintings.utils.Services;
 
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import java.util.Optional;
 public class ProcessPlacementEvent {
 
     private static final List<ResourceKey<PaintingVariant>> vanillaPaintings = new ArrayList<>();
+    private static final ArtComparator ART_COMPARATOR = new ArtComparator();
 
     static {
         vanillaPaintings.add(PaintingVariants.KEBAB);
@@ -116,10 +116,8 @@ public class ProcessPlacementEvent {
                             // reset the art of the painting to the one registered before
                             ((IPaintingAccessor) paintingEntity).callSetVariant(originalArt);
 
-                            Paintings.UTILITY.updatePaintingBoundingBox(paintingEntity); // reset bounding box
-
                             // sort paintings from high to low, and from big to small
-                            List<PaintingVariant> sorted = (validArts.stream().map(paintingRegistry::getValue).sorted(PaintingUtility.ART_COMPARATOR)).toList();
+                            List<PaintingVariant> sorted = (validArts.stream().map(paintingRegistry::getValue).sorted(ART_COMPARATOR)).toList();
                             //map resource<variant> to the registered Identifier
                             //Send packet to open gui
                             packetSupplier.send((ServerPlayer) player, paintingEntity, sorted);
