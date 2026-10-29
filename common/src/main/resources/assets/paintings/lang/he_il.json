@@ -1,0 +1,7 @@
+{
+  "select.a.painting": "בחרו ציור",
+  "text.autoconfig.paintings.option.use_vanilla_only": "השתמש רק בציורים מוונילה ודלג על טעינת ציורים אחרים",
+  "text.autoconfig.paintings.option.use_selection_gui": "הראה את תפריט בחירת הציור כשאני שמ/ה ציור",
+  "text.autoconfig.paintings.option.cycle_paintings": "אפשר החלפה מחזורית של ציורים על ידי קליק ימני עם ציור",
+  "text.autoconfig.paintings.option.show_painting_size": "הראה את גדלי הציורים בתפריט בחירת הציור"
+}
